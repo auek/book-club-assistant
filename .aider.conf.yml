@@ -1,0 +1,5 @@
+model: openrouter/deepseek/deepseek-v3.2
+chat-language: swedish
+read: [BOKKLUBB.md]
+stream: true
+cache-prompts: true
