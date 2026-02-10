@@ -12,12 +12,12 @@ if [[ $# -eq 0 ]]; then
 fi
 
 LOG_FILES=(reading_log_*.md(N))
-RAW_DATA=(raw_books.xml(N))
+#RAW_DATA=(raw_books.xml(N))
 
 case "$1" in
     -sync)
         echo "🚀 Startar synkronisering (Modell: DeepSeek V3.2)..."
-        aider --config .aider.sync.yml --file "${LOG_FILES[@]}" --file "${RAW_DATA[@]}"
+        aider --config .aider.sync.yml --file "${LOG_FILES[@]}" 
         ;;
     -chat)
         echo "💬 Startar boksamtal (Modell: Grok 4.1 Fast)..."
