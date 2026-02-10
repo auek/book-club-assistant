@@ -1,0 +1,6 @@
+model: openrouter/x-ai/grok-4.1-fast
+chat-language: swedish
+read: [BOKKLUBB_CHAT.md]
+file: [reading_in_progress.md]
+stream: true
+chat-mode: ask
