@@ -11,7 +11,7 @@ import sys
 
 # Konstanter
 INPUT_FILE = "raw_books.xml"
-OUTPUT_PREFIX = "reading_log"
+OUTPUT_FILE = "reading_log.md"
 DATE_FORMAT = "%Y-%m-%d"
 
 def parse_xml(file_path):
@@ -137,6 +137,17 @@ def generate_markdown(books):
 
     return "\n".join(lines)
 
+def cleanup_files():
+    """
+    Raderar rådatafilen efter bearbetning.
+    """
+    print("🧹 Städar upp temporära filer...")
+    
+    # Radera raw_books.xml
+    if os.path.exists(INPUT_FILE):
+        os.remove(INPUT_FILE)
+        print(f"   Raderade {INPUT_FILE}")
+
 def main():
     """Huvudfunktion för att köra synkroniseringen."""
     print("🔍 Läser XML-data...")
@@ -148,13 +159,12 @@ def main():
     books = sort_books(books)
     markdown_content = generate_markdown(books)
     
-    # Skapa filnamn med dagens datum
-    today_str = datetime.now().strftime("%Y%m%d")
-    output_filename = f"{OUTPUT_PREFIX}_{today_str}.md"
-    
-    print(f"💾 Skriver till {output_filename}...")
-    with open(output_filename, "w", encoding="utf-8") as f:
+    print(f"💾 Skriver till {OUTPUT_FILE}...")
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(markdown_content)
+    
+    # Städning
+    cleanup_files()
     
     print(f"✅ Klart! Logg uppdaterad.")
 
