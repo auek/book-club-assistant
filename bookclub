@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# Plattformsdetektering
+# Platform detection
 detect_platform() {
     if [[ $(uname -m) == "arm"* ]] || [[ $(uname -m) == "aarch"* ]]; then
         echo "raspberry"
@@ -16,26 +16,26 @@ detect_platform() {
 PLATFORM=$(detect_platform)
 
 usage() {
-    echo "Användning: $0 [-sync | -chat | -dev | -setup]"
-    echo "  -sync   Hämtar data från Goodreads och uppdaterar läslistan automatiskt"
-    echo "  -chat   Startar AI-chatt om dina böcker"
-    echo "  -dev    Startar i utvecklingsläge med DeepSeek"
-    echo "  -setup  Installerar nödvändiga beroenden för $PLATFORM"
+    echo "Usage: $0 [-sync | -chat | -dev | -setup]"
+    echo "  -sync   Fetches data from Goodreads and updates reading list automatically"
+    echo "  -chat   Starts AI chat about your books"
+    echo "  -dev    Starts development mode with DeepSeek"
+    echo "  -setup  Installs necessary dependencies for $PLATFORM"
     exit 1
 }
 
-# Ladda miljövariabler från .env om filen finns
+# Load environment variables from .env if file exists
 if [[ -f ".env" ]]; then
     source .env
 elif [[ -f ".env.local" ]]; then
     source .env.local
 fi
 
-# Kontrollera att API-nyckeln är satt i synk-läge
+# Check that API key is set for sync mode
 check_api_key() {
     if [[ -z "$GOODREADS_API_KEY" ]]; then
-        echo "❌ Fel: GOODREADS_API_KEY är inte satt."
-        echo "   Skapa en .env-fil med: GOODREADS_API_KEY='din_nyckel_here'"
+        echo "❌ Error: GOODREADS_API_KEY is not set."
+        echo "   Create a .env file with: GOODREADS_API_KEY='your_key_here'"
         exit 1
     fi
 }
@@ -48,68 +48,68 @@ LOG_FILE="reading_log.md"
 
 case "$1" in
     -sync)
-        echo "🚀 Startar synkronisering..."
+        echo "🚀 Starting synchronization..."
         check_api_key
         
-        # 1. Hämta data
-        echo "📥 Hämtar data från Goodreads..."
+        # 1. Fetch data
+        echo "📥 Fetching data from Goodreads..."
         curl -s "https://www.goodreads.com/review/list_rss/137796233?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
         
         if [[ $? -ne 0 ]]; then
-            echo "❌ Fel vid hämtning av data från Goodreads."
+            echo "❌ Error while fetching data from Goodreads."
             exit 1
         fi
 
-        # 2. Bearbeta data med Python-scriptet
-        echo "⚙️ Bearbetar data med sync_books.py..."
+        # 2. Process data with Python script
+        echo "⚙️ Processing data with sync_books.py..."
         python3 sync_books.py
         
         if [[ $? -ne 0 ]]; then
-            echo "❌ Fel vid bearbetning av data."
+            echo "❌ Error while processing data."
             exit 1
         fi
 
-        echo "✅ Synkronisering klar."
+        echo "✅ Synchronization complete."
         ;;
     -chat)
-        echo "💬 Startar boksamtal (Modell: Grok 4.1 Fast)..."
-        # Kontrollera om loggfilen finns innan vi försöker läsa den
+        echo "💬 Starting book chat (Model: Grok 4.1 Fast)..."
+        # Check if log file exists before trying to read it
         if [[ -f "$LOG_FILE" ]]; then
             aider --no-gitignore --config .aider.chat.yml --read "$LOG_FILE"
         else
-            echo "⚠️ Varning: Ingen loggfil hittades ($LOG_FILE). Startar Aider utan läslogg."
+            echo "⚠️ Warning: No log file found ($LOG_FILE). Starting Aider without reading log."
             aider --no-gitignore --config .aider.chat.yml
         fi
         ;;
     -setup)
-        echo "🔧 Installerar beroenden för $PLATFORM..."
+        echo "🔧 Installing dependencies for $PLATFORM..."
         
         case $PLATFORM in
             raspberry|volumio)
-                # Raspberry Pi / Volumio (Debian-baserat)
-                echo "📦 Installerar paket med apt..."
+                # Raspberry Pi / Volumio (Debian-based)
+                echo "📦 Installing packages with apt..."
                 sudo apt update
                 sudo apt install -y python3 python3-pip curl git
                 pip3 install --user aider-chat
                 ;;
             fedora)
                 # Fedora (PC)
-                echo "📦 Installerar paket med dnf..."
+                echo "📦 Installing packages with dnf..."
                 sudo dnf install -y python3 python3-pip curl git
                 pip3 install --user aider-chat
                 ;;
             *)
-                echo "⚠️ Okänd plattform. Installera manuellt:"
-                echo "   Python3, pip, curl, git, och 'pip install aider-chat'"
+                echo "⚠️ Unknown platform. Please install manually:"
+                echo "   Python3, pip, curl, git, and 'pip install aider-chat'"
                 ;;
         esac
         
-        echo "✅ Installation klar! Kör nu:"
-        echo "   ./bookclub -sync   # Första synk"
-        echo "   ./bookclub -chat   # Starta chatt"
+        echo "✅ Installation complete! Now run:"
+        echo "   ./bookclub -sync   # First sync"
+        echo "   ./bookclub -chat   # Start chat"
         ;;
     -dev)
-        echo "🔧 Startar i utvecklingsläge (Modell: Qwen3 Coder Next)..."
+        echo "🔧 Starting development mode (Model: Qwen3 Coder Next)..."
         check_api_key
         aider --no-gitignore --config .aider.dev.yml
         ;;

@@ -13,7 +13,7 @@ import sys
 INPUT_FILE = "raw_books.xml"
 OUTPUT_FILE = "reading_log.md"
 
-# Goodreads RSS kan skicka olika datumformat. Vi prover dessa i ordning.
+# Goodreads RSS may send various date formats. We try these in order.
 DATE_FORMATS = [
     "%a, %d %b %Y %H:%M:%S %z",         # RFC 822 / RSS pubDate (t.ex. Mon, 9 Feb 2026 00:00:00 +0000)
     "%Y-%m-%d",                         # Enkelt format (YYYY-MM-DD)
@@ -41,14 +41,14 @@ def parse_xml(file_path):
 
     books = []
     
-    # Goodreads RSS items ligger vanligtvis under //item
+    # Goodreads RSS items are typically under //item
     for item in root.findall('.//item'):
-        # Extrahera data med fallback för saknade taggar
+        # Extract data with fallback for missing tags
         title_node = item.find('title')
-        title = title_node.text if title_node is not None else "Okänd titel"
+        title = title_node.text if title_node is not None else "Unknown title"
 
         author_node = item.find('author_name')
-        author = author_node.text if author_node is not None else "Okänd författare"
+        author = author_node.text if author_node is not None else "Unknown author"
 
         rating_node = item.find('user_rating')
         rating = rating_node.text if rating_node is not None else "0"
@@ -56,31 +56,31 @@ def parse_xml(file_path):
         link_node = item.find('link')
         link = link_node.text if link_node is not None else "#"
 
-        # Hantera datum: först user_read_at, sedan pubDate som fallback
+        # Handle date: first user_read_at, then pubDate as fallback
         date_read_node = item.find('user_read_at')
         date_str = date_read_node.text if date_read_node is not None and date_read_node.text else None
         
-        # Fallback till pubDate om user_read_at saknas
+        # Fallback to pubDate if user_read_at is missing
         if not date_str:
             pub_date_node = item.find('pubDate')
             date_str = pub_date_node.text if pub_date_node is not None and pub_date_node.text else None
         
         date_obj = None
-        display_date = "Saknas"
+        display_date = "Missing"
 
         if date_str:
-            # Försök parsa datumet med de definierade formaten
+            # Try to parse the date with the defined formats
             for fmt in DATE_FORMATS:
                 try:
                     date_obj = datetime.strptime(date_str, fmt)
-                    # Normalisera visning till YYYY-MM-DD
+                    # Normalize display to YYYY-MM-DD
                     display_date = date_obj.strftime("%Y-%m-%d")
                     break
                 except ValueError:
                     continue
         else:
-            # Om inget datum hittades alls, markera som saknas
-            display_date = "Saknas"
+            # If no date found at all, mark as missing
+            display_date = "Missing"
 
         books.append({
             'title': title,
@@ -95,10 +95,10 @@ def parse_xml(file_path):
 
 def sort_books(books):
     """
-    Sorterar böcker baserat på läst datum (nyast först).
-    Böcker utan datum placeras sist.
+    Sorts books based on read date (newest first).
+    Books without date are placed last.
     """
-    # Sortera nyckel: (Har datum, Datumobjekt) -> reverse=True sätter True (har datum) först
+    # Sort key: (Has date, Date object) -> reverse=True puts True (has date) first
     return sorted(books, key=lambda x: (x['date_obj'] is None, x['date_obj']), reverse=True)
 
 def generate_markdown(books):
@@ -116,10 +116,10 @@ def generate_markdown(books):
 
     # Lägg till rader
     for book in books:
-        # Ersätt | med HTML-entitet för att undvika att bryta tabellen
+        # Replace | with HTML entity to avoid breaking the table
         title = book['title'].replace('|', '&#124;')
         author = book['author'].replace('|', '&#124;')
-        lines.append(f"| {title} | {author} | {book['rating']} | {book['date_display']} | [Länk]({book['link']}) |")
+        lines.append(f"| {title} | {author} | {book['rating']} | {book['date_display']} | [Link]({book['link']}) |")
 
     # Sammanfattning
     total_books = len(books)
@@ -162,34 +162,34 @@ def generate_markdown(books):
 
 def cleanup_files():
     """
-    Raderar rådatafilen efter bearbetning.
+    Deletes the raw data file after processing.
     """
-    print("🧹 Städar upp temporära filer...")
+    print("🧹 Cleaning up temporary files...")
     
-    # Radera raw_books.xml
+    # Delete raw_books.xml
     if os.path.exists(INPUT_FILE):
         os.remove(INPUT_FILE)
-        print(f"   Raderade {INPUT_FILE}")
+        print(f"   Deleted {INPUT_FILE}")
 
 def main():
-    """Huvudfunktion för att köra synkroniseringen."""
-    print("🔍 Läser XML-data...")
+    """Main function to run synchronization."""
+    print("🔍 Reading XML data...")
     books = parse_xml(INPUT_FILE)
     
-    print(f"📚 Hittade {len(books)} böcker.")
+    print(f"📚 Found {len(books)} books.")
     
-    print("🔄 Sorterar och genererar Markdown...")
+    print("🔄 Sorting and generating Markdown...")
     books = sort_books(books)
     markdown_content = generate_markdown(books)
     
-    print(f"💾 Skriver till {OUTPUT_FILE}...")
+    print(f"💾 Writing to {OUTPUT_FILE}...")
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(markdown_content)
     
-    # Städning
+    # Cleanup
     cleanup_files()
     
-    print(f"✅ Klart! Logg uppdaterad.")
+    print(f"✅ Done! Log updated.")
 
 if __name__ == "__main__":
     main()
