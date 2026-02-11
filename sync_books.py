@@ -12,7 +12,13 @@ import sys
 # Konstanter
 INPUT_FILE = "raw_books.xml"
 OUTPUT_FILE = "reading_log.md"
-DATE_FORMAT = "%Y-%m-%d"
+
+# Goodreads RSS kan skicka olika datumformat. Vi prover dessa i ordning.
+DATE_FORMATS = [
+    "%Y-%m-%d",                 # Enkelt format (YYYY-MM-DD)
+    "%a %b %d %H:%M:%S %Y %z",  # Goodreads standard (t.ex. Mon Feb 10 00:00:00 2026 +0000)
+    "%a %b %d %H:%M:%S %Y"      # Utan tidszon
+]
 
 def parse_xml(file_path):
     """
@@ -55,12 +61,15 @@ def parse_xml(file_path):
         display_date = "Saknas"
 
         if date_str:
-            try:
-                date_obj = datetime.strptime(date_str, DATE_FORMAT)
-                display_date = date_str
-            except ValueError:
-                # Om datumformatet är konstigt, behåll "Saknas"
-                pass
+            # Försök parsa datumet med de definierade formaten
+            for fmt in DATE_FORMATS:
+                try:
+                    date_obj = datetime.strptime(date_str, fmt)
+                    # Normalisera visning till YYYY-MM-DD
+                    display_date = date_obj.strftime("%Y-%m-%d")
+                    break
+                except ValueError:
+                    continue
 
         books.append({
             'title': title,
