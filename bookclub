@@ -4,6 +4,7 @@ usage() {
     echo "Användning: $0 [-sync | -chat]"
     echo "  -sync   Startar Aider med DeepSeek för att uppdatera läslistan (redigering aktiverad)"
     echo "  -chat   Startar Aider med Grok för att diskutera böcker (läsläge aktiverat)"
+    echo "  -dev   Startar Aider i utvecklingsläge med DeepSeek (för testning och felsökning)"
     exit 1
 }
 
@@ -17,11 +18,15 @@ LOG_FILES=(reading_log_*.md(N))
 case "$1" in
     -sync)
         echo "🚀 Startar synkronisering (Modell: DeepSeek V3.2)..."
-        aider --config .aider.sync.yml --file "${LOG_FILES[@]}" 
+        aider --no-gitignore --config .aider.sync.yml --file "${LOG_FILES[@]}" 
         ;;
     -chat)
         echo "💬 Startar boksamtal (Modell: Grok 4.1 Fast)..."
-        aider --config .aider.chat.yml --read "${LOG_FILES[@]}"
+        aider --no-gitignore --config .aider.chat.yml --read "${LOG_FILES[@]}"
+        ;;
+    -dev)
+        echo "🔧 Startar i utvecklingsläge (Modell: DeepSeek V3.2)..."
+        aider --no-gitignore --config .aider.dev.yml --file "${LOG_FILES[@]}"
         ;;
     *)
         usage
