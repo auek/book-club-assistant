@@ -42,7 +42,7 @@ case "$1" in
         aider --no-gitignore --config .aider.chat.yml --read "${LOG_FILES[@]}"
         ;;
     -dev)
-        echo "🔧 Startar i utvecklingsläge (Modell: DeepSeek V3.2)..."
+        echo "🔧 Startar i utvecklingsläge (Modell: Qwen3 Coder Next)..."
         check_api_key
         aider --no-gitignore --config .aider.dev.yml --file "${LOG_FILES[@]}"
         ;;

@@ -12,3 +12,6 @@ Du är projektets Lead Architect. Din uppgift är att underhålla och vidareutve
 - Miljö: Raspberry Pi (Debian/Volumio).
 - Säkerhet: Inga hårdkodade nycklar. Använd whitelist för användare.
 - Ekonomi: Använd prompt caching och var token-effektiv.
+
+## Säkerhet
+Efterfråga ALDRIG faktiska .env-filer eller hemliga nycklar. Om du behöver analysera miljöhantering, be användaren om en .env.example eller en beskrivning av variabelnamnen. Utgå alltid ifrån att faktiska nycklar är konfidentiella och inte får lämna den lokala maskinen.
