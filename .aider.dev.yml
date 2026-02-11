@@ -1,6 +1,6 @@
 model: openrouter/deepseek/deepseek-v3.2
 chat-language: swedish
 read: [ARCHITECT.md]
-file: [bookclub, .aider.sync.yml, .aider.chat.yml, BOKKLUBB.md, BOKKLUBB_CHAT.md, reading_log.md, reading_in_progress.md, sync_books.py, README.md]
+file: [bookclub, .aider.sync.yml, .aider.chat.yml, BOKKLUBB_CHAT.md, reading_log.md, reading_in_progress.md, sync_books.py, README.md]
 stream: true
 cache-prompts: true
