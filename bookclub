@@ -44,7 +44,7 @@ case "$1" in
     -dev)
         echo "🔧 Startar i utvecklingsläge (Modell: Qwen3 Coder Next)..."
         check_api_key
-        aider --no-gitignore --config .aider.dev.yml --file "${LOG_FILES[@]}"
+        aider --no-gitignore --config .aider.dev.yml
         ;;
     *)
         usage
