@@ -105,7 +105,10 @@ def generate_markdown(books):
 
     # Lägg till rader
     for book in books:
-        lines.append(f"| {book['title']} | {book['author']} | {book['rating']} | {book['date_display']} | [Länk]({book['link']}) |")
+        # Ersätt | med HTML-entitet för att undvika att bryta tabellen
+        title = book['title'].replace('|', '&#124;')
+        author = book['author'].replace('|', '&#124;')
+        lines.append(f"| {title} | {author} | {book['rating']} | {book['date_display']} | [Länk]({book['link']}) |")
 
     # Sammanfattning
     total_books = len(books)
