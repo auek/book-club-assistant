@@ -15,9 +15,12 @@ OUTPUT_FILE = "reading_log.md"
 
 # Goodreads RSS kan skicka olika datumformat. Vi prover dessa i ordning.
 DATE_FORMATS = [
-    "%Y-%m-%d",                 # Enkelt format (YYYY-MM-DD)
-    "%a %b %d %H:%M:%S %Y %z",  # Goodreads standard (t.ex. Mon Feb 10 00:00:00 2026 +0000)
-    "%a %b %d %H:%M:%S %Y"      # Utan tidszon
+    "%a, %d %b %Y %H:%M:%S %z",         # RFC 822 / RSS pubDate (t.ex. Mon, 9 Feb 2026 00:00:00 +0000)
+    "%Y-%m-%d",                         # Enkelt format (YYYY-MM-DD)
+    "%a %b %d %H:%M:%S %Y %z",          # Goodreads standard (t.ex. Mon Feb 10 00:00:00 2026 +0000)
+    "%a %b %d %H:%M:%S %Y",             # Utan tidszon
+    "%Y-%m-%dT%H:%M:%S%z",              # ISO 8601 med tidszon
+    "%Y-%m-%d %H:%M:%S"                 # Lokalt format
 ]
 
 def parse_xml(file_path):
@@ -53,9 +56,14 @@ def parse_xml(file_path):
         link_node = item.find('link')
         link = link_node.text if link_node is not None else "#"
 
-        # Hantera datum
+        # Hantera datum: först user_read_at, sedan pubDate som fallback
         date_read_node = item.find('user_read_at')
         date_str = date_read_node.text if date_read_node is not None and date_read_node.text else None
+        
+        # Fallback till pubDate om user_read_at saknas
+        if not date_str:
+            pub_date_node = item.find('pubDate')
+            date_str = pub_date_node.text if pub_date_node is not None and pub_date_node.text else None
         
         date_obj = None
         display_date = "Saknas"
@@ -70,6 +78,9 @@ def parse_xml(file_path):
                     break
                 except ValueError:
                     continue
+        else:
+            # Om inget datum hittades alls, markera som saknas
+            display_date = "Saknas"
 
         books.append({
             'title': title,
