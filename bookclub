@@ -1,10 +1,26 @@
 #!/bin/zsh
 
+# Plattformsdetektering
+detect_platform() {
+    if [[ $(uname -m) == "arm"* ]] || [[ $(uname -m) == "aarch"* ]]; then
+        echo "raspberry"
+    elif [[ -f /etc/volumio_version ]]; then
+        echo "volumio"
+    elif [[ -f /etc/fedora-release ]]; then
+        echo "fedora"
+    else
+        echo "unknown"
+    fi
+}
+
+PLATFORM=$(detect_platform)
+
 usage() {
-    echo "Användning: $0 [-sync | -chat]"
-    echo "  -sync   Hämtar data från Goodreads och uppdaterar läslistan automatiskt med sync_books.py"
-    echo "  -chat   Startar Aider med Grok för att diskutera böcker (läsläge aktiverat)"
-    echo "  -dev    Startar Aider i utvecklingsläge med DeepSeek (för testning och felsökning)"
+    echo "Användning: $0 [-sync | -chat | -dev | -setup]"
+    echo "  -sync   Hämtar data från Goodreads och uppdaterar läslistan automatiskt"
+    echo "  -chat   Startar AI-chatt om dina böcker"
+    echo "  -dev    Startar i utvecklingsläge med DeepSeek"
+    echo "  -setup  Installerar nödvändiga beroenden för $PLATFORM"
     exit 1
 }
 
@@ -64,6 +80,33 @@ case "$1" in
             echo "⚠️ Varning: Ingen loggfil hittades ($LOG_FILE). Startar Aider utan läslogg."
             aider --no-gitignore --config .aider.chat.yml
         fi
+        ;;
+    -setup)
+        echo "🔧 Installerar beroenden för $PLATFORM..."
+        
+        case $PLATFORM in
+            raspberry|volumio)
+                # Raspberry Pi / Volumio (Debian-baserat)
+                echo "📦 Installerar paket med apt..."
+                sudo apt update
+                sudo apt install -y python3 python3-pip curl git
+                pip3 install --user aider-chat
+                ;;
+            fedora)
+                # Fedora (PC)
+                echo "📦 Installerar paket med dnf..."
+                sudo dnf install -y python3 python3-pip curl git
+                pip3 install --user aider-chat
+                ;;
+            *)
+                echo "⚠️ Okänd plattform. Installera manuellt:"
+                echo "   Python3, pip, curl, git, och 'pip install aider-chat'"
+                ;;
+        esac
+        
+        echo "✅ Installation klar! Kör nu:"
+        echo "   ./bookclub -sync   # Första synk"
+        echo "   ./bookclub -chat   # Starta chatt"
         ;;
     -dev)
         echo "🔧 Startar i utvecklingsläge (Modell: Qwen3 Coder Next)..."
