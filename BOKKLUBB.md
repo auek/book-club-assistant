@@ -10,7 +10,7 @@ Du är min Bokklubbs-assistent. Din uppgift är att synka data mellan Goodreads,
 - Använd inga MCP tjänster
 
 # KOMMANDO FÖR ATT HÄMTA NY DATA
-- $curl -s https://www.goodreads.com/review/list_rss/137796233\?key\=zPd3WVVmZuPj9sAK87T-uCX-MQR_D5ncn3xkrq8MFn4f6SOV\&shelf\=read > raw_books.xml
+- $curl -s "https://www.goodreads.com/review/list_rss/137796233?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
 - Om raw_books.xml skapas eller uppdateras, se till att den är tillagd i chatten (använd /add om det behövs) så att du kan läsa dess innehåll och uppdatera loggfilen.
 
 # ARBETSFLÖDE (WORKFLOW)
