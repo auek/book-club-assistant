@@ -41,14 +41,14 @@ def parse_xml(file_path):
         author_node = item.find('author_name')
         author = author_node.text if author_node is not None else "Okänd författare"
 
-        rating_node = item.find('book_rating')
+        rating_node = item.find('user_rating')
         rating = rating_node.text if rating_node is not None else "0"
 
         link_node = item.find('link')
         link = link_node.text if link_node is not None else "#"
 
         # Hantera datum
-        date_read_node = item.find('book_read_at')
+        date_read_node = item.find('user_read_at')
         date_str = date_read_node.text if date_read_node is not None and date_read_node.text else None
         
         date_obj = None
