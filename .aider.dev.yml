@@ -1,6 +1,6 @@
 model: openrouter/z-ai/glm-4.7
 chat-language: swedish
 read: [ARCHITECT.md]
-file: [.aider.sync.yml, .aider.chat.yml, BOKKLUBB.md, BOKKLUBB_CHAT.md, reading_in_progress.md]
+file: [.aider.sync.yml, .aider.chat.yml, BOKKLUBB.md, BOKKLUBB_CHAT.md, reading_in_progress.md, sync_books.py]
 stream: true
 cache-prompts: true
