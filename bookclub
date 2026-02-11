@@ -8,6 +8,22 @@ usage() {
     exit 1
 }
 
+# Ladda miljövariabler från .env om filen finns
+if [[ -f ".env" ]]; then
+    source .env
+elif [[ -f ".env.local" ]]; then
+    source .env.local
+fi
+
+# Kontrollera att API-nyckeln är satt i synk-läge
+check_api_key() {
+    if [[ -z "$GOODREADS_API_KEY" ]]; then
+        echo "❌ Fel: GOODREADS_API_KEY är inte satt."
+        echo "   Skapa en .env-fil med: GOODREADS_API_KEY='din_nyckel_here'"
+        exit 1
+    fi
+}
+
 if [[ $# -eq 0 ]]; then
     usage
 fi
@@ -18,6 +34,7 @@ LOG_FILES=(reading_log_*.md(N))
 case "$1" in
     -sync)
         echo "🚀 Startar synkronisering (Modell: DeepSeek V3.2)..."
+        check_api_key
         aider --no-gitignore --config .aider.sync.yml --file "${LOG_FILES[@]}" 
         ;;
     -chat)
@@ -26,6 +43,7 @@ case "$1" in
         ;;
     -dev)
         echo "🔧 Startar i utvecklingsläge (Modell: DeepSeek V3.2)..."
+        check_api_key
         aider --no-gitignore --config .aider.dev.yml --file "${LOG_FILES[@]}"
         ;;
     *)
