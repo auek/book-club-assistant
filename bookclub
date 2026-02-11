@@ -1,27 +1,117 @@
 #!/bin/zsh
 
+# Platform detection
+detect_platform() {
+    if [[ $(uname -m) == "arm"* ]] || [[ $(uname -m) == "aarch"* ]]; then
+        echo "raspberry"
+    elif [[ -f /etc/volumio_version ]]; then
+        echo "volumio"
+    elif [[ -f /etc/fedora-release ]]; then
+        echo "fedora"
+    else
+        echo "unknown"
+    fi
+}
+
+PLATFORM=$(detect_platform)
+
 usage() {
-    echo "Användning: $0 [-sync | -chat]"
-    echo "  -sync   Startar Aider med DeepSeek för att uppdatera läslistan (redigering aktiverad)"
-    echo "  -chat   Startar Aider med Grok för att diskutera böcker (läsläge aktiverat)"
+    echo "Usage: $0 [-sync | -chat | -dev | -setup]"
+    echo "  -sync   Fetches data from Goodreads and updates reading list automatically"
+    echo "  -chat   Starts AI chat about your books"
+    echo "  -dev    Starts development mode with DeepSeek"
+    echo "  -setup  Installs necessary dependencies for $PLATFORM"
     exit 1
+}
+
+# Load environment variables from .env if file exists
+if [[ -f ".env" ]]; then
+    source .env
+elif [[ -f ".env.local" ]]; then
+    source .env.local
+fi
+
+# Check that API key is set for sync mode
+check_api_key() {
+    if [[ -z "$GOODREADS_API_KEY" ]]; then
+        echo "❌ Error: GOODREADS_API_KEY is not set."
+        echo "   Create a .env file with: GOODREADS_API_KEY='your_key_here'"
+        exit 1
+    fi
 }
 
 if [[ $# -eq 0 ]]; then
     usage
 fi
 
-LOG_FILES=(reading_log_*.md(N))
-#RAW_DATA=(raw_books.xml(N))
+LOG_FILE="reading_log.md"
 
 case "$1" in
     -sync)
-        echo "🚀 Startar synkronisering (Modell: DeepSeek V3.2)..."
-        aider --config .aider.sync.yml --file "${LOG_FILES[@]}" 
+        echo "🚀 Starting synchronization..."
+        check_api_key
+        
+        # 1. Fetch data
+        echo "📥 Fetching data from Goodreads..."
+        curl -s "https://www.goodreads.com/review/list_rss/137796233?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
+        
+        if [[ $? -ne 0 ]]; then
+            echo "❌ Error while fetching data from Goodreads."
+            exit 1
+        fi
+
+        # 2. Process data with Python script
+        echo "⚙️ Processing data with sync_books.py..."
+        python3 sync_books.py
+        
+        if [[ $? -ne 0 ]]; then
+            echo "❌ Error while processing data."
+            exit 1
+        fi
+
+        echo "✅ Synchronization complete."
         ;;
     -chat)
-        echo "💬 Startar boksamtal (Modell: Grok 4.1 Fast)..."
-        aider --config .aider.chat.yml --read "${LOG_FILES[@]}"
+        echo "💬 Starting book chat (Model: Grok 4.1 Fast)..."
+        # Check if log file exists before trying to read it
+        if [[ -f "$LOG_FILE" ]]; then
+            aider --no-gitignore --config .aider.chat.yml --read "$LOG_FILE"
+        else
+            echo "⚠️ Warning: No log file found ($LOG_FILE). Starting Aider without reading log."
+            aider --no-gitignore --config .aider.chat.yml
+        fi
+        ;;
+    -setup)
+        echo "🔧 Installing dependencies for $PLATFORM..."
+        
+        case $PLATFORM in
+            raspberry|volumio)
+                # Raspberry Pi / Volumio (Debian-based)
+                echo "📦 Installing packages with apt..."
+                sudo apt update
+                sudo apt install -y python3 python3-pip curl git
+                pip3 install --user aider-chat
+                ;;
+            fedora)
+                # Fedora (PC)
+                echo "📦 Installing packages with dnf..."
+                sudo dnf install -y python3 python3-pip curl git
+                pip3 install --user aider-chat
+                ;;
+            *)
+                echo "⚠️ Unknown platform. Please install manually:"
+                echo "   Python3, pip, curl, git, and 'pip install aider-chat'"
+                ;;
+        esac
+        
+        echo "✅ Installation complete! Now run:"
+        echo "   ./bookclub -sync   # First sync"
+        echo "   ./bookclub -chat   # Start chat"
+        ;;
+    -dev)
+        echo "🔧 Starting development mode (Model: Qwen3 Coder Next)..."
+        check_api_key
+        aider --no-gitignore --config .aider.dev.yml
         ;;
     *)
         usage
