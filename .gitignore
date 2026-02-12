@@ -7,3 +7,8 @@
 reading_log.md
 reading_in_progress.md
 raw_books.xml
+
+# New structure
+data/
+logs/
+__pycache__/
