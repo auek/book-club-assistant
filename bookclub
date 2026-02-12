@@ -31,11 +31,17 @@ elif [[ -f ".env.local" ]]; then
     source .env.local
 fi
 
-# Check that API key is set for sync mode
+# Check that API key and user ID are set for sync mode
 check_api_key() {
     if [[ -z "$GOODREADS_API_KEY" ]]; then
         echo "❌ Error: GOODREADS_API_KEY is not set."
         echo "   Create a .env file with: GOODREADS_API_KEY='your_key_here'"
+        exit 1
+    fi
+    if [[ -z "$GOODREADS_USER_ID" ]]; then
+        echo "❌ Error: GOODREADS_USER_ID is not set."
+        echo "   Add GOODREADS_USER_ID='your_user_id_here' to your .env file"
+        echo "   Find your ID at: https://www.goodreads.com/settings"
         exit 1
     fi
 }
@@ -52,8 +58,8 @@ case "$1" in
         check_api_key
         
         # 1. Fetch data
-        echo "📥 Fetching data from Goodreads..."
-        curl -s "https://www.goodreads.com/review/list_rss/137796233?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
+        echo "📥 Fetching data from Goodreads (User ID: ${GOODREADS_USER_ID})..."
+        curl -s "https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
         
         if [[ $? -ne 0 ]]; then
             echo "❌ Error while fetching data from Goodreads."
