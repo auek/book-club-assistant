@@ -121,9 +121,6 @@ Migrera bokklubbssystemet från lokal PC till Raspberry Pi med framtida integrat
 
 ## 📝 Anteckningar från Nuvarande Session
 - Pi:n kör Volumio (Raspbian Buster) med Python 3.7.3
-- Användare `volumio` har NOPASSWD sudo för `apt-get`
-- `aider-chat` är inte kompatibelt med Python 3.7 (networkx==3.1 kräver Python 3.8+)
-- Bash-skript fungerar efter shebang-ändring till `#!/bin/bash`
 
 ## 🔗 Resurser
 - [python-telegram-bot dokumentation](https://github.com/python-telegram-bot/python-telegram-bot)
