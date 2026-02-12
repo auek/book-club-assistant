@@ -21,6 +21,9 @@ usage() {
     echo "  -chat   Starts AI chat about your books"
     echo "  -dev    Starts development mode with DeepSeek"
     echo "  -setup  Installs necessary dependencies for $PLATFORM"
+    echo ""
+    echo "For Raspberry Pi, use bookclub.pi instead:"
+    echo "  ./bookclub.pi [-sync | -setup | -bot | -cron]"
     exit 1
 }
 
