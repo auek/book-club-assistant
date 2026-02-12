@@ -62,45 +62,51 @@ Available commands:
 
 @auth_only
 async def show_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send the reading log, split into chunks if needed."""
+    """Send the reading log in a nice formatted way for Telegram."""
     try:
         with open("reading_log.md", "r", encoding="utf-8") as f:
             book_log = f.read()
     except FileNotFoundError:
         logger.error("reading_log.md not found")
-        await update.message.reply_text("Error: Book log not found. Run sync first.")
+        await update.message.reply_text("❌ Error: Book log not found. Run sync first.")
         return
     except Exception as e:
         logger.exception(f"Unexpected error reading reading_log.md: {e}")
-        await update.message.reply_text("Error reading book log. Check logs.")
+        await update.message.reply_text("❌ Error reading book log. Check logs.")
         return
 
+    # Format books for better Telegram display
+    formatted_books = format_books_for_telegram(book_log)
+    
     # Telegram message length limit
     max_length = 4096
-    if len(book_log) <= max_length:
-        # Try sending with Markdown, fall back to plain text on error
+    
+    if len(formatted_books) <= max_length:
         try:
-            await update.message.reply_text(f"Here are your books:\n{book_log}", parse_mode='Markdown')
+            await update.message.reply_text(formatted_books, parse_mode='HTML')
         except BadRequest as e:
-            logger.warning(f"Markdown parse error, falling back to plain text: {e}")
-            # Fall back to plain text
-            await update.message.reply_text(f"Here are your books:\n{book_log}", parse_mode=None)
+            logger.warning(f"HTML parse error, falling back to plain text: {e}")
+            # Remove HTML tags and send as plain text
+            plain_text = formatted_books.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
+            await update.message.reply_text(plain_text, parse_mode=None)
         except Exception as e:
-            logger.exception(f"Error sending book log: {e}")
-            await update.message.reply_text("Error sending book log. Check logs.")
+            logger.exception(f"Error sending book list: {e}")
+            await update.message.reply_text("❌ Error sending book list. Check logs.")
     else:
-        # Split into chunks
-        parts = [book_log[i:i+max_length] for i in range(0, len(book_log), max_length)]
+        # Split into chunks using our helper function
+        parts = split_text_into_chunks(formatted_books, max_length)
         for i, part in enumerate(parts):
-            prefix = f"Part {i+1}/{len(parts)}:\n" if len(parts) > 1 else ""
+            prefix = f"📚 <b>Part {i+1}/{len(parts)}</b>\n\n" if len(parts) > 1 else ""
             try:
-                await update.message.reply_text(f"{prefix}{part}", parse_mode='Markdown')
+                await update.message.reply_text(f"{prefix}{part}", parse_mode='HTML')
             except BadRequest as e:
-                logger.warning(f"Markdown parse error in chunk {i+1}, using plain text: {e}")
-                await update.message.reply_text(f"{prefix}{part}", parse_mode=None)
+                logger.warning(f"HTML parse error in chunk {i+1}, using plain text: {e}")
+                plain_part = part.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
+                plain_prefix = f"📚 Part {i+1}/{len(parts)}:\n\n" if len(parts) > 1 else ""
+                await update.message.reply_text(f"{plain_prefix}{plain_part}", parse_mode=None)
             except Exception as e:
                 logger.exception(f"Error sending chunk {i+1}: {e}")
-                await update.message.reply_text(f"Error sending part {i+1} of book log.")
+                await update.message.reply_text(f"❌ Error sending part {i+1} of book list.")
 
 @auth_only
 async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -114,27 +120,90 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 @auth_only
 async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Show the current reading progress."""
+    """Show the current reading progress in a nice format."""
     try:
         with open("reading_in_progress.md", "r", encoding="utf-8") as f:
-            progress = f.read()
+            progress_content = f.read()
+        
+        # Format the progress content for better Telegram display
+        formatted_progress = format_progress_for_telegram(progress_content)
+        
         try:
-            await update.message.reply_text(f"Current reading:\n{progress}", parse_mode='Markdown')
-        except BadRequest:
-            await update.message.reply_text(f"Current reading:\n{progress}", parse_mode=None)
+            await update.message.reply_text(formatted_progress, parse_mode='HTML')
+        except BadRequest as e:
+            logger.warning(f"HTML parse error for progress, falling back to plain text: {e}")
+            # Remove HTML tags and send as plain text
+            plain_text = formatted_progress.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
+            await update.message.reply_text(plain_text, parse_mode=None)
+        except Exception as e:
+            logger.exception(f"Error sending progress: {e}")
+            await update.message.reply_text("❌ Error sending reading progress. Check logs.")
+            
     except FileNotFoundError:
         logger.warning("reading_in_progress.md not found")
-        await update.message.reply_text("No reading in progress file found.")
+        await update.message.reply_text("📖 No reading in progress file found. Add some books to reading_in_progress.md")
     except Exception as e:
         logger.exception(f"Error in show_progress: {e}")
-        await update.message.reply_text("Error reading progress file.")
+        await update.message.reply_text("❌ Error reading progress file.")
+
+def format_progress_for_telegram(markdown_text: str) -> str:
+    """Format the reading progress markdown for nice Telegram display."""
+    if not markdown_text.strip():
+        return "📖 <b>Pågående läsning</b>\n\nInga böcker i pågående läsning för tillfället."
+    
+    lines = markdown_text.strip().split('\n')
+    formatted_lines = ["📖 <b>Pågående läsning</b>\n"]
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        
+        # Check for markdown headings
+        if line.startswith('# '):
+            formatted_lines.append(f"\n<b>{line[2:]}</b>")
+        elif line.startswith('## '):
+            formatted_lines.append(f"\n<i>{line[3:]}</i>")
+        elif line.startswith('### '):
+            formatted_lines.append(f"\n{line[4:]}")
+        # Check for bullet points
+        elif line.startswith('- '):
+            formatted_lines.append(f"• {line[2:]}")
+        # Check for numbered lists
+        elif line[0].isdigit() and '. ' in line:
+            formatted_lines.append(f"  {line}")
+        # Check for markdown links [text](url)
+        elif '[' in line and ']' in line and '(' in line and ')' in line:
+            # Simple link formatting for Telegram HTML
+            try:
+                text_start = line.find('[')
+                text_end = line.find(']')
+                url_start = line.find('(')
+                url_end = line.find(')')
+                
+                if text_start < text_end < url_start < url_end:
+                    text = line[text_start+1:text_end]
+                    url = line[url_start+1:url_end]
+                    formatted_line = line[:text_start] + f'<a href="{url}">{text}</a>' + line[url_end+1:]
+                    formatted_lines.append(formatted_line)
+                else:
+                    formatted_lines.append(line)
+            except:
+                formatted_lines.append(line)
+        else:
+            formatted_lines.append(line)
+    
+    # Add a footer
+    formatted_lines.append("\n\n📌 <i>Uppdatera filen reading_in_progress.md för att ändra</i>")
+    
+    return '\n'.join(formatted_lines)
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle errors in telegram bot updates."""
     logger.error("Exception while handling an update:", exc_info=context.error)
     if update and isinstance(update, Update):
         try:
-            await update.message.reply_text("Sorry, an error occurred. Check the bot logs.")
+            await update.message.reply_text("❌ Sorry, an error occurred. Check the bot logs.")
         except Exception:
             pass
 
@@ -162,6 +231,85 @@ def main() -> None:
     logger.info("🤖 Bot is starting...")
     print("🤖 Bot is running... Check telegram_bot.log for logs. Press Ctrl+C to stop.")
     application.run_polling(allowed_updates=Update.ALL_TYPES)
+
+def format_books_for_telegram(markdown_text: str) -> str:
+    """Convert markdown table to a more readable Telegram format."""
+    lines = markdown_text.split('\n')
+    formatted_lines = []
+    
+    # Find the table section
+    in_table = False
+    book_count = 0
+    
+    for line in lines:
+        if line.startswith('|') and 'Titel' in line and 'Författare' in line:
+            in_table = True
+            continue  # Skip header row
+        elif line.startswith('|') and in_table:
+            # Parse table row
+            parts = [part.strip() for part in line.split('|') if part.strip()]
+            if len(parts) >= 5:
+                title, author, rating, date, link = parts[0], parts[1], parts[2], parts[3], parts[4]
+                book_count += 1
+                
+                # Format rating with stars
+                try:
+                    rating_int = int(rating)
+                    stars = '⭐' * rating_int + '☆' * (5 - rating_int) if rating_int <= 5 else rating
+                except ValueError:
+                    stars = rating
+                
+                # Format the book entry
+                formatted_lines.append(f"<b>{book_count}. {title}</b>")
+                formatted_lines.append(f"   👤 <i>{author}</i>")
+                formatted_lines.append(f"   {stars} | 📅 {date}")
+                formatted_lines.append("")
+        elif line.startswith('## Sammanfattning'):
+            # Add summary section
+            formatted_lines.append("\n📊 <b>Sammanfattning</b>")
+            in_table = False
+        elif line.startswith('- **Totalt antal böcker:**'):
+            formatted_lines.append(line.replace('- **', '📚 ').replace('**', ''))
+        elif line.startswith('- **Högsta betyg:**'):
+            formatted_lines.append(line.replace('- **', '🏆 ').replace('**', ''))
+        elif line.startswith('- **Senaste bok:**'):
+            formatted_lines.append(line.replace('- **', '🆕 ').replace('**', ''))
+        elif line.startswith('- **Äldsta bok:**'):
+            formatted_lines.append(line.replace('- **', '📜 ').replace('**', ''))
+    
+    # If no books were found in table format, return original with header
+    if book_count == 0:
+        return f"📚 <b>Lästa Böcker</b>\n\n{markdown_text}"
+    
+    # Add header
+    result = f"📚 <b>Lästa Böcker</b> ({book_count} böcker)\n\n"
+    result += "\n".join(formatted_lines)
+    
+    return result
+
+def split_text_into_chunks(text: str, max_length: int) -> list:
+    """Split text into chunks that don't exceed max_length."""
+    if len(text) <= max_length:
+        return [text]
+    
+    chunks = []
+    current_chunk = ""
+    
+    # Split by lines to avoid breaking in the middle of formatting
+    lines = text.split('\n')
+    
+    for line in lines:
+        if len(current_chunk) + len(line) + 1 <= max_length:
+            current_chunk += line + "\n"
+        else:
+            if current_chunk:
+                chunks.append(current_chunk.strip())
+            current_chunk = line + "\n"
+    
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+    
+    return chunks
 
 if __name__ == "__main__":
     main()
