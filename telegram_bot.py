@@ -62,45 +62,51 @@ Available commands:
 
 @auth_only
 async def show_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send the reading log, split into chunks if needed."""
+    """Send the reading log in a nice formatted way for Telegram."""
     try:
         with open("reading_log.md", "r", encoding="utf-8") as f:
             book_log = f.read()
     except FileNotFoundError:
         logger.error("reading_log.md not found")
-        await update.message.reply_text("Error: Book log not found. Run sync first.")
+        await update.message.reply_text("❌ Error: Book log not found. Run sync first.")
         return
     except Exception as e:
         logger.exception(f"Unexpected error reading reading_log.md: {e}")
-        await update.message.reply_text("Error reading book log. Check logs.")
+        await update.message.reply_text("❌ Error reading book log. Check logs.")
         return
 
+    # Format books for better Telegram display
+    formatted_books = format_books_for_telegram(book_log)
+    
     # Telegram message length limit
     max_length = 4096
-    if len(book_log) <= max_length:
-        # Try sending with Markdown, fall back to plain text on error
+    
+    if len(formatted_books) <= max_length:
         try:
-            await update.message.reply_text(f"Here are your books:\n{book_log}", parse_mode='Markdown')
+            await update.message.reply_text(formatted_books, parse_mode='HTML')
         except BadRequest as e:
-            logger.warning(f"Markdown parse error, falling back to plain text: {e}")
-            # Fall back to plain text
-            await update.message.reply_text(f"Here are your books:\n{book_log}", parse_mode=None)
+            logger.warning(f"HTML parse error, falling back to plain text: {e}")
+            # Remove HTML tags and send as plain text
+            plain_text = formatted_books.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
+            await update.message.reply_text(plain_text, parse_mode=None)
         except Exception as e:
-            logger.exception(f"Error sending book log: {e}")
-            await update.message.reply_text("Error sending book log. Check logs.")
+            logger.exception(f"Error sending book list: {e}")
+            await update.message.reply_text("❌ Error sending book list. Check logs.")
     else:
-        # Split into chunks
-        parts = [book_log[i:i+max_length] for i in range(0, len(book_log), max_length)]
+        # Split into chunks using our helper function
+        parts = split_text_into_chunks(formatted_books, max_length)
         for i, part in enumerate(parts):
-            prefix = f"Part {i+1}/{len(parts)}:\n" if len(parts) > 1 else ""
+            prefix = f"📚 <b>Part {i+1}/{len(parts)}</b>\n\n" if len(parts) > 1 else ""
             try:
-                await update.message.reply_text(f"{prefix}{part}", parse_mode='Markdown')
+                await update.message.reply_text(f"{prefix}{part}", parse_mode='HTML')
             except BadRequest as e:
-                logger.warning(f"Markdown parse error in chunk {i+1}, using plain text: {e}")
-                await update.message.reply_text(f"{prefix}{part}", parse_mode=None)
+                logger.warning(f"HTML parse error in chunk {i+1}, using plain text: {e}")
+                plain_part = part.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
+                plain_prefix = f"📚 Part {i+1}/{len(parts)}:\n\n" if len(parts) > 1 else ""
+                await update.message.reply_text(f"{plain_prefix}{plain_part}", parse_mode=None)
             except Exception as e:
                 logger.exception(f"Error sending chunk {i+1}: {e}")
-                await update.message.reply_text(f"Error sending part {i+1} of book log.")
+                await update.message.reply_text(f"❌ Error sending part {i+1} of book list.")
 
 @auth_only
 async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
