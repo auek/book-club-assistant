@@ -15,5 +15,6 @@ file:
   - get_chat_id.py
   - README.md
   - ROADMAP.md
+  - requirements.txt
 stream: true
 cache-prompts: true
