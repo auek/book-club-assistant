@@ -1,138 +1,170 @@
-# 🗺️ Roadmap för Bokklubb-Bot Migrering
+# 🗺️ Comprehensive Roadmap & Migration Plan för Bokklubb-Bot
 
 ## 🎯 Översikt
-Migrera bokklubbssystemet från lokal PC till Raspberry Pi med framtida integration av chat-bot (Telegram/Signal/Discord).
+Denna dokument kombinerar den långsiktiga roadmapen med den detaljerade migrationsplanen till en enda källa för sanning. Planen beskriver progressionen från nuvarande fungerande system till en modulär arkitektur som stödjer både PC och Raspberry Pi, med framtida integration av chat-bot (Telegram/Signal/Discord) och AI-funktionalitet.
 
-## 📋 Fas 1: Grundläggande Migrering (KLAR)
-- [x] Överför filer till Raspberry Pi
-- [x] Installera Python 3.7 + curl
-- [x] Testa synkronisering (`./bookclub -sync`)
-- [x] Fixa bash/zsh-kompatibilitet (ändra shebang till `#!/bin/bash`)
+## 📋 Nuvarande Status (Baslinje)
+Följande fungerar redan och ska bevaras:
+- ✅ `./bookclub -sync` fungerar perfekt (använder original `sync_books.py`)
+- ✅ `python telegram_bot.py` körs (monolitisk bot)
+- ✅ `bookclub.pi` existerar (behöver `chmod +x`)
+- ✅ Grundläggande `src/`-struktur finns men saknar implementering
 
-## 🔧 Fas 2: Förenkla Pi-versionen
-### Mål: Skapa en renodlad Pi-version utan onödiga dependencies
-- [ ] Ta bort `-chat` och `-dev` från Pi-skriptet
-- [ ] Uppdatera `-setup` för endast nödvändiga dependencies:
-  - Python 3.7+
-  - curl
-  - git (valfritt)
-  - INTE `aider-chat`
-- [ ] Skapa cron-jobb för regelbunden synkronisering (t.ex. varje dag)
-- [ ] Optimera för låg resursanvändning på Pi
+## 🔄 Migreringsfaser – Steg-för-steg
 
-### Filändringar:
-- Skapa `bookclub.pi` (förenklad version)
-- Uppdatera `README.md` med Pi-specifika instruktioner
-- Skapa `cron_setup.sh` för automatisk synkronisering
+### Fas 0: Förberedelser (Dag 1)
+**Mål**: Förbered miljön utan att ändra fungerande kod.
 
-## 🤖 Fas 3: Bot-Integration
-### Mål: Möjliggör fjärrstyrning via chat-bot
-- [ ] Välj plattform:
-  - **Telegram** (enklast, bra dokumentation)
-  - **Signal** (mer privat, kräver Signal-Server)
-  - **Discord** (bra för communities)
-- [ ] Skapa bot-token och konfiguration
-- [ ] Implementera webhook/API på Pi:n
-- [ ] Lägg till grundläggande kommandon:
-  - `/books` - Visa senaste lästa böcker
-  - `/reading` - Visa pågående läsning
-  - `/recommend` - Få bokrekommendationer baserat på historik
-  - `/sync` - Manuell synkronisering
-  - `/stats` - Visa lässtatistik
+1. **Fixera behörigheter** för `bookclub.pi`:
+   ```bash
+   chmod +x bookclub.pi
+   ```
+2. **Skapa tomma `src/`-underkataloger**:
+   ```bash
+   mkdir -p src/{cli,sync,bot/{commands,middleware},data,utils}
+   mkdir -p config/prompts tests/{test_sync,test_bot,test_utils}
+   ```
+3. **Uppdatera `.gitignore`** för de nya katalogerna
+4. **Skapa backup** av nuvarande skript:
+   ```bash
+   cp sync_books.py sync_books.py.backup
+   cp telegram_bot.py telegram_bot.py.backup
+   ```
 
-### Tekniskt:
-- Använd `python-telegram-bot` eller liknande bibliotek
-- Implementera säker autentisering
-- Designa enkel REST API om flera klienter behövs
+### Fas 1: Extrahera Sync-modulen (Dag 2–3)
+**Regel**: Behåll original `sync_books.py` fungerande medan ny modul byggs vid sidan av.
 
-## 🧠 Fas 4: AI/Logik-lager
-### Mål: Intelligent bokanalys och rekommendationer
-- [ ] Besluta om arkitektur:
-  - **Alternativ A:** Lokal AI (lättviktig, privat)
-    - Använd enkel ML för rekommendationer
-    - Inga externa API-anrop
-  - **Alternativ B:** Extern API (mer kraftfull)
-    - Använd OpenAI/Anthropic/etc
-    - Kräver internetuppkoppling
-- [ ] Implementera bokanalys-logik:
-  - Analysera genrer från titlar/författare
-  - Identifiera läsvanor
-  - Generera personliga rekommendationer
-- [ ] Lägg till avancerad statistik:
-  - Böcker per månad/år
-  - Genomsnittligt betyg
-  - Mest läste författare
+1. **Skapa `src/sync/fetch.py`** – flytta `curl`/API-logik från `sync_books.py`
+2. **Skapa `src/sync/parse.py`** – flytta `parse_xml()` och `sort_books()`
+3. **Skapa `src/sync/render.py`** – flytta `generate_markdown()` och `cleanup_files()`
+4. **Skapa `scripts/sync_books_refactored.py`** som importerar från `src.sync`
+5. **Testa sida vid sida** för att verifiera identisk utdata
+6. **Ersätt original `sync_books.py`** med en tunn wrapper när testet lyckas
 
-## 🔒 Fas 5: Produktionssäkerhet
-### Mål: Gör systemet robust och säkert
-- [ ] Implementera autentisering för bot-kommandon
-- [ ] Lägg till omfattande felhantering och logging
-- [ ] Skapa backup-system för bokloggen
-- [ ] Implementera hälsokontroller (health checks)
-- [ ] Konfigurera automatiska uppdateringar (säkerhetsuppdateringar)
+### Fas 2: Extrahera Data-lagret (Dag 4)
+**Mål**: Isolera fil-I/O och datamodeller.
 
-## 🗂️ Filstruktur (Föreslagen)
+1. **Skapa `src/data/models.py`** med `Book`-dataklass
+2. **Skapa `src/data/storage.py`** med funktioner för att läsa/skriva loggfiler
+3. **Uppdatera sync-modulen** att använda dessa datafunktioner
+4. **Testa** att synkroniseringen fortfarande fungerar
+
+### Fas 3: Refaktorera Telegram-boten (Dag 5–7)
+**Känsligaste delen** – boten fungerar redan. Arbeta inkrementellt.
+
+1. **Skapa `src/bot/core.py`** – flytta `main()`, applikationsbyggare, felhanterare
+2. **Skapa `src/bot/middleware/auth.py`** – flytta `@auth_only`-dekoratorn
+3. **Skapa `src/bot/middleware/formatters.py`** – flytta formateringsfunktioner
+4. **Skapa `src/bot/commands/`** – en fil per kommando (start, help, books, progress, discuss)
+5. **Skapa `scripts/telegram_bot_refactored.py`** som importerar från `src.bot`
+6. **Kör båda botarna temporärt** för att verifiera identiskt beteende
+7. **Ersätt original `telegram_bot.py`** med tunn wrapper när säker
+
+### Fas 4: Uppdatera Launcher-skripten (Dag 8)
+**Mål**: Gör så att `bookclub` och `bookclub.pi` använder de nya modulerna internt.
+
+1. **Skapa `src/cli/sync_cli.py`** – funktion som efterliknar `-sync`-grenen av `bookclub`
+2. **Skapa `src/cli/bot_cli.py`** – funktion för `-bot`-grenen
+3. **Modifiera `bookclub`** (Bash-skriptet) att anropa `python3 -m src.cli.sync_cli`
+4. **Modifiera `bookclub.pi`** på samma sätt
+5. **Testa** att alla kommandon fortfarande fungerar
+
+### Fas 5: Lägg till Förbättringar (Dag 9–10)
+**Nu när strukturen är stabil** kan vi lägga till förbättringar:
+
+1. **Konfigurationsvalidering** – i `src/utils/config.py`, lägg till `validate_config()`
+2. **Automatiska backup** – utöka `src/data/storage.py` för att skapa tidsstämplade backup
+3. **Hälsokontroller** – lägg till `src/cli/health.py` som verifierar filbehörigheter, API-åtkomst, etc.
+4. **Förbättrad loggning** – använd `src/utils/logging.py` för konsekventa, roterande loggfiler
+
+### Fas 6: Testning & Slutlig Validering (Dag 11)
+**Mål**: Säkerställ att allt fungerar på både PC och Raspberry Pi.
+
+1. **Skriv några nyckelenhetstester** (med `pytest`)
+2. **Testa på Raspberry Pi** (eller simulera med Docker)
+3. **Verifiera bakåtkompatibilitet** – alla befintliga kommandon, miljövariabler och filformat måste förbli oförändrade
+4. **Dokumentera den nya strukturen** i `README.md`
+
+## 🗂️ Mål-filstruktur (Efter Migrering)
+
 ```
-/bookclub-pi/
-├── bookclub.pi                 # Huvudskript (förenklad)
-├── sync_books.py              # Synkroniseringslogik
-├── bot/                       # Bot-implementation
-│   ├── telegram_bot.py
-│   ├── commands.py
-│   └── config.py
-├── api/                       # REST API (om behövs)
-│   ├── app.py
-│   └── endpoints.py
-├── analysis/                  # AI/analys-logik
-│   ├── recommender.py
-│   └── statistics.py
-├── data/                      # Databaser/loggar
-│   ├── reading_log.md
-│   ├── reading_in_progress.md
-│   └── backups/
-├── config/                    # Konfiguration
-│   ├── .env
-│   └── cron_jobs
-└── docs/                      # Dokumentation
-    ├── SETUP_PI.md
-    └── BOT_INTEGRATION.md
+bookclub/
+├── bookclub.pi                      # Pi launcher
+├── bookclub                         # PC launcher
+├── src/                             # Modulärt Python-paket
+│   ├── cli/                         # CLI entry points
+│   ├── sync/                        # Goodreads sync-logik
+│   ├── bot/                         # Telegram bot
+│   ├── data/                        # Data layer (file I/O, modeller)
+│   └── utils/                       # Cross-cutting utilities
+├── scripts/                         # Fristående exekverbara skript
+├── config/                          # Applikationskonstanter
+├── data/                            # Genererat innehåll (git-ignorerad)
+├── logs/                            # Loggfiler (git-ignorerad)
+└── tests/                           # Testfiler
 ```
 
-## ⚙️ Tekniska Krav
+## ⚙️ Tekniska Krav & Kompatibilitet
 ### Raspberry Pi (Volumio)
 - Python 3.7+
 - curl för Goodreads API
 - Öppen port för webhook (om extern bot)
-- Tillräckligt med diskutrymme för bokloggar
+- Tillräckligt diskutrymme för bokloggar
 
 ### Bot-plattform
 - Internetuppkoppling
 - Bot-token/API-nyckel
 - Webhook-support (för Telegram/Discord)
 
-## 🚀 Omedelbara Nästa Steg
-1. **Testa synkronisering** på Pi:n: `./bookclub -sync`
-2. **Skapa förenklad version** av `bookclub` för Pi
-3. **Börja med Telegram-bot** (enklaste vägen):
-   ```bash
-   pip3 install python-telegram-bot
-   ```
-4. **Implementera enkelt `/books`-kommando**
+## 🧪 Teststrategi – Vad som ska valideras i varje fas
 
-## 📝 Anteckningar från Nuvarande Session
-- Pi:n kör Volumio (Raspbian Buster) med Python 3.7.3
+| Fas | Vad som ska testas | Kommando |
+|-----|-------------------|----------|
+| 0 | `bookclub.pi` exekverar | `./bookclub.pi -h` |
+| 1 | Ny sync producerar identisk utdata | `diff reading_log.md reading_log.md.backup` |
+| 2 | Data-lagret läser/skriver korrekt | `python -c "from src.data import storage"` |
+| 3 | Refaktorerad bot startar och svarar | `python scripts/telegram_bot_refactored.py` |
+| 4 | Launcher-skripten fungerar fortfarande | `./bookclub -sync && ./bookclub.pi -sync` |
+| 5 | Förbättringar bryter inget | Kör alla befintliga kommandon |
+| 6 | Allt fungerar på Pi | (faktiskt Pi-test) |
+
+## 🚨 Risker & Åtgärder
+
+| Risk | Åtgärd |
+|------|--------|
+| Bryta den fungerande synken | Behåll original `sync_books.py` tills den nya modulen passerar diff-testet |
+| Bryta Telegram-boten | Kör den refaktorerade boten parallellt med test-token innan byte |
+| Raspberry Pi-kompatibilitet | Testa `bookclub.pi` efter varje fas; håll dess beroenden minimala |
+| Dataförlust | Skapa alltid backup innan något kärnskript ersätts |
+
+## 🚀 Omedelbara Första Steg
+
+1. **Fixera behörigheter** på `bookclub.pi`:
+   ```bash
+   chmod +x bookclub.pi
+   ```
+2. **Skapa de saknade katalogerna**:
+   ```bash
+   mkdir -p src/{cli,bot/commands,bot/middleware} config/prompts tests/{test_sync,test_bot,test_utils}
+   ```
+3. **Backa upp nuvarande skript**:
+   ```bash
+   cp sync_books.py sync_books.py.backup
+   cp telegram_bot.py telegram_bot.py.backup
+   ```
+4. **Starta Fas 1** genom att skapa `src/sync/fetch.py` och flytta Goodreads API-logiken dit.
 
 ## 🔗 Resurser
 - [python-telegram-bot dokumentation](https://github.com/python-telegram-bot/python-telegram-bot)
 - [Goodreads API dokumentation](https://www.goodreads.com/api)
 - [Raspberry Pi cron guide](https://www.raspberrypi.com/documentation/computers/os.html#cron)
 
-## 📞 Kontaktpunkt för Nästa Session
-- Starta med att testa synkronisering på Pi:n
-- Skapa förenklad `bookclub.pi`-version
-- Börja implementera Telegram-bot med grundläggande kommandon
+## 📞 Support Under Migrering
+- Om något går fel, återgå till backup-kopior (`*.backup`)
+- Testa efter **varje filändring**
+- Använd `git diff` för att se exakt vad som modifieras
+- Håll denna `ROADMAP.md` öppen och markera avslutade steg
 
 ---
 *Senast uppdaterad: 2026-02-12*
-*Status: Pausad - Väntar på nästa session*
-````
+*Status: Pågående – Starta med Fas 0*
