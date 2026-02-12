@@ -33,6 +33,9 @@ Ett litet Bash/Python-verktyg för att synkronisera lästa böcker från Goodrea
 
 # Utvecklingsläge med DeepSeek
 ./bookclub -dev
+
+# Starta Telegram-boten
+python3 telegram_bot.py
 ```
 
 ## Filer
