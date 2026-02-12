@@ -1,0 +1,49 @@
+#!/bin/zsh
+# Simplified version for Raspberry Pi
+
+USAGE="Usage: $0 [-sync | -setup]"
+
+# Platform detection (simplified)
+detect_platform() {
+    if [[ $(uname -m) == "arm"* || $(uname -m) == "aarch64"* ]]; then
+        echo "raspberry"
+    fi
+}
+
+PLATFORM=$(detect_platform)
+
+# Load environment variables
+if [[ -f ".env" ]]; then
+    source .env
+elif [[ -f ".env.local" ]]; then
+    source .env.local
+fi
+
+# Check API credentials
+check_api_key() {
+    if [[ -z "$GOODREADS_API_KEY" || -z "$GOODREADS_USER_ID" ]]; then
+        echo "❌ Error: Missing API credentials in .env file"
+        exit 1
+    fi
+}
+
+case "$1" in
+    -sync)
+        echo "🚀 Syncing books..." && check_api_key
+        curl -s "https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
+        if [[ $? -eq 0 ]]; then
+            python3 sync_books.py
+        else
+            echo "❌ Sync failed"
+        fi
+        ;;
+    -setup)
+        echo "🔧 Installing dependencies..."
+        sudo apt update && sudo apt install -y python3 python3-pip curl git
+        pip3 install --user xml.etree elementtree
+        ;;
+    *)
+        echo "$USAGE"
+        exit 1
+        ;;
+esac
