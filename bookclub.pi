@@ -1,12 +1,15 @@
-#!/bin/zsh
+#!/bin/bash
 # Simplified version for Raspberry Pi
+# Compatible with bash (default on most Raspberry Pi systems)
 
-USAGE="Usage: $0 [-sync | -setup]"
+USAGE="Usage: $0 [-sync | -setup | -bot]"
 
-# Platform detection (simplified)
+# Platform detection
 detect_platform() {
-    if [[ $(uname -m) == "arm"* || $(uname -m) == "aarch64"* ]]; then
+    if [[ $(uname -m) == "arm"* ]] || [[ $(uname -m) == "aarch64"* ]]; then
         echo "raspberry"
+    else
+        echo "unknown"
     fi
 }
 
@@ -14,33 +17,130 @@ PLATFORM=$(detect_platform)
 
 # Load environment variables
 if [[ -f ".env" ]]; then
+    # Use safer method to load .env
+    set -a
     source .env
+    set +a
 elif [[ -f ".env.local" ]]; then
+    set -a
     source .env.local
+    set +a
 fi
 
 # Check API credentials
 check_api_key() {
-    if [[ -z "$GOODREADS_API_KEY" || -z "$GOODREADS_USER_ID" ]]; then
-        echo "❌ Error: Missing API credentials in .env file"
+    if [[ -z "$GOODREADS_API_KEY" ]]; then
+        echo "❌ Error: GOODREADS_API_KEY is not set in .env file"
+        echo "   Add: GOODREADS_API_KEY='your_key_here'"
+        exit 1
+    fi
+    if [[ -z "$GOODREADS_USER_ID" ]]; then
+        echo "❌ Error: GOODREADS_USER_ID is not set in .env file"
+        echo "   Add: GOODREADS_USER_ID='your_user_id_here'"
+        echo "   Find your ID at: https://www.goodreads.com/settings"
         exit 1
     fi
 }
 
+# Check if required files exist
+check_files() {
+    if [[ ! -f "sync_books.py" ]]; then
+        echo "❌ Error: sync_books.py not found in current directory"
+        exit 1
+    fi
+}
+
+# Main execution
+if [[ $# -eq 0 ]]; then
+    echo "$USAGE"
+    exit 1
+fi
+
 case "$1" in
     -sync)
-        echo "🚀 Syncing books..." && check_api_key
-        curl -s "https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
+        echo "🚀 Syncing books from Goodreads..."
+        check_api_key
+        check_files
+        
+        # Fetch data
+        echo "📥 Fetching RSS feed..."
+        curl -s -f "https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
+        
+        if [[ $? -ne 0 ]]; then
+            echo "❌ Failed to fetch data from Goodreads"
+            echo "   Check your internet connection and API credentials"
+            exit 1
+        fi
+        
+        # Check if XML was received
+        if [[ ! -s "raw_books.xml" ]]; then
+            echo "❌ Received empty XML file"
+            echo "   Check your Goodreads user ID and API key"
+            exit 1
+        fi
+        
+        # Process data
+        echo "⚙️ Processing book data..."
+        python3 sync_books.py
+        
         if [[ $? -eq 0 ]]; then
-            python3 sync_books.py
+            echo "✅ Synchronization complete!"
+            echo "   Reading log updated: reading_log.md"
         else
-            echo "❌ Sync failed"
+            echo "❌ Error processing book data"
+            exit 1
         fi
         ;;
     -setup)
-        echo "🔧 Installing dependencies..."
-        sudo apt update && sudo apt install -y python3 python3-pip curl git
-        pip3 install --user xml.etree elementtree
+        echo "🔧 Installing dependencies for Raspberry Pi..."
+        
+        if [[ "$PLATFORM" != "raspberry" ]]; then
+            echo "⚠️ Warning: This doesn't appear to be a Raspberry Pi"
+            echo "   Continuing anyway..."
+        fi
+        
+        # Update package list
+        echo "📦 Updating package list..."
+        sudo apt update
+        
+        # Install required packages
+        echo "📦 Installing Python 3, pip, curl..."
+        sudo apt install -y python3 python3-pip curl
+        
+        # Install Python dependencies
+        echo "📦 Installing Python dependencies..."
+        pip3 install --user python-telegram-bot python-dotenv requests
+        
+        echo ""
+        echo "✅ Basic setup complete!"
+        echo ""
+        echo "Next steps:"
+        echo "1. Create .env file with:"
+        echo "   GOODREADS_API_KEY='your_key_here'"
+        echo "   GOODREADS_USER_ID='your_user_id_here'"
+        echo "   TELEGRAM_BOT_TOKEN='your_bot_token_here' (optional)"
+        echo "   TELEGRAM_CHAT_ID='your_chat_id_here' (optional)"
+        echo "2. Run: ./bookclub.pi -sync"
+        echo "3. For Telegram bot: python3 telegram_bot.py"
+        ;;
+    -bot)
+        echo "🤖 Starting Telegram bot..."
+        
+        # Check if required files exist
+        if [[ ! -f "telegram_bot.py" ]]; then
+            echo "❌ Error: telegram_bot.py not found"
+            exit 1
+        fi
+        
+        # Check if .env exists
+        if [[ ! -f ".env" ]]; then
+            echo "⚠️ Warning: .env file not found"
+            echo "   Create one with TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID"
+            echo "   Or run: ./bookclub.pi -setup for instructions"
+        fi
+        
+        # Start the bot
+        python3 telegram_bot.py
         ;;
     *)
         echo "$USAGE"
