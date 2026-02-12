@@ -240,42 +240,55 @@ def format_books_for_telegram(markdown_text: str) -> str:
     # Find the table section
     in_table = False
     book_count = 0
+    table_rows = []
     
+    # First, collect all table rows
     for line in lines:
         if line.startswith('|') and 'Titel' in line and 'Författare' in line:
             in_table = True
             continue  # Skip header row
         elif line.startswith('|') and in_table:
-            # Parse table row
-            parts = [part.strip() for part in line.split('|') if part.strip()]
-            if len(parts) >= 5:
-                title, author, rating, date, link = parts[0], parts[1], parts[2], parts[3], parts[4]
-                book_count += 1
-                
-                # Format rating with stars
-                try:
-                    rating_int = int(rating)
-                    stars = '⭐' * rating_int + '☆' * (5 - rating_int) if rating_int <= 5 else rating
-                except ValueError:
-                    stars = rating
-                
-                # Format the book entry
-                formatted_lines.append(f"<b>{book_count}. {title}</b>")
-                formatted_lines.append(f"   👤 <i>{author}</i>")
-                formatted_lines.append(f"   {stars} | 📅 {date}")
-                formatted_lines.append("")
+            table_rows.append(line)
         elif line.startswith('## Sammanfattning'):
-            # Add summary section
-            formatted_lines.append("\n📊 <b>Sammanfattning</b>")
             in_table = False
-        elif line.startswith('- **Totalt antal böcker:**'):
-            formatted_lines.append(line.replace('- **', '📚 ').replace('**', ''))
-        elif line.startswith('- **Högsta betyg:**'):
-            formatted_lines.append(line.replace('- **', '🏆 ').replace('**', ''))
-        elif line.startswith('- **Senaste bok:**'):
-            formatted_lines.append(line.replace('- **', '🆕 ').replace('**', ''))
-        elif line.startswith('- **Äldsta bok:**'):
-            formatted_lines.append(line.replace('- **', '📜 ').replace('**', ''))
+    
+    # Process each table row
+    for i, line in enumerate(table_rows):
+        parts = [part.strip() for part in line.split('|') if part.strip()]
+        if len(parts) >= 5:
+            title, author, rating, date, link = parts[0], parts[1], parts[2], parts[3], parts[4]
+            book_count += 1
+            
+            # Format rating with stars
+            try:
+                rating_int = int(rating)
+                stars = '⭐' * rating_int + '☆' * (5 - rating_int) if rating_int <= 5 else rating
+            except ValueError:
+                stars = rating
+            
+            # Format the book entry
+            formatted_lines.append(f"<b>{book_count}. {title}</b>")
+            formatted_lines.append(f"   👤 <i>{author}</i>")
+            formatted_lines.append(f"   {stars} | 📅 {date}")
+            # Add a blank line between books, but not after the last one
+            if i < len(table_rows) - 1:
+                formatted_lines.append("")
+    
+    # Add summary section
+    in_summary = False
+    for line in lines:
+        if line.startswith('## Sammanfattning'):
+            formatted_lines.append("\n📊 <b>Sammanfattning</b>")
+            in_summary = True
+        elif in_summary and line.startswith('- **'):
+            if 'Totalt antal böcker:' in line:
+                formatted_lines.append(line.replace('- **', '📚 ').replace('**', ''))
+            elif 'Högsta betyg:' in line:
+                formatted_lines.append(line.replace('- **', '🏆 ').replace('**', ''))
+            elif 'Senaste bok:' in line:
+                formatted_lines.append(line.replace('- **', '🆕 ').replace('**', ''))
+            elif 'Äldsta bok:' in line:
+                formatted_lines.append(line.replace('- **', '📜 ').replace('**', ''))
     
     # If no books were found in table format, return original with header
     if book_count == 0:
