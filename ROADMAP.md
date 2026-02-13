@@ -10,9 +10,16 @@ Följande fungerar redan och ska bevaras:
 - ✅ `bookclub.pi` existerar (behöver `chmod +x`)
 - ✅ Grundläggande `src/`-struktur finns men saknar implementering
 
+**Implementeringsstatus (uppdaterad 2026-02-13):**
+- ✅ **Fas 0** (Förberedelser) är slutförd: behörigheter fixade, kataloger skapade, backup finns.
+- ✅ **Fas 1** (Sync-modulen) är genomförd: `src/sync/fetch.py`, `parse.py`, `render.py` finns och används av `scripts/sync_books_refactored.py`. Den ursprungliga `sync_books.py` är fortfarande kvar som backup.
+- ❌ **Fas 2** (Data-lagret) är påbörjad men ej slutförd: `src/data/models.py` och `storage.py` är inte skapade ännu.
+- ❌ **Fas 3** (Refaktorera Telegram-boten) är påbörjad: `src/bot/commands/`, `middleware/` finns tomma, men kärnmoduler saknas.
+- ❌ **Fas 4–6** (Launcher, Förbättringar, Testning) är inte påbörjade.
+
 ## 🔄 Migreringsfaser – Steg-för-steg
 
-### Fas 0: Förberedelser (Dag 1)
+### Fas 0: Förberedelser (Dag 1) – **SLUTFÖRD**
 **Mål**: Förbered miljön utan att ändra fungerande kod.
 
 1. **Fixera behörigheter** för `bookclub.pi`:
@@ -31,59 +38,59 @@ Följande fungerar redan och ska bevaras:
    cp telegram_bot.py telegram_bot.py.backup
    ```
 
-### Fas 1: Extrahera Sync-modulen (Dag 2–3)
+### Fas 1: Extrahera Sync-modulen (Dag 2–3) – **SLUTFÖRD**
 **Regel**: Behåll original `sync_books.py` fungerande medan ny modul byggs vid sidan av.
 
-1. **Skapa `src/sync/fetch.py`** – flytta `curl`/API-logik från `sync_books.py`
-2. **Skapa `src/sync/parse.py`** – flytta `parse_xml()` och `sort_books()`
-3. **Skapa `src/sync/render.py`** – flytta `generate_markdown()` och `cleanup_files()`
-4. **Skapa `scripts/sync_books_refactored.py`** som importerar från `src.sync`
-5. **Testa sida vid sida** för att verifiera identisk utdata
-6. **Ersätt original `sync_books.py`** med en tunn wrapper när testet lyckas
+1. ✅ **Skapa `src/sync/fetch.py`** – flytta `curl`/API-logik från `sync_books.py`
+2. ✅ **Skapa `src/sync/parse.py`** – flytta `parse_xml()` och `sort_books()`
+3. ✅ **Skapa `src/sync/render.py`** – flytta `generate_markdown()` och `cleanup_files()`
+4. ✅ **Skapa `scripts/sync_books_refactored.py`** som importerar från `src.sync`
+5. ✅ **Testa sida vid sida** för att verifiera identisk utdata
+6. ⏳ **Ersätt original `sync_books.py`** med en tunn wrapper när testet lyckas – *ej utfört ännu*
 
-### Fas 2: Extrahera Data-lagret (Dag 4)
+### Fas 2: Extrahera Data-lagret (Dag 4) – **PÅBÖRJAD**
 **Mål**: Isolera fil-I/O och datamodeller.
 
-1. **Skapa `src/data/models.py`** med `Book`-dataklass
-2. **Skapa `src/data/storage.py`** med funktioner för att läsa/skriva loggfiler
-3. **Uppdatera sync-modulen** att använda dessa datafunktioner
-4. **Testa** att synkroniseringen fortfarande fungerar
+1. ⏳ **Skapa `src/data/models.py`** med `Book`-dataklass
+2. ⏳ **Skapa `src/data/storage.py`** med funktioner för att läsa/skriva loggfiler
+3. ⏳ **Uppdatera sync-modulen** att använda dessa datafunktioner
+4. ❌ **Testa** att synkroniseringen fortfarande fungerar
 
-### Fas 3: Refaktorera Telegram-boten (Dag 5–7)
+### Fas 3: Refaktorera Telegram-boten (Dag 5–7) – **PÅBÖRJAD**
 **Känsligaste delen** – boten fungerar redan. Arbeta inkrementellt.
 
-1. **Skapa `src/bot/core.py`** – flytta `main()`, applikationsbyggare, felhanterare
-2. **Skapa `src/bot/middleware/auth.py`** – flytta `@auth_only`-dekoratorn
-3. **Skapa `src/bot/middleware/formatters.py`** – flytta formateringsfunktioner
-4. **Skapa `src/bot/commands/`** – en fil per kommando (start, help, books, progress, discuss)
-5. **Skapa `scripts/telegram_bot_refactored.py`** som importerar från `src.bot`
-6. **Kör båda botarna temporärt** för att verifiera identiskt beteende
-7. **Ersätt original `telegram_bot.py`** med tunn wrapper när säker
+1. ⏳ **Skapa `src/bot/core.py`** – flytta `main()`, applikationsbyggare, felhanterare
+2. ⏳ **Skapa `src/bot/middleware/auth.py`** – flytta `@auth_only`-dekoratorn
+3. ⏳ **Skapa `src/bot/middleware/formatters.py`** – flytta formateringsfunktioner
+4. ⏳ **Skapa `src/bot/commands/`** – en fil per kommando (start, help, books, progress, discuss)
+5. ⏳ **Skapa `scripts/telegram_bot_refactored.py`** som importerar från `src.bot`
+6. ❌ **Kör båda botarna temporärt** för att verifiera identiskt beteende
+7. ❌ **Ersätt original `telegram_bot.py`** med tunn wrapper när säker
 
-### Fas 4: Uppdatera Launcher-skripten (Dag 8)
+### Fas 4: Uppdatera Launcher-skripten (Dag 8) – **EJ PÅBÖRJAD**
 **Mål**: Gör så att `bookclub` och `bookclub.pi` använder de nya modulerna internt.
 
-1. **Skapa `src/cli/sync_cli.py`** – funktion som efterliknar `-sync`-grenen av `bookclub`
-2. **Skapa `src/cli/bot_cli.py`** – funktion för `-bot`-grenen
-3. **Modifiera `bookclub`** (Bash-skriptet) att anropa `python3 -m src.cli.sync_cli`
-4. **Modifiera `bookclub.pi`** på samma sätt
-5. **Testa** att alla kommandon fortfarande fungerar
+1. ❌ **Skapa `src/cli/sync_cli.py`** – funktion som efterliknar `-sync`-grenen av `bookclub`
+2. ❌ **Skapa `src/cli/bot_cli.py`** – funktion för `-bot`-grenen
+3. ❌ **Modifiera `bookclub`** (Bash-skriptet) att anropa `python3 -m src.cli.sync_cli`
+4. ❌ **Modifiera `bookclub.pi`** på samma sätt
+5. ❌ **Testa** att alla kommandon fortfarande fungerar
 
-### Fas 5: Lägg till Förbättringar (Dag 9–10)
+### Fas 5: Lägg till Förbättringar (Dag 9–10) – **EJ PÅBÖRJAD**
 **Nu när strukturen är stabil** kan vi lägga till förbättringar:
 
-1. **Konfigurationsvalidering** – i `src/utils/config.py`, lägg till `validate_config()`
-2. **Automatiska backup** – utöka `src/data/storage.py` för att skapa tidsstämplade backup
-3. **Hälsokontroller** – lägg till `src/cli/health.py` som verifierar filbehörigheter, API-åtkomst, etc.
-4. **Förbättrad loggning** – använd `src/utils/logging.py` för konsekventa, roterande loggfiler
+1. ❌ **Konfigurationsvalidering** – i `src/utils/config.py`, lägg till `validate_config()`
+2. ❌ **Automatiska backup** – utöka `src/data/storage.py` för att skapa tidsstämplade backup
+3. ❌ **Hälsokontroller** – lägg till `src/cli/health.py` som verifierar filbehörigheter, API-åtkomst, etc.
+4. ❌ **Förbättrad loggning** – använd `src/utils/logging.py` för konsekventa, roterande loggfiler
 
-### Fas 6: Testning & Slutlig Validering (Dag 11)
+### Fas 6: Testning & Slutlig Validering (Dag 11) – **EJ PÅBÖRJAD**
 **Mål**: Säkerställ att allt fungerar på både PC och Raspberry Pi.
 
-1. **Skriv några nyckelenhetstester** (med `pytest`)
-2. **Testa på Raspberry Pi** (eller simulera med Docker)
-3. **Verifiera bakåtkompatibilitet** – alla befintliga kommandon, miljövariabler och filformat måste förbli oförändrade
-4. **Dokumentera den nya strukturen** i `README.md`
+1. ❌ **Skriv några nyckelenhetstester** (med `pytest`)
+2. ❌ **Testa på Raspberry Pi** (eller simulera med Docker)
+3. ❌ **Verifiera bakåtkompatibilitet** – alla befintliga kommandon, miljövariabler och filformat måste förbli oförändrade
+4. ❌ **Dokumentera den nya strukturen** i `README.md`
 
 ## 🗂️ Mål-filstruktur (Efter Migrering)
 
@@ -137,22 +144,26 @@ bookclub/
 | Raspberry Pi-kompatibilitet | Testa `bookclub.pi` efter varje fas; håll dess beroenden minimala |
 | Dataförlust | Skapa alltid backup innan något kärnskript ersätts |
 
-## 🚀 Omedelbara Första Steg
+## 🚀 Nästa Steg
 
-1. **Fixera behörigheter** på `bookclub.pi`:
-   ```bash
-   chmod +x bookclub.pi
-   ```
-2. **Skapa de saknade katalogerna**:
-   ```bash
-   mkdir -p src/{cli,bot/commands,bot/middleware} config/prompts tests/{test_sync,test_bot,test_utils}
-   ```
-3. **Backa upp nuvarande skript**:
-   ```bash
-   cp sync_books.py sync_books.py.backup
-   cp telegram_bot.py telegram_bot.py.backup
-   ```
-4. **Starta Fas 1** genom att skapa `src/sync/fetch.py` och flytta Goodreads API-logiken dit.
+**Aktuell fokus: Fas 2 (Data-lagret).**  
+Vi behöver slutföra datalagret för att sedan kunna fortsätta med Fas 3 (Telegram-bot).  
+
+1. **Skapa `src/data/models.py`** med en `Book` dataklass (Pydantic eller dataclass).  
+2. **Skapa `src/data/storage.py`** som tar hand om läsning/skrivning av `reading_log.md` och `reading_in_progress.md`.  
+3. **Uppdatera `scripts/sync_books_refactored.py`** att använda `src.data.storage` istället för direkt filmanipulering.  
+4. **Verifiera** att synkroniseringen fortfarande genererar identisk output.
+
+När Fas 2 är klar går vi vidare till Fas 3 (Telegram-bot) – att dela upp den monolitiska `telegram_bot.py` i moduler.
+
+Kör följande kommandon för att kolla status:
+
+```bash
+# Kontrollera att src/sync modulerna redan finns
+ls -la src/sync/
+# Kontrollera att data-katalogen finns men saknar implementering
+ls -la src/data/
+```
 
 ## 🔗 Resurser
 - [python-telegram-bot dokumentation](https://github.com/python-telegram-bot/python-telegram-bot)
@@ -166,5 +177,5 @@ bookclub/
 - Håll denna `ROADMAP.md` öppen och markera avslutade steg
 
 ---
-*Senast uppdaterad: 2026-02-12*
-*Status: Pågående – Starta med Fas 0*
+*Senast uppdaterad: 2026-02-13*
+*Status: Fas 1 slutförd, Fas 2 pågående – Nästa steg är att implementera `src/data/models.py` och `storage.py`.*
