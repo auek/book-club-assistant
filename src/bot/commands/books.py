@@ -16,13 +16,12 @@ async def show_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         await update.message.reply_text("❌ Error: Book log not found. Run sync first.")
         return
 
-    formatted_books = format_books_for_telegram(content)
+    formatted_books = format_books_for_telegram(content, limit=10)
     parts = split_text_into_chunks(formatted_books)
     
-    for i, part in enumerate(parts):
-        prefix = f"📚 <b>Part {i+1}/{len(parts)}</b>\n\n" if len(parts) > 1 else ""
+    for part in parts:
         try:
-            await update.message.reply_text(f"{prefix}{part}", parse_mode='HTML')
+            await update.message.reply_text(part, parse_mode='HTML', disable_web_page_preview=True)
         except BadRequest:
             plain_part = part.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
             await update.message.reply_text(f"{prefix}{plain_part}", parse_mode=None)
