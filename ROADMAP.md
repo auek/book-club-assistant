@@ -45,17 +45,17 @@ These tasks build the core infrastructure. They must be completed in order to en
 ### 🚀 Features & Improvements (Independent - Flexible Order)
 Once Phase 4 is complete, these can be implemented in any order.
 
-#### Phase 5: System Robustness (Enabler/Improvement)
+#### Feature 1: System Robustness (Enabler/Improvement)
 - [ ] **Config Validation**: `src/utils/config.py`.
 - [ ] **Auto-Backups**: Timestamped log backups in `storage.py`.
 - [ ] **Health Checks**: `src/cli/health.py` for API/Permission verification.
 
-#### Phase 6: Testing & Documentation
+#### Feature 2: Testing & Documentation
 - [ ] Unit tests with `pytest`.
 - [ ] Full Raspberry Pi (Volumio) validation.
 - [ ] Update `README.md` with new architecture details.
 
-#### Phase 7: AI-Chat Integration (Feature)
+#### Feature 3: AI-Chat Integration
 - **Goal**: Direct Telegram interaction with the book log using LLMs.
 - [ ] `src/utils/llm.py` (OpenAI/DeepSeek wrapper).
 - [ ] `src/bot/commands/chat.py` for `/chat` command.
@@ -65,7 +65,7 @@ Once Phase 4 is complete, these can be implemented in any order.
 
 ### 🔮 Future Evolution (Major Shifts)
 
-#### Phase 8: SQLite Integration
+#### Feature 4: SQLite Integration
 - **Goal**: Move from Markdown-parsing to a database as the "source of truth".
 - [ ] `src/data/database.py` for SQLite management.
 - [ ] Update Sync logic to save to DB first, then export to Markdown.
@@ -90,11 +90,11 @@ bookclub/
 
 ## 🧪 Testing Strategy
 
-| Phase | Validation | Command |
+| Phase/Feature | Validation | Command |
 |-----|-------------------|----------|
-| 1-3 | Output Parity | `diff reading_log.md reading_log.md.backup` |
-| 4 | Launcher Functionality | `./bookclub -sync` |
-| 7 | AI Interaction | `/chat "What should I read next?"` |
+| Phase 1-3 | Output Parity | `diff reading_log.md reading_log.md.backup` |
+| Phase 4 | Launcher Functionality | `./bookclub -sync` |
+| Feature 3 | AI Interaction | `/chat "What should I read next?"` |
 
 ---
 *Last Updated: 2026-02-13*
