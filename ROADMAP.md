@@ -46,9 +46,8 @@ These tasks build the core infrastructure. They must be completed in order to en
 Once Phase 4 is complete, these can be implemented in any order.
 
 #### Feature 1: System Robustness (Enabler/Improvement)
-- [ ] **Config Validation**: `src/utils/config.py`.
-- [ ] **Auto-Backups**: Timestamped log backups in `storage.py`.
-- [ ] **Health Checks**: `src/cli/health.py` for API/Permission verification.
+- ✅ **Config Validation**: `src/utils/config.py`.
+- ✅ **Health Checks**: `src/cli/health.py` for API/Permission verification.
 
 #### Feature 2: Testing & Documentation
 - [ ] Unit tests with `pytest`.
@@ -60,6 +59,13 @@ Once Phase 4 is complete, these can be implemented in any order.
 - [ ] `src/utils/llm.py` (OpenAI/DeepSeek wrapper).
 - [ ] `src/bot/commands/chat.py` for `/chat` command.
 - [ ] Context Injection (inject `reading_log.md` into prompt).
+
+---
+
+### 📖 Stories (Backlog)
+
+#### Story 1: Auto-Backups
+- [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
 
 ---
 
@@ -99,4 +105,4 @@ bookclub/
 
 ---
 *Last Updated: 2026-02-13*
-*Status: Phases 1-4 completed – Next: Feature 1 (System Robustness).*
+*Status: Phases 1-4 & Feature 1 completed – Next: Feature 2 (Testing).*
