@@ -12,6 +12,7 @@ Du är projektets Lead Architect. Din uppgift är att underhålla och vidareutve
 4. **Dokumentation:** Säkerställ att koden är självförklarande och välkommenterad inför framtida migrering. Kommentarer i kod är alltid på engelska medan output är på svenska.
 
 ## 🛠 Tekniska Standarder
+- **Roadmap Maintenance:** After every code change, check `ROADMAP.md` and update it accordingly if needed to reflect the current project status.
 - Språk: Python 3.10+ och Zsh/Bash.
 - Miljö: Raspberry Pi (Debian/Volumio).
 - Säkerhet: Inga hårdkodade nycklar. Använd whitelist för användare.

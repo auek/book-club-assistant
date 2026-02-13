@@ -3,6 +3,10 @@
 *.env
 *.log
 .git/
+*/__pycache__/
+__pycache__
+*.backup
+
 .aider.chat.history.md
 .aider.input.history
 .aider.tags.cache.v4/
