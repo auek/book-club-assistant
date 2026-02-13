@@ -55,11 +55,11 @@ Once Phase 4 is complete, these can be implemented in any order.
 - ✅ Full Raspberry Pi (Volumio) validation.
 - ✅ Update `README.md` with new architecture details.
 
-#### Feature 3: Telegram UX Enhancement
+#### Feature 3: Telegram UX Enhancement - **COMPLETED**
 - **Goal**: Make bot output leaner and more professional.
-- [ ] Limit `/books` to the 10 most recent entries.
-- [ ] Improve visual layout with better HTML formatting and separators.
-- [ ] Add visual progress bars for the `/progress` command.
+- ✅ Limit `/books` to the 10 most recent entries.
+- ✅ Improve visual layout with better HTML formatting and separators.
+- ✅ Add visual progress bars for the `/progress` command.
 
 #### Feature 4: AI-Chat Integration
 - **Goal**: Direct Telegram interaction with the book log using LLMs.

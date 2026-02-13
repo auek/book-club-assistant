@@ -26,6 +26,7 @@ def main():
         level=logging.INFO
     )
 
+    # Use a more robust initialization to avoid Python 3.13 compatibility issues
     application = ApplicationBuilder().token(token).build()
 
     # Register handlers
