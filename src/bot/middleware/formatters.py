@@ -14,10 +14,11 @@ def format_books_for_telegram(markdown_text: str, limit: int = 10) -> str:
             in_table = True
             continue
         elif line.startswith('|') and in_table:
-            if '---' not in line:
+            if '---' not in line and 'Titel' not in line:
                 table_rows.append(line)
-        elif line.startswith('## Sammanfattning'):
-            in_table = False
+        elif line.startswith('## Sammanfattning') or line.startswith('# '):
+            if in_table and line.strip():
+                in_table = False
 
     total_books = len(table_rows)
     display_rows = table_rows[:limit]
@@ -77,13 +78,13 @@ def format_progress_for_telegram(markdown_text: str) -> str:
                 # Extract percentage number
                 pct_str = "".join(filter(str.isdigit, line))
                 if pct_str:
-                    pct = int(pct_str)
+                    pct = min(max(int(pct_str), 0), 100)
                     filled = pct // 10
                     bar = "█" * filled + "░" * (10 - filled)
                     formatted_lines.append(f"<code>[{bar}] {pct}%</code>")
                     continue
-            except ValueError:
-                pass
+            except (ValueError, Exception) as e:
+                logger.error(f"Error formatting progress bar: {e}")
 
         if line.startswith('# '): formatted_lines.append(f"\n<b>{line[2:]}</b>")
         elif line.startswith('## '): formatted_lines.append(f"\n<i>{line[3:]}</i>")
