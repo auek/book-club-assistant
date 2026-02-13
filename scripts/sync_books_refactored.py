@@ -6,6 +6,7 @@ This script imports from src.sync modules.
 
 import sys
 import os
+from dotenv import load_dotenv
 
 # Add parent directory to path to import from src
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -23,6 +24,9 @@ OUTPUT_FILE = "reading_log.md"
 
 def main():
     """Main function to run synchronization using modular structure."""
+    # Load environment variables from .env file
+    load_dotenv()
+
     # Get credentials from environment
     api_key = os.getenv('GOODREADS_API_KEY')
     user_id = os.getenv('GOODREADS_USER_ID')
