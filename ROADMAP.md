@@ -69,6 +69,7 @@ Once Phase 4 is complete, these can be implemented in any order.
 - **Goal**: Move from Markdown-parsing to a database as the "source of truth".
 - [ ] `src/data/database.py` for SQLite management.
 - [ ] Update Sync logic to save to DB first, then export to Markdown.
+- [ ] Security considerations for local DB access is of utmost importance.
 
 ---
 
