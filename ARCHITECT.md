@@ -18,6 +18,7 @@ You are the project's Lead Architect. Your task is to maintain and further devel
     - *New Features:* Any new core logic or complex data transformation introduced in future phases must include corresponding tests.
 - Language: Python 3.10+ and Zsh/Bash.
 - Environment: Raspberry Pi (Debian/Volumio).
+- Dependencies: When adding libraries to `requirements.txt`, ensure they support the Raspberry Pi/Volumio environment. This often requires using version ranges (e.g., `package>=1.0.0,<2.0.0`) rather than strict pinning to accommodate older Python versions or pre-compiled wheels on the Pi.
 - Security: No hardcoded keys. Use a whitelist for users.
 - Economy: Use prompt caching and be token-efficient.
 
