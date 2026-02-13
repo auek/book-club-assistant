@@ -15,7 +15,7 @@ Följande fungerar redan och ska bevaras:
 - ✅ **Fas 1** (Sync-modulen) är slutförd: `src/sync/` moduler skapade, `scripts/sync_books_refactored.py` implementerad och `sync_books.py` ersatt med en wrapper.
 - ✅ **Fas 2** (Data-lagret) är slutförd: `src/data/models.py` och `storage.py` implementerade.
 - ✅ **Fas 3** (Refaktorera Telegram-boten) är slutförd: Moduler för middleware, core och kommandon skapade, och `telegram_bot.py` ersatt med en wrapper.
-- ❌ **Fas 4–7** (Launcher, Förbättringar, Testning, AI-Chat) är inte påbörjade.
+- ❌ **Fas 4–8** (Launcher, Förbättringar, Testning, AI-Chat, Databas) är inte påbörjade.
 
 ## 🔄 Migreringsfaser – Steg-för-steg
 
@@ -99,6 +99,14 @@ Följande fungerar redan och ska bevaras:
 2. ❌ **Skapa `src/bot/commands/chat.py`** – Hanterare för `/chat` och fritext.
 3. ❌ **Implementera Context Injection** – Läs in `reading_log.md` som system-prompt.
 4. ❌ **Session Management** – Enkel historik per användare för sammanhängande samtal.
+
+### Fas 8: SQLite Integration (Framtida utveckling)
+**Mål**: Flytta från Markdown-parsing till en riktig databas som "source of truth".
+
+1. ❌ **Skapa `src/data/database.py`** – Hantera SQLite-anslutning och schema.
+2. ❌ **Migrera Sync-logik** – Spara böcker i DB innan Markdown genereras.
+3. ❌ **Markdown som Export** – Generera `reading_log.md` baserat på DB-innehåll.
+4. ❌ **Avancerade frågor** – Möjliggör för boten att söka i DB (t.ex. "Visa alla 5-stjärniga böcker").
 
 ## 🗂️ Mål-filstruktur (Efter Migrering)
 
