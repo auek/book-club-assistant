@@ -2,7 +2,7 @@
 # Simplified version for Raspberry Pi
 # Compatible with bash (default on most Raspberry Pi systems)
 
-USAGE="Usage: $0 [-sync | -setup | -bot | -cron]"
+USAGE="Usage: $0 [-sync | -setup | -bot]"
 
 # Platform detection
 detect_platform() {
@@ -94,16 +94,6 @@ case "$1" in
         ;;
     -bot)
         python3 -m src.cli.bot_cli
-        ;;
-    -cron)
-        echo "⏰ Setting up automatic synchronization..."
-        echo "   Running cron setup script..."
-        if [[ -f "cron_setup.sh" ]]; then
-            bash cron_setup.sh
-        else
-            echo "❌ Error: cron_setup.sh not found"
-            echo "   Please download it from the repository"
-        fi
         ;;
     *)
         echo "$USAGE"

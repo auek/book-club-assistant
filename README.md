@@ -66,30 +66,7 @@ To verify that the environment is correctly configured (especially on Raspberry 
 python3 -m src.cli.health
 ```
 
-## Automatisk Synkronisering (Cron)
-För att automatiskt synkronisera dina böcker varje dag, lägg till följande cron-jobb:
-
-```bash
-# Öppna crontab för redigering
-crontab -e
-```
-
-Lägg till följande rad för att köra synkronisering varje dag kl 02:00:
-```
-0 2 * * * cd /sökväg/till/bookclub && ./bookclub.pi -sync >> /var/log/bookclub_sync.log 2>&1
-```
-
-Eller för att testa varje timme:
-```
-0 * * * * cd /sökväg/till/bookclub && ./bookclub.pi -sync >> /var/log/bookclub_sync.log 2>&1
-```
-
-Se till att skriptet är körbart:
-```bash
-chmod +x bookclub.pi
-```
-
-### Bot‑kommandon
+### Bot Commands
 - `/start` – Välkomstmeddelande
 - `/help` – Visa tillgängliga kommandon
 - `/books` – Visa hela läsloggen
