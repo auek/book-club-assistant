@@ -85,6 +85,11 @@ Once Phase 4 is complete, these can be implemented in any order.
     - [ ] Define tool schema for searching and adding notes to Notion.
     - [ ] Implement secure credential management for Notion API keys.
     - [ ] Update `src/utils/llm.py` to handle tool-call loops.
+    - [ ] **Security & Constraints**:
+        - *Scope*: Restrict Notion Integration to specific databases/pages only.
+        - *Safety*: Implement "Human-in-the-loop" confirmation for any write/delete actions.
+        - *Privacy*: Acknowledge that retrieved data is sent to the LLM provider.
+        - *Robustness*: Implement rate-limiting and token-usage guards to prevent recursive loops.
 
 ---
 
