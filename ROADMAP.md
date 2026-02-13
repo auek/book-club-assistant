@@ -33,6 +33,7 @@ These tasks build the core infrastructure. They must be completed in order to en
 #### Phase 3: Telegram Bot Refactoring - **COMPLETED**
 - Logic moved to `src/bot/` (core, middleware, commands).
 - Created `scripts/telegram_bot_refactored.py`.
+- ✅ Verified commands (/start, /books, /progress) on hardware.
 
 #### Phase 4: Launcher Integration - **COMPLETED**
 - **Dependency**: Phases 1-3.
