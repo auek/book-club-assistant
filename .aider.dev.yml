@@ -1,8 +1,6 @@
 # model: openrouter/deepseek/deepseek-r1-distill-llama-70b
 # model: openrouter/anthropic/claude-sonnet-4.5
 # model: openrouter/deepseek/deepseek-v3.2
-model: openrouter/google/gemini-3-flash-preview
-editor-model: openrouter/openai/gpt-4o-mini
 auto-accept-architect: false
 chat-language: english
 read: [ARCHITECT.md]

@@ -7,7 +7,10 @@ def validate_config():
     
     required_vars = [
         'GOODREADS_API_KEY',
-        'GOODREADS_USER_ID'
+        'GOODREADS_USER_ID',
+        'AIDER_MODEL',
+        'AIDER_EDITOR_MODEL',
+        'CHAT_MODEL'
     ]
     
     missing = [var for var in required_vars if not os.getenv(var)]
