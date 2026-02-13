@@ -53,8 +53,6 @@ if [[ $# -eq 0 ]]; then
     usage
 fi
 
-LOG_FILE="reading_log.md"
-
 case "$1" in
     -sync)
         echo "🚀 Starting synchronization..."
@@ -83,12 +81,7 @@ case "$1" in
     -chat)
         echo "💬 Starting book chat (Model: Grok 4.1 Fast)..."
         # Check if log file exists before trying to read it
-        if [[ -f "$LOG_FILE" ]]; then
-            aider --no-gitignore --config .aider.chat.yml --read "$LOG_FILE"
-        else
-            echo "⚠️ Warning: No log file found ($LOG_FILE). Starting Aider without reading log."
-            aider --no-gitignore --config .aider.chat.yml
-        fi
+        aider --no-gitignore --config .aider.chat.yml 
         ;;
     -setup)
         echo "🔧 Installing dependencies for $PLATFORM..."
