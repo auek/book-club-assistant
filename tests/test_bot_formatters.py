@@ -32,3 +32,4 @@ def test_format_books_limit():
     assert "Author 1" in formatted
     assert "⭐⭐⭐⭐⭐" in formatted
     assert "2. Book 2" not in formatted
+    assert "Senaste 1 böckerna" in formatted

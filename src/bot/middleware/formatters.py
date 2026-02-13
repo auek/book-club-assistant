@@ -57,7 +57,7 @@ def format_books_for_telegram(markdown_text: str, limit: int = 10) -> str:
     if not formatted_lines:
         return "📚 <b>Lästa Böcker</b>\n\nInga böcker hittades."
     
-    header = f"📚 <b>Senaste {len(formatted_lines)} böckerna</b> (av totalt {total_books})\n\n"
+    header = f"📚 <b>Senaste {len(display_rows)} böckerna</b> (av totalt {total_books})\n\n"
     return header + "\n".join(formatted_lines)
 
 def format_progress_for_telegram(markdown_text: str) -> str:
