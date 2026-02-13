@@ -92,39 +92,7 @@ case "$1" in
         # Create reading_in_progress.md if it doesn't exist
         if [[ ! -f "reading_in_progress.md" ]]; then
             echo "📄 Creating reading_in_progress.md from template..."
-            if [[ -f "reading_in_progress.example.md" ]]; then
-                # Copy from example file
-                cp reading_in_progress.example.md reading_in_progress.md
-                echo "   Created from reading_in_progress.example.md"
-            else
-                # Fallback to minimal template if example file doesn't exist
-                echo "⚠️  reading_in_progress.example.md not found, creating minimal template"
-                cat > reading_in_progress.md << 'EOF'
-# Pågående Läsning
-
-## 📖 Just nu
-
-*Lägg till dina pågående böcker här med formatet:*
-
-**Titel** av Författare - (Progress: X%)
-
-- Anteckningar: Dina tankar om boken...
-
-## 💭 Kommande böcker
-
-- Bok 1
-- Bok 2
-
-## 📚 Rekommendationer
-
-- Bok som någon rekommenderat
-
-## 📝 Noteringar
-
-- Dina läsvanor eller mål...
-EOF
-            fi
-        fi
+            cp reading_in_progress.example.md reading_in_progress.md
         fi
         
         # Start the chat
