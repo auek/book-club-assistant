@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 from dotenv import load_dotenv
-from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
 # Add parent directory to path to import from src
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -36,6 +36,7 @@ def main():
     application.add_handler(CommandHandler("books", show_books))
     application.add_handler(CommandHandler("progress", show_progress))
     application.add_handler(CommandHandler("discuss", discuss_books))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, discuss_books))
     
     application.add_error_handler(error_handler)
 

@@ -61,11 +61,12 @@ Once Phase 4 is complete, these can be implemented in any order.
 - ✅ Improve visual layout with better HTML formatting and separators.
 - ✅ Add visual progress bars for the `/progress` command.
 
-#### Feature 4: AI-Chat Integration
+#### Feature 4: AI-Chat Integration - **COMPLETED**
 - **Goal**: Direct Telegram interaction with the book log using LLMs.
 - ✅ `src/utils/llm.py` (OpenRouter wrapper).
 - ✅ Context Injection (inject `reading_log.md` into prompt).
-- [ ] Implement `/discuss` command logic in bot.
+- ✅ Implement `/discuss` command logic in bot.
+- ✅ Default text messages to AI discussion.
 
 ---
 

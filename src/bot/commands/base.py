@@ -20,8 +20,15 @@ Available commands:
 """
     await update.message.reply_text(help_text)
 
+@auth_only
 async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Start a discussion about books."""
-    user_query = update.message.text.replace('/discuss', '').strip()
+    user_query = update.message.text
+    if user_query.startswith('/discuss'):
+        user_query = user_query.replace('/discuss', '', 1).strip()
+    
+    if not user_query or len(user_query) < 2:
+        return
+
     response = await get_ai_response(user_query)
     await update.message.reply_text(response)

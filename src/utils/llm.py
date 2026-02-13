@@ -28,6 +28,10 @@ async def get_ai_response(user_query: str) -> str:
     Svara på svenska. Var kortfattad men engagerande.
     """
 
+    # Guardrail: Limit input length to save tokens
+    if len(user_query) > 1000:
+        return "❌ Frågan är för lång (max 1000 tecken)."
+
     try:
         response = await client.chat.completions.create(
             model=model,
@@ -35,7 +39,8 @@ async def get_ai_response(user_query: str) -> str:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_query}
             ],
-            temperature=0.7
+            temperature=0.7,
+            max_tokens=500  # Guardrail: Limit response length
         )
         return response.choices[0].message.content
     except Exception as e:
