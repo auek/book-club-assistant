@@ -55,28 +55,7 @@ fi
 
 case "$1" in
     -sync)
-        echo "🚀 Starting synchronization..."
-        check_api_key
-        
-        # 1. Fetch data
-        echo "📥 Fetching data from Goodreads (User ID: ${GOODREADS_USER_ID})..."
-        curl -s "https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
-        
-        if [[ $? -ne 0 ]]; then
-            echo "❌ Error while fetching data from Goodreads."
-            exit 1
-        fi
-
-        # 2. Process data with Python script
-        echo "⚙️ Processing data with sync_books.py..."
-        python3 sync_books.py
-        
-        if [[ $? -ne 0 ]]; then
-            echo "❌ Error while processing data."
-            exit 1
-        fi
-
-        echo "✅ Synchronization complete."
+        python3 -m src.cli.sync_cli
         ;;
     -chat)
         echo "💬 Starting book chat..."

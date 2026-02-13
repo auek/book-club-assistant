@@ -34,7 +34,7 @@ These tasks build the core infrastructure. They must be completed in order to en
 - Logic moved to `src/bot/` (core, middleware, commands).
 - Created `scripts/telegram_bot_refactored.py`.
 
-#### Phase 4: Launcher Integration - **NEXT STEP**
+#### Phase 4: Launcher Integration - **COMPLETED**
 - **Dependency**: Phases 1-3.
 - **Goal**: Switch `bookclub` and `bookclub.pi` to use the new modular code.
 - [ ] Create `src/cli/sync_cli.py` and `src/cli/bot_cli.py`.
@@ -99,4 +99,4 @@ bookclub/
 
 ---
 *Last Updated: 2026-02-13*
-*Status: Phases 1-3 completed – Next: Phase 4 (Launcher Integration).*
+*Status: Phases 1-4 completed – Next: Feature 1 (System Robustness).*

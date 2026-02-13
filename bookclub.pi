@@ -58,38 +58,7 @@ fi
 
 case "$1" in
     -sync)
-        echo "🚀 Syncing books from Goodreads..."
-        check_api_key
-        check_files
-        
-        # Fetch data
-        echo "📥 Fetching RSS feed..."
-        curl -s -f "https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?key=${GOODREADS_API_KEY}&shelf=read" > raw_books.xml
-        
-        if [[ $? -ne 0 ]]; then
-            echo "❌ Failed to fetch data from Goodreads"
-            echo "   Check your internet connection and API credentials"
-            exit 1
-        fi
-        
-        # Check if XML was received
-        if [[ ! -s "raw_books.xml" ]]; then
-            echo "❌ Received empty XML file"
-            echo "   Check your Goodreads user ID and API key"
-            exit 1
-        fi
-        
-        # Process data
-        echo "⚙️ Processing book data..."
-        python3 sync_books.py
-        
-        if [[ $? -eq 0 ]]; then
-            echo "✅ Synchronization complete!"
-            echo "   Reading log updated: reading_log.md"
-        else
-            echo "❌ Error processing book data"
-            exit 1
-        fi
+        python3 -m src.cli.sync_cli
         ;;
     -setup)
         echo "🔧 Installing dependencies for Raspberry Pi..."
@@ -124,23 +93,7 @@ case "$1" in
         echo "3. For Telegram bot: python3 telegram_bot.py"
         ;;
     -bot)
-        echo "🤖 Starting Telegram bot..."
-        
-        # Check if required files exist
-        if [[ ! -f "telegram_bot.py" ]]; then
-            echo "❌ Error: telegram_bot.py not found"
-            exit 1
-        fi
-        
-        # Check if .env exists
-        if [[ ! -f ".env" ]]; then
-            echo "⚠️ Warning: .env file not found"
-            echo "   Create one with TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID"
-            echo "   Or run: ./bookclub.pi -setup for instructions"
-        fi
-        
-        # Start the bot
-        python3 telegram_bot.py
+        python3 -m src.cli.bot_cli
         ;;
     -cron)
         echo "⏰ Setting up automatic synchronization..."
