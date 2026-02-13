@@ -7,7 +7,7 @@
 reading_log.md
 reading_in_progress.md
 raw_books.xml
-
+*.log
 # New structure
 data/
 logs/
