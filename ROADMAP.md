@@ -37,8 +37,8 @@ These tasks build the core infrastructure. They must be completed in order to en
 #### Phase 4: Launcher Integration - **COMPLETED**
 - **Dependency**: Phases 1-3.
 - **Goal**: Switch `bookclub` and `bookclub.pi` to use the new modular code.
-- [ ] Create `src/cli/sync_cli.py` and `src/cli/bot_cli.py`.
-- [ ] Update Bash launchers to call `python3 -m src.cli.sync_cli`.
+- ✅ Create `src/cli/sync_cli.py` and `src/cli/bot_cli.py`.
+- ✅ Update Bash launchers to call `python3 -m src.cli.sync_cli`.
 
 ---
 
@@ -105,4 +105,4 @@ bookclub/
 
 ---
 *Last Updated: 2026-02-13*
-*Status: Phases 1-4 & Feature 1-2 partially completed – Next: Feature 3 (AI-Chat).*
+*Status: Phases 0-4 & Feature 1-2 completed – Next: Feature 3 (AI-Chat).*
