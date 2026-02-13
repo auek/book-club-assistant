@@ -27,6 +27,7 @@ def main():
     )
 
     # Use a more robust initialization to avoid Python 3.13 compatibility issues
+    # We avoid run_polling() which triggers the Updater class bug on Python 3.13
     application = ApplicationBuilder().token(token).build()
 
     # Register handlers
@@ -39,7 +40,20 @@ def main():
     application.add_error_handler(error_handler)
 
     print("🤖 Refactored bot is starting...")
-    application.run_polling()
+    
+    import asyncio
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+    if loop.is_running():
+        # If we are in an environment with a running loop (like some IDEs)
+        import nest_asyncio
+        nest_asyncio.apply()
+        
+    application.run_polling(close_loop=False)
 
 if __name__ == "__main__":
     main()
