@@ -50,9 +50,9 @@ Once Phase 4 is complete, these can be implemented in any order.
 - ✅ **Health Checks**: `src/cli/health.py` for API/Permission verification.
 
 #### Feature 2: Testing & Documentation
-- [ ] Unit tests with `pytest`.
-- [ ] Full Raspberry Pi (Volumio) validation.
-- [ ] Update `README.md` with new architecture details.
+- ✅ Unit tests with `pytest`.
+- [ ] Full Raspberry Pi (Volumio) validation (Pending user report).
+- ✅ Update `README.md` with new architecture details.
 
 #### Feature 3: AI-Chat Integration
 - **Goal**: Direct Telegram interaction with the book log using LLMs.
@@ -105,4 +105,4 @@ bookclub/
 
 ---
 *Last Updated: 2026-02-13*
-*Status: Phases 1-4 & Feature 1 completed – Next: Feature 2 (Testing).*
+*Status: Phases 1-4 & Feature 1-2 partially completed – Next: Feature 3 (AI-Chat).*

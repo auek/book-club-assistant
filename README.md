@@ -36,7 +36,7 @@ Ett litet Bash/Python-verktyg för att synkronisera lästa böcker från Goodrea
 ./bookclub -dev
 
 # Starta Telegram-boten
-python3 telegram_bot.py
+./bookclub.pi -bot
 ```
 
 ## Telegram Bot Setup
@@ -56,8 +56,14 @@ python3 telegram_bot.py
    ```
 6. Starta boten:
    ```bash
-   python3 telegram_bot.py
+   ./bookclub.pi -bot
    ```
+
+## System Health
+To verify that the environment is correctly configured (especially on Raspberry Pi):
+```bash
+python3 -m src.cli.health
+```
 
 ## Automatisk Synkronisering (Cron)
 För att automatiskt synkronisera dina böcker varje dag, lägg till följande cron-jobb:
