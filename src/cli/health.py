@@ -16,7 +16,7 @@ def check_connectivity():
 
 def check_permissions():
     """Checks if the application has necessary file permissions."""
-    paths = ['.', 'src', 'data']
+    paths = ['.', 'src']
     all_ok = True
     for path in paths:
         if os.access(path, os.W_OK):
