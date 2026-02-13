@@ -80,6 +80,12 @@ Once Phase 4 is complete, these can be implemented in any order.
 - [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
+#### Story 3: MCP Integration (Notion)
+- [ ] **Notion Connectivity**: Implement Model Context Protocol (MCP) or direct Tool Calling to allow the AI to interact with Notion.
+    - [ ] Define tool schema for searching and adding notes to Notion.
+    - [ ] Implement secure credential management for Notion API keys.
+    - [ ] Update `src/utils/llm.py` to handle tool-call loops.
+
 ---
 
 ### 🔮 Future Evolution (Major Shifts)
