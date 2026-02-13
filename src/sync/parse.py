@@ -111,5 +111,7 @@ def sort_books(books: List[Book]) -> List[Book]:
     Returns:
         Sorted list of books
     """
-    # Sort key: (Has date, Date object) -> reverse=True puts True (has date) first
-    return sorted(books, key=lambda x: (x.date_obj is None, x.date_obj), reverse=True)
+    # Sort key: (Has date, Date object)
+    # x.date_obj is not None is True (1) for books with dates, False (0) for missing.
+    # reverse=True makes 1 come before 0, and newer dates come before older ones.
+    return sorted(books, key=lambda x: (x.date_obj is not None, x.date_obj), reverse=True)
