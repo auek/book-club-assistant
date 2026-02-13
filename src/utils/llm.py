@@ -1,8 +1,8 @@
 import os
-import openai
+from openai import AsyncOpenAI
 from src.data.storage import read_file_content
 
-def get_ai_response(user_query: str) -> str:
+async def get_ai_response(user_query: str) -> str:
     """Get a response from the LLM based on the reading log context."""
     api_key = os.getenv('OPENROUTER_API_KEY')
     model = os.getenv('CHAT_MODEL', 'google/gemini-2.0-flash-001')
@@ -14,7 +14,7 @@ def get_ai_response(user_query: str) -> str:
     reading_log = read_file_content("reading_log.md")
     instructions = read_file_content("BOKKLUBB.md")
     
-    client = openai.OpenAI(
+    client = AsyncOpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=api_key,
     )
@@ -29,7 +29,7 @@ def get_ai_response(user_query: str) -> str:
     """
 
     try:
-        response = client.chat.completions.create(
+        response = await client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
