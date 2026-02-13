@@ -12,8 +12,8 @@ Följande fungerar redan och ska bevaras:
 
 **Implementeringsstatus (uppdaterad 2026-02-13):**
 - ✅ **Fas 0** (Förberedelser) är slutförd: behörigheter fixade, kataloger skapade, backup finns.
-- ✅ **Fas 1** (Sync-modulen) är delvis genomförd: `src/sync/fetch.py`, `parse.py`, `render.py` finns och används av `scripts/sync_books_refactored.py`. Den ursprungliga `sync_books.py` är fortfarande den primära körbara filen och har inte ersatts med en wrapper.
-- ❌ **Fas 2** (Data-lagret) är inte påbörjad: `src/data/models.py` och `storage.py` saknas helt.
+- ✅ **Fas 1** (Sync-modulen) är slutförd: `src/sync/` moduler skapade, `scripts/sync_books_refactored.py` implementerad och `sync_books.py` ersatt med en wrapper.
+- ⚠️ **Fas 2** (Data-lagret) är påbörjad: `src/data/models.py` skapad. `storage.py` saknas fortfarande.
 - ❌ **Fas 3** (Refaktorera Telegram-boten) är inte påbörjad: `src/bot/commands/`, `middleware/` finns tomma, och `src/bot/core.py` saknas.
 - ❌ **Fas 4–6** (Launcher, Förbättringar, Testning) är inte påbörjade.
 
@@ -38,7 +38,7 @@ Följande fungerar redan och ska bevaras:
    cp telegram_bot.py telegram_bot.py.backup
    ```
 
-### Fas 1: Extrahera Sync-modulen (Dag 2–3) – **DELVIS SLUTFÖRD**
+### Fas 1: Extrahera Sync-modulen (Dag 2–3) – **SLUTFÖRD**
 **Regel**: Behåll original `sync_books.py` fungerande medan ny modul byggs vid sidan av.
 
 1. ✅ **Skapa `src/sync/fetch.py`** – flytta `curl`/API-logik från `sync_books.py`
@@ -46,12 +46,12 @@ Följande fungerar redan och ska bevaras:
 3. ✅ **Skapa `src/sync/render.py`** – flytta `generate_markdown()` och `cleanup_files()`
 4. ✅ **Skapa `scripts/sync_books_refactored.py`** som importerar från `src.sync`
 5. ✅ **Testa sida vid sida** för att verifiera identisk utdata
-6. ❌ **Ersätt original `sync_books.py`** med en tunn wrapper när testet lyckas – *ej utfört ännu*
+6. ✅ **Ersätt original `sync_books.py`** med en tunn wrapper
 
-### Fas 2: Extrahera Data-lagret (Dag 4) – **INTE PÅBÖRJAD**
+### Fas 2: Extrahera Data-lagret (Dag 4) – **PÅBÖRJAD**
 **Mål**: Isolera fil-I/O och datamodeller.
 
-1. ❌ **Skapa `src/data/models.py`** med `Book`-dataklass
+1. ✅ **Skapa `src/data/models.py`** med `Book`-dataklass
 2. ❌ **Skapa `src/data/storage.py`** med funktioner för att läsa/skriva loggfiler
 3. ❌ **Uppdatera sync-modulen** att använda dessa datafunktioner
 4. ❌ **Testa** att synkroniseringen fortfarande fungerar
@@ -146,17 +146,10 @@ bookclub/
 
 ## 🚀 Nästa Steg
 
-**Aktuell fokus: Fas 1 (slutför ersättning av sync_books.py).**  
-Innan vi går vidare till Fas 2 måste vi slutföra Fas 1 genom att ersätta den ursprungliga `sync_books.py` med en tunn wrapper som anropar `scripts/sync_books_refactored.py`.  
+**Aktuell fokus: Fas 2 (Data-lagret).**  
+Fas 1 är helt klar. Nu fortsätter vi med Fas 2:  
 
-1. **Ändra `sync_books.py`** så att den bara importerar och kör `main()` från `scripts/sync_books_refactored.py`.  
-2. **Testa** att `./bookclub -sync` fortfarande fungerar och producerar identisk output.  
-3. **Ta bort duplicerad logik** från `sync_books.py` (behåll bara wrapper-koden).  
-
-**Därefter: Fas 2 (Data-lagret).**  
-När Fas 1 är helt klar kan vi börja med Fas 2:  
-
-1. **Skapa `src/data/models.py`** med en `Book` dataklass (Pydantic eller dataclass).  
+1. ✅ **Skapa `src/data/models.py`** med en `Book` dataklass.  
 2. **Skapa `src/data/storage.py`** som tar hand om läsning/skrivning av `reading_log.md` och `reading_in_progress.md`.  
 3. **Uppdatera `scripts/sync_books_refactored.py`** att använda `src.data.storage` istället för direkt filmanipulering.  
 4. **Verifiera** att synkroniseringen fortfarande genererar identisk output.
@@ -185,4 +178,4 @@ python3 scripts/sync_books_refactored.py
 
 ---
 *Senast uppdaterad: 2026-02-13*
-*Status: Fas 1 delvis slutförd (wrapper saknas), Fas 2 ej påbörjad – Nästa steg är att slutföra Fas 1 genom att ersätta sync_books.py med en wrapper.*
+*Status: Fas 1 slutförd, Fas 2 påbörjad – Nästa steg är att implementera storage.py.*
