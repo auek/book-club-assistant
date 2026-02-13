@@ -76,6 +76,10 @@ Once Phase 4 is complete, these can be implemented in any order.
 #### Story 1: Auto-Backups
 - [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
 
+#### Story 2: Persistent Bot Memory
+- [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
+    - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
+
 ---
 
 ### 🔮 Future Evolution (Major Shifts)

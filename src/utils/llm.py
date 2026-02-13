@@ -2,7 +2,7 @@ import os
 from openai import AsyncOpenAI
 from src.data.storage import read_file_content
 
-async def get_ai_response(user_query: str) -> str:
+async def get_ai_response(user_query: str, history: list = None) -> str:
     """Get a response from the LLM based on the reading log context."""
     api_key = os.getenv('OPENROUTER_API_KEY')
     model = os.getenv('CHAT_MODEL', 'google/gemini-2.0-flash-001')
@@ -36,13 +36,19 @@ async def get_ai_response(user_query: str) -> str:
     if len(user_query) > 1000:
         return "❌ Frågan är för lång (max 1000 tecken)."
 
+    messages = [{"role": "system", "content": system_prompt}]
+    if history:
+        messages.extend(history)
+    messages.append({"role": "user", "content": user_query})
+
     try:
+        # Guardrail: Limit input length to save tokens
+        if len(user_query) > 1000:
+            return "❌ Frågan är för lång (max 1000 tecken)."
+
         response = await client.chat.completions.create(
             model=model,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_query}
-            ],
+            messages=messages,
             temperature=0.7,
             max_tokens=500  # Guardrail: Limit response length
         )

@@ -30,5 +30,17 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if not user_query or len(user_query) < 2:
         return
 
-    response = await get_ai_response(user_query)
+    if 'history' not in context.user_data:
+        context.user_data['history'] = []
+
+    response = await get_ai_response(user_query, context.user_data['history'])
+    
+    # Update history
+    context.user_data['history'].append({"role": "user", "content": user_query})
+    context.user_data['history'].append({"role": "assistant", "content": response})
+    
+    # Keep only last 20 messages (10 exchanges)
+    if len(context.user_data['history']) > 20:
+        context.user_data['history'] = context.user_data['history'][-20:]
+
     await update.message.reply_text(response)
