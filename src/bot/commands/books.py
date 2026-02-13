@@ -24,4 +24,4 @@ async def show_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
             await update.message.reply_text(part, parse_mode='HTML', disable_web_page_preview=True)
         except BadRequest:
             plain_part = part.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
-            await update.message.reply_text(f"{prefix}{plain_part}", parse_mode=None)
+            await update.message.reply_text(plain_part, parse_mode=None)
