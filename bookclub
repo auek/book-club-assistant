@@ -91,38 +91,40 @@ case "$1" in
         
         # Create reading_in_progress.md if it doesn't exist
         if [[ ! -f "reading_in_progress.md" ]]; then
-            echo "📄 Creating reading_in_progress.md with helpful template..."
-            cat > reading_in_progress.md << 'EOF'
+            echo "📄 Creating reading_in_progress.md from template..."
+            if [[ -f "reading_in_progress.example.md" ]]; then
+                # Copy from example file
+                cp reading_in_progress.example.md reading_in_progress.md
+                echo "   Created from reading_in_progress.example.md"
+            else
+                # Fallback to minimal template if example file doesn't exist
+                echo "⚠️  reading_in_progress.example.md not found, creating minimal template"
+                cat > reading_in_progress.md << 'EOF'
 # Pågående Läsning
 
 ## 📖 Just nu
 
-### 1. **Sapiens: en kort historik över mänskligheten** av Yuval Noah Harari - (Progress: 45%)
-   - Anteckningar: Intressant perspektiv på människans utveckling och hur samhällen har formats.
+*Lägg till dina pågående böcker här med formatet:*
 
-### 2. **Mina drömmars stad** av Jonas Gardell - (Progress: 80%)
-   - Anteckningar: Stark och känsloladdad berättelse om att hitta sin plats i världen.
+**Titel** av Författare - (Progress: X%)
+
+- Anteckningar: Dina tankar om boken...
 
 ## 💭 Kommande böcker
 
-- **Alkemisten** av Paulo Coelho
-- **1984** av George Orwell
-- **Mörkrets hjärta** av Joseph Conrad
+- Bok 1
+- Bok 2
 
-## 📚 Läses av andra (Rekommendationer)
+## 📚 Rekommendationer
 
-- **Normal People** av Sally Rooney - Rekommenderad av Anna
-- **Klara and the Sun** av Kazuo Ishiguro - Rekommenderad av David
+- Bok som någon rekommenderat
 
 ## 📝 Noteringar
 
-- Läsa minst 30 minuter per dag
-- Kom ihåg att skriva ner tankar direkt när jag läser
-- Diskutera böckerna med bokklubben på torsdag
-
----
-*Denna fil kan redigeras via AI-chatten med kommandot `./bookclub -chat`*
+- Dina läsvanor eller mål...
 EOF
+            fi
+        fi
         fi
         
         # Start the chat
