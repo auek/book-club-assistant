@@ -12,6 +12,7 @@ async def get_ai_response(user_query: str) -> str:
 
     # Load context
     reading_log = read_file_content("reading_log.md")
+    reading_in_progress = read_file_content("reading_in_progress.md")
     instructions = read_file_content("BOKKLUBB.md")
     
     client = AsyncOpenAI(
@@ -24,6 +25,9 @@ async def get_ai_response(user_query: str) -> str:
     
     Här är användarens nuvarande läslogg:
     {reading_log}
+
+    Här är vad användaren läser just nu:
+    {reading_in_progress}
     
     Svara på svenska. Var kortfattad men engagerande.
     """
