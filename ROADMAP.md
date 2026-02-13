@@ -14,7 +14,7 @@ Följande fungerar redan och ska bevaras:
 - ✅ **Fas 0** (Förberedelser) är slutförd: behörigheter fixade, kataloger skapade, backup finns.
 - ✅ **Fas 1** (Sync-modulen) är slutförd: `src/sync/` moduler skapade, `scripts/sync_books_refactored.py` implementerad och `sync_books.py` ersatt med en wrapper.
 - ✅ **Fas 2** (Data-lagret) är slutförd: `src/data/models.py` och `storage.py` implementerade.
-- ⚠️ **Fas 3** (Refaktorera Telegram-boten) är påbörjad: Moduler för middleware, core och kommandon skapade.
+- ✅ **Fas 3** (Refaktorera Telegram-boten) är delvis genomförd: Moduler för middleware, core och kommandon skapade. `scripts/telegram_bot_refactored.py` redo för testning.
 - ❌ **Fas 4–6** (Launcher, Förbättringar, Testning) är inte påbörjade.
 
 ## 🔄 Migreringsfaser – Steg-för-steg
@@ -56,14 +56,14 @@ Följande fungerar redan och ska bevaras:
 3. ✅ **Uppdatera sync-modulen** att använda dessa datafunktioner
 4. ✅ **Testa** att synkroniseringen fortfarande fungerar
 
-### Fas 3: Refaktorera Telegram-boten (Dag 5–7) – **INTE PÅBÖRJAD**
+### Fas 3: Refaktorera Telegram-boten (Dag 5–7) – **DELVIS SLUTFÖRD**
 **Känsligaste delen** – boten fungerar redan. Arbeta inkrementellt.
 
-1. ❌ **Skapa `src/bot/core.py`** – flytta `main()`, applikationsbyggare, felhanterare
-2. ❌ **Skapa `src/bot/middleware/auth.py`** – flytta `@auth_only`-dekoratorn
-3. ❌ **Skapa `src/bot/middleware/formatters.py`** – flytta formateringsfunktioner
-4. ❌ **Skapa `src/bot/commands/`** – en fil per kommando (start, help, books, progress, discuss)
-5. ❌ **Skapa `scripts/telegram_bot_refactored.py`** som importerar från `src.bot`
+1. ✅ **Skapa `src/bot/core.py`** – flytta `main()`, applikationsbyggare, felhanterare
+2. ✅ **Skapa `src/bot/middleware/auth.py`** – flytta `@auth_only`-dekoratorn
+3. ✅ **Skapa `src/bot/middleware/formatters.py`** – flytta formateringsfunktioner
+4. ✅ **Skapa `src/bot/commands/`** – en fil per kommando (start, help, books, progress, discuss)
+5. ✅ **Skapa `scripts/telegram_bot_refactored.py`** som importerar från `src.bot`
 6. ❌ **Kör båda botarna temporärt** för att verifiera identiskt beteende
 7. ❌ **Ersätt original `telegram_bot.py`** med tunn wrapper när säker
 
@@ -177,4 +177,4 @@ python3 scripts/sync_books_refactored.py
 
 ---
 *Senast uppdaterad: 2026-02-13*
-*Status: Fas 1 & 2 slutförda, Fas 3 påbörjad – Nästa steg är att refaktorera botens kärna.*
+*Status: Fas 1 & 2 slutförda, Fas 3 delvis slutförd – Nästa steg är att verifiera den refaktorerade boten.*
