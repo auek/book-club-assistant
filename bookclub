@@ -80,7 +80,52 @@ case "$1" in
         ;;
     -chat)
         echo "💬 Starting book chat (Model: Grok 4.1 Fast)..."
-        # Check if log file exists before trying to read it
+        
+        # Create reading_log.md if it doesn't exist
+        if [[ ! -f "reading_log.md" ]]; then
+            echo "📄 Creating empty reading_log.md file..."
+            echo "# Lästa Böcker" > reading_log.md
+            echo "" >> reading_log.md
+            echo "Inga böcker synkade än. Kör './bookclub -sync' för att synkronisera från Goodreads." >> reading_log.md
+        fi
+        
+        # Create reading_in_progress.md if it doesn't exist
+        if [[ ! -f "reading_in_progress.md" ]]; then
+            echo "📄 Creating reading_in_progress.md with helpful template..."
+            cat > reading_in_progress.md << 'EOF'
+# Pågående Läsning
+
+## 📖 Just nu
+
+### 1. **Sapiens: en kort historik över mänskligheten** av Yuval Noah Harari - (Progress: 45%)
+   - Anteckningar: Intressant perspektiv på människans utveckling och hur samhällen har formats.
+
+### 2. **Mina drömmars stad** av Jonas Gardell - (Progress: 80%)
+   - Anteckningar: Stark och känsloladdad berättelse om att hitta sin plats i världen.
+
+## 💭 Kommande böcker
+
+- **Alkemisten** av Paulo Coelho
+- **1984** av George Orwell
+- **Mörkrets hjärta** av Joseph Conrad
+
+## 📚 Läses av andra (Rekommendationer)
+
+- **Normal People** av Sally Rooney - Rekommenderad av Anna
+- **Klara and the Sun** av Kazuo Ishiguro - Rekommenderad av David
+
+## 📝 Noteringar
+
+- Läsa minst 30 minuter per dag
+- Kom ihåg att skriva ner tankar direkt när jag läser
+- Diskutera böckerna med bokklubben på torsdag
+
+---
+*Denna fil kan redigeras via AI-chatten med kommandot `./bookclub -chat`*
+EOF
+        fi
+        
+        # Start the chat
         aider --no-gitignore --config .aider.chat.yml 
         ;;
     -setup)
