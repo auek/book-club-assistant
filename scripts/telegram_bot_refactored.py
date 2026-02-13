@@ -27,8 +27,7 @@ def main():
     )
 
     # Use a more robust initialization to avoid Python 3.13 compatibility issues
-    # Setting updater=None is required for Python 3.13 compatibility with some PTB versions
-    application = ApplicationBuilder().token(token).updater(None).build()
+    application = ApplicationBuilder().token(token).build()
 
     # Register handlers
     application.add_handler(CommandHandler("start", start))
