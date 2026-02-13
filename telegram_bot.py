@@ -1,5 +1,7 @@
 import os
 import logging
+import re
+from datetime import datetime
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.error import BadRequest
@@ -55,7 +57,8 @@ Available commands:
 /start - Welcome message
 /help - Show this help
 /books - Show reading log
-/progress - Show current reading
+/progress - Show or update current reading progress
+    Usage: /progress [1-100] to update percentage
 /discuss - Start a discussion about your books
 """
     await update.message.reply_text(help_text)
@@ -120,7 +123,36 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 @auth_only
 async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Show the current reading progress in a nice format."""
+    """
+    Show current reading progress or update it with a percentage.
+    
+    Usage:
+        /progress - Show current progress
+        /progress 50 - Update progress to 50%
+    """
+    # Check if an argument was provided
+    args = context.args
+    
+    if args:
+        # Try to update progress
+        try:
+            progress_value = int(args[0])
+            if 0 <= progress_value <= 100:
+                success = await update_progress_file(progress_value)
+                if success:
+                    await update.message.reply_text(f"✅ Progress updated to {progress_value}%")
+                else:
+                    await update.message.reply_text("❌ Could not update progress file.")
+            else:
+                await update.message.reply_text("❌ Please provide a number between 0 and 100.")
+        except ValueError:
+            await update.message.reply_text("❌ Please provide a valid number between 0 and 100.")
+    else:
+        # Just show current progress
+        await _show_current_progress(update)
+
+async def _show_current_progress(update: Update) -> None:
+    """Helper function to show current reading progress."""
     try:
         with open("reading_in_progress.md", "r", encoding="utf-8") as f:
             progress_content = f.read()
@@ -145,6 +177,54 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     except Exception as e:
         logger.exception(f"Error in show_progress: {e}")
         await update.message.reply_text("❌ Error reading progress file.")
+
+async def update_progress_file(progress_percentage: int) -> bool:
+    """
+    Update the reading_in_progress.md file with new progress percentage.
+    Returns True if successful, False otherwise.
+    """
+    try:
+        # Read the current file
+        with open("reading_in_progress.md", "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        # Find and update progress percentage
+        lines = content.split('\n')
+        updated_lines = []
+        progress_updated = False
+        
+        for line in lines:
+            # Look for progress indicators like "Progress: X%" or similar patterns
+            if any(keyword in line.lower() for keyword in ['progress:', 'framsteg:', '%']):
+                # Try to find and replace the percentage
+                import re
+                # Pattern to find percentage numbers
+                pattern = r'(\d{1,3})%'
+                new_line = re.sub(pattern, f'{progress_percentage}%', line)
+                updated_lines.append(new_line)
+                progress_updated = True
+                logger.info(f"Updated progress line: {line.strip()} -> {new_line.strip()}")
+            else:
+                updated_lines.append(line)
+        
+        # If no progress line was found, add one at the end
+        if not progress_updated:
+            updated_lines.append(f"\n\n**Progress:** {progress_percentage}%")
+            logger.info(f"Added new progress line: {progress_percentage}%")
+        
+        # Write back to file
+        with open("reading_in_progress.md", "w", encoding="utf-8") as f:
+            f.write('\n'.join(updated_lines))
+        
+        logger.info(f"Successfully updated progress to {progress_percentage}%")
+        return True
+        
+    except FileNotFoundError:
+        logger.error("reading_in_progress.md not found")
+        return False
+    except Exception as e:
+        logger.exception(f"Error updating progress file: {e}")
+        return False
 
 def format_progress_for_telegram(markdown_text: str) -> str:
     """Format the reading progress markdown for nice Telegram display."""
@@ -240,42 +320,55 @@ def format_books_for_telegram(markdown_text: str) -> str:
     # Find the table section
     in_table = False
     book_count = 0
+    table_rows = []
     
+    # First, collect all table rows
     for line in lines:
         if line.startswith('|') and 'Titel' in line and 'Författare' in line:
             in_table = True
             continue  # Skip header row
         elif line.startswith('|') and in_table:
-            # Parse table row
-            parts = [part.strip() for part in line.split('|') if part.strip()]
-            if len(parts) >= 5:
-                title, author, rating, date, link = parts[0], parts[1], parts[2], parts[3], parts[4]
-                book_count += 1
-                
-                # Format rating with stars
-                try:
-                    rating_int = int(rating)
-                    stars = '⭐' * rating_int + '☆' * (5 - rating_int) if rating_int <= 5 else rating
-                except ValueError:
-                    stars = rating
-                
-                # Format the book entry
-                formatted_lines.append(f"<b>{book_count}. {title}</b>")
-                formatted_lines.append(f"   👤 <i>{author}</i>")
-                formatted_lines.append(f"   {stars} | 📅 {date}")
-                formatted_lines.append("")
+            table_rows.append(line)
         elif line.startswith('## Sammanfattning'):
-            # Add summary section
-            formatted_lines.append("\n📊 <b>Sammanfattning</b>")
             in_table = False
-        elif line.startswith('- **Totalt antal böcker:**'):
-            formatted_lines.append(line.replace('- **', '📚 ').replace('**', ''))
-        elif line.startswith('- **Högsta betyg:**'):
-            formatted_lines.append(line.replace('- **', '🏆 ').replace('**', ''))
-        elif line.startswith('- **Senaste bok:**'):
-            formatted_lines.append(line.replace('- **', '🆕 ').replace('**', ''))
-        elif line.startswith('- **Äldsta bok:**'):
-            formatted_lines.append(line.replace('- **', '📜 ').replace('**', ''))
+    
+    # Process each table row
+    for i, line in enumerate(table_rows):
+        parts = [part.strip() for part in line.split('|') if part.strip()]
+        if len(parts) >= 5:
+            title, author, rating, date, link = parts[0], parts[1], parts[2], parts[3], parts[4]
+            book_count += 1
+            
+            # Format rating with stars
+            try:
+                rating_int = int(rating)
+                stars = '⭐' * rating_int + '☆' * (5 - rating_int) if rating_int <= 5 else rating
+            except ValueError:
+                stars = rating
+            
+            # Format the book entry
+            formatted_lines.append(f"<b>{book_count}. {title}</b>")
+            formatted_lines.append(f"   👤 <i>{author}</i>")
+            formatted_lines.append(f"   {stars} | 📅 {date}")
+            # Add a blank line between books, but not after the last one
+            if i < len(table_rows) - 1:
+                formatted_lines.append("")
+    
+    # Add summary section
+    in_summary = False
+    for line in lines:
+        if line.startswith('## Sammanfattning'):
+            formatted_lines.append("\n📊 <b>Sammanfattning</b>")
+            in_summary = True
+        elif in_summary and line.startswith('- **'):
+            if 'Totalt antal böcker:' in line:
+                formatted_lines.append(line.replace('- **', '📚 ').replace('**', ''))
+            elif 'Högsta betyg:' in line:
+                formatted_lines.append(line.replace('- **', '🏆 ').replace('**', ''))
+            elif 'Senaste bok:' in line:
+                formatted_lines.append(line.replace('- **', '🆕 ').replace('**', ''))
+            elif 'Äldsta bok:' in line:
+                formatted_lines.append(line.replace('- **', '📜 ').replace('**', ''))
     
     # If no books were found in table format, return original with header
     if book_count == 0:

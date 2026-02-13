@@ -1,4 +1,7 @@
 model: openrouter/deepseek/deepseek-v3.2
+editor-model: openrouter/google/gemini-2.0-flash-001
+architect: true
+auto-accept-architect: false
 # model: openrouter/deepseek/deepseek-r1-distill-llama-70b
 chat-language: english
 read: [ARCHITECT.md]
@@ -15,6 +18,7 @@ file:
   - get_chat_id.py
   - README.md
   - ROADMAP.md
+  - MIGRATION.md
   - requirements.txt
 stream: true
 cache-prompts: true
