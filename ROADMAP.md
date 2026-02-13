@@ -51,7 +51,7 @@ Once Phase 4 is complete, these can be implemented in any order.
 
 #### Feature 2: Testing & Documentation
 - ✅ Unit tests with `pytest`.
-- [ ] Full Raspberry Pi (Volumio) validation (Pending user report).
+- ✅ Full Raspberry Pi (Volumio) validation.
 - ✅ Update `README.md` with new architecture details.
 
 #### Feature 3: AI-Chat Integration
