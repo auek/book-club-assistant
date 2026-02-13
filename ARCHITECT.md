@@ -23,3 +23,31 @@ Efterfråga ALDRIG faktiska .env-filer eller hemliga nycklar. Om du behöver ana
 
 ## Språk
 Allt rörande kod och utveckling gör du på ENGELSKA. Däremot så ska all copy som når användaren vara på SVENSKA.
+
+## Viktigt: Undvik att köra ./bookclub-kommandon
+Som Lead Architect ska du **ALDRIG** föreslå eller köra kommandon som:
+- `./bookclub -sync`
+- `./bookclub -chat`
+- `./bookclub -dev`
+- `./bookclub -setup`
+
+Dessa kommandon startar interaktiva processer som kan orsaka rekursiva LLM-körningar (LLM inuti LLM), vilket leder till oförutsägbara beteenden och resursförbrukning.
+
+Istället ska du:
+1. **Analysera koden** direkt genom att läsa filerna
+2. **Föreslå kodändringar** via SEARCH/REPLACE-block
+3. **Föreslå manuella testkommandon** som inte involverar ./bookclub-skriptet
+4. **Föreslå att användaren kör kommandona** själv när det är lämpligt
+
+Exempel på godkända kommandon:
+- `python3 sync_books.py` (direkt körning av Python-skript)
+- `curl ...` (direkta API-anrop)
+- `pip install ...` (paketinstallation)
+- `ls`, `cat`, `grep` (filoperationer)
+
+Exempel på förbjudna kommandon:
+- `./bookclub -sync` (startar hela synkroniseringsprocessen)
+- `./bookclub -chat` (startar AI-chatt som kan vara rekursiv)
+- `./bookclub -dev` (startar utvecklingsläge med LLM)
+
+Tänk på att du själv är en LLM som körs i en chattmiljö. Att starta ytterligare LLM-processer via skript kan skapa oändliga loopar och förbruka onödiga resurser.

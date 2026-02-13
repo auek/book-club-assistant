@@ -1,24 +1,25 @@
-model: openrouter/deepseek/deepseek-v3.2
-editor-model: openrouter/google/gemini-2.0-flash-001
-architect: true
-auto-accept-architect: false
 # model: openrouter/deepseek/deepseek-r1-distill-llama-70b
+model: openrouter/deepseek/deepseek-v3.2
+editor-model: openrouter/openai/gpt-4o-mini
+auto-accept-architect: false
 chat-language: english
 read: [ARCHITECT.md]
-file: 
-  - bookclub
-  - bookclub.pi
-  - .aider.sync.yml
-  - .aider.chat.yml
-  - BOOKCLUB_CHAT.md
-  - reading_log.md
-  - reading_in_progress.md
-  - sync_books.py
-  - telegram_bot.py
-  - get_chat_id.py
-  - README.md
-  - ROADMAP.md
-  - MIGRATION.md
-  - requirements.txt
+# file: 
+  # - bookclub
+  # - bookclub.pi
+  # - .aider.sync.yml
+  # - .aider.chat.yml
+  # - BOOKCLUB_CHAT.md
+  # - reading_log.md
+  # - reading_in_progress.md
+  # - reading_log.md
+  # - reading_in_progress.md
+  # - sync_books.py
+  # - telegram_bot.py
+  # - get_chat_id.py
+  # - README.md
+  # - ROADMAP.md
+  # - MIGRATION.md
+  # - requirements.txt
 stream: true
 cache-prompts: true

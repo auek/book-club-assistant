@@ -79,8 +79,23 @@ case "$1" in
         echo "✅ Synchronization complete."
         ;;
     -chat)
-        echo "💬 Starting book chat (Model: Grok 4.1 Fast)..."
-        # Check if log file exists before trying to read it
+        echo "💬 Starting book chat..."
+        
+        # Create reading_log.md if it doesn't exist
+        if [[ ! -f "reading_log.md" ]]; then
+            echo "📄 Creating empty reading_log.md file..."
+            echo "# Lästa Böcker" > reading_log.md
+            echo "" >> reading_log.md
+            echo "Inga böcker synkade än. Kör './bookclub -sync' för att synkronisera från Goodreads." >> reading_log.md
+        fi
+        
+        # Create reading_in_progress.md if it doesn't exist
+        if [[ ! -f "reading_in_progress.md" ]]; then
+            echo "📄 Creating reading_in_progress.md from template..."
+            cp reading_in_progress.example.md reading_in_progress.md
+        fi
+        
+        # Start the chat
         aider --no-gitignore --config .aider.chat.yml 
         ;;
     -setup)
@@ -104,7 +119,7 @@ case "$1" in
         echo "   ./bookclub -chat   # Start chat"
         ;;
     -dev)
-        echo "🔧 Starting development mode (Model: Qwen3 Coder Next)..."
+        echo "🔧 Starting development mode..."
         check_api_key
         aider --no-gitignore --config .aider.dev.yml
         ;;
