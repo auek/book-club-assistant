@@ -14,7 +14,7 @@ Följande fungerar redan och ska bevaras:
 - ✅ **Fas 0** (Förberedelser) är slutförd: behörigheter fixade, kataloger skapade, backup finns.
 - ✅ **Fas 1** (Sync-modulen) är slutförd: `src/sync/` moduler skapade, `scripts/sync_books_refactored.py` implementerad och `sync_books.py` ersatt med en wrapper.
 - ✅ **Fas 2** (Data-lagret) är slutförd: `src/data/models.py` och `storage.py` implementerade.
-- ❌ **Fas 3** (Refaktorera Telegram-boten) är inte påbörjad: `src/bot/commands/`, `middleware/` finns tomma, och `src/bot/core.py` saknas.
+- ⚠️ **Fas 3** (Refaktorera Telegram-boten) är påbörjad: Moduler för middleware, core och kommandon skapade.
 - ❌ **Fas 4–6** (Launcher, Förbättringar, Testning) är inte påbörjade.
 
 ## 🔄 Migreringsfaser – Steg-för-steg

@@ -36,10 +36,12 @@ logger = logging.getLogger(__name__)
 
 def auth_only(func):
     """Decorator to restrict access to authorized chat ID."""
+    @wraps(func)
     async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        chat_id = os.getenv('TELEGRAM_CHAT_ID')
         incoming_chat_id = str(update.effective_chat.id)
-        logger.info(f"Auth check: incoming chat ID {incoming_chat_id}, allowed {CHAT_ID}")
-        if CHAT_ID and incoming_chat_id != CHAT_ID:
+        
+        if chat_id and incoming_chat_id != chat_id:
             logger.warning(f"Unauthorized access from chat ID: {incoming_chat_id}")
             await update.message.reply_text("⛔ Unauthorized access.")
             return
