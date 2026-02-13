@@ -8,17 +8,6 @@
 ### 2. **Mina drömmars stad** av Jonas Gardell - (Progress: 80%)
    - Anteckningar: Stark och känsloladdad berättelse om att hitta sin plats i världen.
 
-## 💭 Kommande böcker
-
-- **Alkemisten** av Paulo Coelho
-- **1984** av George Orwell
-- **Mörkrets hjärta** av Joseph Conrad
-
-## 📚 Läses av andra (Rekommendationer)
-
-- **Normal People** av Sally Rooney - Rekommenderad av Anna
-- **Klara and the Sun** av Kazuo Ishiguro - Rekommenderad av David
-
 ## 📝 Noteringar
 
 - Läsa minst 30 minuter per dag
