@@ -1,4 +1,5 @@
 from telegram import Update
+from src.utils.llm import get_ai_response
 from telegram.ext import ContextTypes
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
