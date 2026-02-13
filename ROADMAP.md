@@ -15,7 +15,7 @@ Följande fungerar redan och ska bevaras:
 - ✅ **Fas 1** (Sync-modulen) är slutförd: `src/sync/` moduler skapade, `scripts/sync_books_refactored.py` implementerad och `sync_books.py` ersatt med en wrapper.
 - ✅ **Fas 2** (Data-lagret) är slutförd: `src/data/models.py` och `storage.py` implementerade.
 - ✅ **Fas 3** (Refaktorera Telegram-boten) är slutförd: Moduler för middleware, core och kommandon skapade, och `telegram_bot.py` ersatt med en wrapper.
-- ❌ **Fas 4–6** (Launcher, Förbättringar, Testning) är inte påbörjade.
+- ❌ **Fas 4–7** (Launcher, Förbättringar, Testning, AI-Chat) är inte påbörjade.
 
 ## 🔄 Migreringsfaser – Steg-för-steg
 
@@ -91,6 +91,14 @@ Följande fungerar redan och ska bevaras:
 2. ❌ **Testa på Raspberry Pi** (eller simulera med Docker)
 3. ❌ **Verifiera bakåtkompatibilitet** – alla befintliga kommandon, miljövariabler och filformat måste förbli oförändrade
 4. ❌ **Dokumentera den nya strukturen** i `README.md`
+
+### Fas 7: AI-Chat Integration (Framtida utveckling)
+**Mål**: Möjliggör chatt med bokloggen direkt i Telegram utan `aider`.
+
+1. ❌ **Skapa `src/utils/llm.py`** – Wrapper för OpenAI/DeepSeek API-anrop.
+2. ❌ **Skapa `src/bot/commands/chat.py`** – Hanterare för `/chat` och fritext.
+3. ❌ **Implementera Context Injection** – Läs in `reading_log.md` som system-prompt.
+4. ❌ **Session Management** – Enkel historik per användare för sammanhängande samtal.
 
 ## 🗂️ Mål-filstruktur (Efter Migrering)
 
