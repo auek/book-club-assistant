@@ -62,7 +62,7 @@ Once Phase 4 is complete, these can be implemented in any order.
 
 ---
 
-### 📖 Stories (Backlog)
+### 📖 Backlog
 
 #### Story 1: Auto-Backups
 - [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
