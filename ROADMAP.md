@@ -63,9 +63,9 @@ Once Phase 4 is complete, these can be implemented in any order.
 
 #### Feature 4: AI-Chat Integration
 - **Goal**: Direct Telegram interaction with the book log using LLMs.
-- [ ] `src/utils/llm.py` (OpenAI/DeepSeek wrapper).
-- [ ] `src/bot/commands/chat.py` for `/chat` command.
-- [ ] Context Injection (inject `reading_log.md` into prompt).
+- ✅ `src/utils/llm.py` (OpenRouter wrapper).
+- ✅ Context Injection (inject `reading_log.md` into prompt).
+- [ ] Implement `/discuss` command logic in bot.
 
 ---
 

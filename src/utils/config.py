@@ -10,6 +10,7 @@ def validate_config():
         'GOODREADS_USER_ID',
         'TELEGRAM_BOT_TOKEN',
         'TELEGRAM_CHAT_ID',
+        'OPENROUTER_API_KEY',
         'AIDER_MODEL',
         'AIDER_EDITOR_MODEL',
         'CHAT_MODEL'
