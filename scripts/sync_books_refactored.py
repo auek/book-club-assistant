@@ -13,6 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.sync.fetch import fetch_goodreads_rss
 from src.sync.parse import parse_xml, sort_books
 from src.sync.render import generate_markdown, cleanup_files
+from src.data.storage import save_reading_log
 
 
 # Constants
@@ -46,8 +47,7 @@ def main():
     
     # Write output
     print(f"💾 Writing to {OUTPUT_FILE}...")
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write(markdown_content)
+    save_reading_log(markdown_content, OUTPUT_FILE)
     
     # Cleanup
     cleanup_files(INPUT_FILE)

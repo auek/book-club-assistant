@@ -6,9 +6,10 @@ Handles XML parsing, data extraction, and sorting.
 
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import List, Optional
 import os
 import sys
+from src.data.models import Book
 
 
 # Goodreads RSS may send various date formats. We try these in order.
@@ -22,7 +23,7 @@ DATE_FORMATS = [
 ]
 
 
-def parse_xml(file_path: str) -> List[Dict]:
+def parse_xml(file_path: str) -> List[Book]:
     """
     Parse Goodreads XML file and extract book data.
     Handles missing fields and date errors gracefully.
@@ -31,7 +32,7 @@ def parse_xml(file_path: str) -> List[Dict]:
         file_path: Path to the XML file
         
     Returns:
-        List of book dictionaries
+        List of Book objects
     """
     if not os.path.exists(file_path):
         print(f"❌ Fel: Filen '{file_path}' saknas.", file=sys.stderr)
@@ -87,28 +88,28 @@ def parse_xml(file_path: str) -> List[Dict]:
             # If no date found at all, mark as missing
             display_date = "Missing"
 
-        books.append({
-            'title': title,
-            'author': author,
-            'rating': rating,
-            'date_display': display_date,
-            'date_obj': date_obj,
-            'link': link
-        })
+        books.append(Book(
+            title=title,
+            author=author,
+            rating=rating,
+            date_display=display_date,
+            date_obj=date_obj,
+            link=link
+        ))
 
     return books
 
 
-def sort_books(books: List[Dict]) -> List[Dict]:
+def sort_books(books: List[Book]) -> List[Book]:
     """
     Sort books based on read date (newest first).
     Books without date are placed last.
     
     Args:
-        books: List of book dictionaries
+        books: List of Book objects
         
     Returns:
         Sorted list of books
     """
     # Sort key: (Has date, Date object) -> reverse=True puts True (has date) first
-    return sorted(books, key=lambda x: (x['date_obj'] is None, x['date_obj']), reverse=True)
+    return sorted(books, key=lambda x: (x.date_obj is None, x.date_obj), reverse=True)

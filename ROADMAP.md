@@ -13,7 +13,7 @@ Följande fungerar redan och ska bevaras:
 **Implementeringsstatus (uppdaterad 2026-02-13):**
 - ✅ **Fas 0** (Förberedelser) är slutförd: behörigheter fixade, kataloger skapade, backup finns.
 - ✅ **Fas 1** (Sync-modulen) är slutförd: `src/sync/` moduler skapade, `scripts/sync_books_refactored.py` implementerad och `sync_books.py` ersatt med en wrapper.
-- ⚠️ **Fas 2** (Data-lagret) är påbörjad: `src/data/models.py` skapad. `storage.py` saknas fortfarande.
+- ✅ **Fas 2** (Data-lagret) är slutförd: `src/data/models.py` och `storage.py` implementerade.
 - ❌ **Fas 3** (Refaktorera Telegram-boten) är inte påbörjad: `src/bot/commands/`, `middleware/` finns tomma, och `src/bot/core.py` saknas.
 - ❌ **Fas 4–6** (Launcher, Förbättringar, Testning) är inte påbörjade.
 
@@ -48,13 +48,13 @@ Följande fungerar redan och ska bevaras:
 5. ✅ **Testa sida vid sida** för att verifiera identisk utdata
 6. ✅ **Ersätt original `sync_books.py`** med en tunn wrapper
 
-### Fas 2: Extrahera Data-lagret (Dag 4) – **PÅBÖRJAD**
+### Fas 2: Extrahera Data-lagret (Dag 4) – **SLUTFÖRD**
 **Mål**: Isolera fil-I/O och datamodeller.
 
 1. ✅ **Skapa `src/data/models.py`** med `Book`-dataklass
-2. ❌ **Skapa `src/data/storage.py`** med funktioner för att läsa/skriva loggfiler
-3. ❌ **Uppdatera sync-modulen** att använda dessa datafunktioner
-4. ❌ **Testa** att synkroniseringen fortfarande fungerar
+2. ✅ **Skapa `src/data/storage.py`** med funktioner för att läsa/skriva loggfiler
+3. ✅ **Uppdatera sync-modulen** att använda dessa datafunktioner
+4. ✅ **Testa** att synkroniseringen fortfarande fungerar
 
 ### Fas 3: Refaktorera Telegram-boten (Dag 5–7) – **INTE PÅBÖRJAD**
 **Känsligaste delen** – boten fungerar redan. Arbeta inkrementellt.
@@ -146,13 +146,12 @@ bookclub/
 
 ## 🚀 Nästa Steg
 
-**Aktuell fokus: Fas 2 (Data-lagret).**  
-Fas 1 är helt klar. Nu fortsätter vi med Fas 2:  
+**Aktuell fokus: Fas 3 (Refaktorera Telegram-boten).**  
+Fas 2 är helt klar. Nu fortsätter vi med Fas 3:  
 
-1. ✅ **Skapa `src/data/models.py`** med en `Book` dataklass.  
-2. **Skapa `src/data/storage.py`** som tar hand om läsning/skrivning av `reading_log.md` och `reading_in_progress.md`.  
-3. **Uppdatera `scripts/sync_books_refactored.py`** att använda `src.data.storage` istället för direkt filmanipulering.  
-4. **Verifiera** att synkroniseringen fortfarande genererar identisk output.
+1. **Skapa `src/bot/core.py`** – flytta `main()`, applikationsbyggare, felhanterare.
+2. **Skapa `src/bot/middleware/auth.py`** – flytta `@auth_only`-dekoratorn.
+3. **Skapa `src/bot/middleware/formatters.py`** – flytta formateringsfunktioner.
 
 Kör följande kommandon för att kolla status:
 
@@ -178,4 +177,4 @@ python3 scripts/sync_books_refactored.py
 
 ---
 *Senast uppdaterad: 2026-02-13*
-*Status: Fas 1 slutförd, Fas 2 påbörjad – Nästa steg är att implementera storage.py.*
+*Status: Fas 1 & 2 slutförda, Fas 3 påbörjad – Nästa steg är att refaktorera botens kärna.*

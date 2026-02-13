@@ -4,11 +4,12 @@ Render module for generating Markdown output.
 Handles Markdown generation and file cleanup.
 """
 
-from typing import List, Dict
+from typing import List
 import os
+from src.data.models import Book
 
 
-def generate_markdown(books: List[Dict]) -> str:
+def generate_markdown(books: List[Book]) -> str:
     """
     Generate Markdown content based on the sorted book list.
     
@@ -30,20 +31,20 @@ def generate_markdown(books: List[Dict]) -> str:
     # Add rows
     for book in books:
         # Replace | with HTML entity to avoid breaking the table
-        title = book['title'].replace('|', '&#124;')
-        author = book['author'].replace('|', '&#124;')
-        lines.append(f"| {title} | {author} | {book['rating']} | {book['date_display']} | [Link]({book['link']}) |")
+        title = book.title.replace('|', '&#124;')
+        author = book.author.replace('|', '&#124;')
+        lines.append(f"| {title} | {author} | {book.rating} | {book.date_display} | [Link]({book.link}) |")
 
     # Summary
     total_books = len(books)
-    top_rated_books = [b['title'] for b in books if b['rating'] == '5']
+    top_rated_books = [b.title for b in books if b.rating == '5']
     
     latest_book = books[0] if books else None
     oldest_book = None
 
     # Find oldest book with a valid date
     for book in reversed(books):
-        if book['date_obj']:
+        if book.date_obj:
             oldest_book = book
             break
 
@@ -59,10 +60,10 @@ def generate_markdown(books: List[Dict]) -> str:
         lines.append("- **Högsta betyg:** Saknas")
 
     if latest_book:
-        lines.append(f"- **Senaste bok:** {latest_book['title']} (läst {latest_book['date_display']})")
+        lines.append(f"- **Senaste bok:** {latest_book.title} (läst {latest_book.date_display})")
     
     if oldest_book:
-        lines.append(f"- **Äldsta bok:** {oldest_book['title']} (läst {oldest_book['date_display']})")
+        lines.append(f"- **Äldsta bok:** {oldest_book.title} (läst {oldest_book.date_display})")
 
     # Notes
     lines.extend([
