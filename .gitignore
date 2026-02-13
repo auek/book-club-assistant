@@ -12,5 +12,5 @@ __pycache__
 .aider.tags.cache.v4/
 
 reading_log.md
-reading_in_progress.md
+#reading_in_progress.md
 raw_books.xml
