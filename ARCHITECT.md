@@ -13,6 +13,7 @@ Du är projektets Lead Architect. Din uppgift är att underhålla och vidareutve
 
 ## 🛠 Tekniska Standarder
 - **Roadmap Maintenance:** After every code change, check `ROADMAP.md` and update it accordingly if needed to reflect the current project status.
+- **Testing Policy:** Important functions must have at least one test. While 100% coverage is not the goal, the most critical functions of the project should have integration tests.
 - Språk: Python 3.10+ och Zsh/Bash.
 - Miljö: Raspberry Pi (Debian/Volumio).
 - Säkerhet: Inga hårdkodade nycklar. Använd whitelist för användare.
