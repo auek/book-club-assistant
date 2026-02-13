@@ -79,7 +79,7 @@ case "$1" in
         echo "✅ Synchronization complete."
         ;;
     -chat)
-        echo "💬 Starting book chat (Model: Grok 4.1 Fast)..."
+        echo "💬 Starting book chat..."
         
         # Create reading_log.md if it doesn't exist
         if [[ ! -f "reading_log.md" ]]; then
@@ -119,7 +119,7 @@ case "$1" in
         echo "   ./bookclub -chat   # Start chat"
         ;;
     -dev)
-        echo "🔧 Starting development mode (Model: Qwen3 Coder Next)..."
+        echo "🔧 Starting development mode..."
         check_api_key
         aider --no-gitignore --config .aider.dev.yml
         ;;
