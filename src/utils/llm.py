@@ -1,10 +1,6 @@
 import os
 import httpx
-from datetime import datetime
-try:
-    from zoneinfo import ZoneInfo
-except ImportError:
-    from backports.zoneinfo import ZoneInfo
+from datetime import datetime, timedelta, timezone
 from openai import AsyncOpenAI
 from src.data.storage import read_file_content
 
@@ -45,7 +41,10 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         http_client=http_client,
     )
 
-    current_time = datetime.now(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M:%S")
+    # Manual offset for Sweden (CET is UTC+1, CEST is UTC+2)
+    # This avoids zoneinfo/backports dependencies on older Python versions
+    offset = timedelta(hours=1) 
+    current_time = (datetime.now(timezone.utc) + offset).strftime("%Y-%m-%d %H:%M:%S")
     system_prompt = f"""
     {instructions}
     
