@@ -86,7 +86,17 @@ Once Phase 4 is complete, these can be implemented in any order.
     - *Analysis*: Development tools like `aider` should be external to the project's runtime logic to avoid circular dependencies and bloated production environments.
     - *Action*: Move development instructions to a separate `CONTRIBUTING.md` or a dedicated dev-script.
 
-#### Story 4: MCP Integration (Notion)
+#### Story 4: Garmin Connect Integration (Health & Workouts)
+- [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
+    - **Goal**: Allow the LLM to analyze fitness trends and suggest personalized running workouts.
+    - **Safety & Privacy Precautions (MANDATORY)**:
+        - *Data Minimization*: Only fetch the specific metrics required for the requested analysis.
+        - *Local Processing*: Ensure health data is processed in-memory and not stored permanently in the book log or shared logs.
+        - *Medical Disclaimer*: The AI must prepend a disclaimer stating it is not a medical professional and workout suggestions should be followed at the user's own risk.
+        - *Explicit Consent*: Implement a per-session confirmation before the bot accesses health endpoints.
+        - *Anonymization*: Strip personal identifiers (name, GPS coordinates of home/work) before sending data to the LLM provider.
+
+#### Story 5: MCP Integration (Notion)
 - [ ] **Notion Connectivity**: Implement Model Context Protocol (MCP) or direct Tool Calling to allow the AI to interact with Notion.
     - [ ] Define tool schema for searching and adding notes to Notion.
     - [ ] Implement secure credential management for Notion API keys.
