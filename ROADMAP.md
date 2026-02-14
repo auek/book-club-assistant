@@ -117,6 +117,15 @@ Once Phase 4 is complete, these can be implemented in any order.
 - [ ] Update Sync logic to save to DB first, then export to Markdown.
 - [ ] Security considerations for local DB access is of utmost importance.
 
+#### Feature 5: Transition to "Personal Assistant" Architecture
+- **Analysis**: Evaluate if Garmin and Notion features belong in the "Bookclub" or if the project should be forked/renamed to a "Personal Assistant" framework.
+- [ ] **Modular Core**: Design a core assistant that can load "plugins" (Bookclub, Garmin, Notion).
+- [ ] **Head Start**: Use the existing Telegram/LLM integration as the foundation for the new project.
+
+#### Feature 6: LLM Time Awareness
+- **Goal**: Ensure the LLM knows the current local time for context-aware responses.
+- ✅ Inject `datetime.now()` into the system prompt in `src/utils/llm.py`.
+
 ---
 
 ## 🗂️ Target File Structure

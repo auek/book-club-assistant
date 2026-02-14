@@ -1,5 +1,6 @@
 import os
 import httpx
+from datetime import datetime
 from openai import AsyncOpenAI
 from src.data.storage import read_file_content
 
@@ -25,9 +26,12 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         http_client=http_client,
     )
 
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     system_prompt = f"""
     {instructions}
     
+    Aktuell lokal tid: {current_time}
+
     Här är användarens nuvarande läslogg:
     {reading_log}
 
