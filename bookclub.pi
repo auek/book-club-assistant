@@ -2,7 +2,7 @@
 # Simplified version for Raspberry Pi
 # Compatible with bash (default on most Raspberry Pi systems)
 
-USAGE="Usage: $0 [-sync | -setup | -bot]"
+USAGE="Usage: $0 [-sync | -setup | -bot | -tmux]"
 
 # Platform detection
 detect_platform() {
@@ -73,8 +73,8 @@ case "$1" in
         sudo apt update
         
         # Install required packages
-        echo "📦 Installing Python 3, pip, curl..."
-        sudo apt install -y python3 python3-pip curl
+        echo "📦 Installing Python 3, pip, curl, tmux..."
+        sudo apt install -y python3 python3-pip curl tmux
         
         # Install Python dependencies
         echo "📦 Installing Python dependencies..."
@@ -94,6 +94,15 @@ case "$1" in
         ;;
     -bot)
         python3 -m src.cli.bot_cli
+        ;;
+    -tmux)
+        if tmux has-session -t bookclub 2>/dev/null; then
+            echo "Reattaching to existing 'bookclub' session..."
+            tmux attach -t bookclub
+        else
+            echo "Starting new 'bookclub' tmux session..."
+            tmux new-session -s bookclub "$0 -bot"
+        fi
         ;;
     *)
         echo "$USAGE"

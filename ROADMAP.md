@@ -65,12 +65,12 @@ This document outlines the progression from a monolithic script-based system to 
     - [ ] **Security**: Implement strict User ID whitelisting to ensure only the owner can interact with the bot.
     - [ ] **Economy**: Leverage the existing `src/utils/llm.py` with prompt caching to maintain low API costs compared to flat-rate subscriptions.
 
-#### Story 7: Persistent SSH Sessions (tmux) [S]
-- [ ] **Remote Persistence**: Install and configure `tmux` on the Raspberry Pi (Volumio).
+#### Story 7: Persistent SSH Sessions (tmux) [S] (COMPLETED)
+- [x] **Remote Persistence**: Install and configure `tmux` on the Raspberry Pi (Volumio).
     - **Goal**: Prevent the bot from stopping when the SSH connection is lost.
-    - [ ] Install `tmux` via `apt-get`.
-    - [ ] Document the workflow: `ssh` -> `tmux attach` -> run bot.
-    - [ ] (Optional) Create a simple helper script to auto-attach or start a new session.
+    - [x] Install `tmux` via `apt-get`.
+    - [x] Document the workflow: `ssh` -> `tmux attach` -> run bot.
+    - [x] (Optional) Create a simple helper script to auto-attach or start a new session.
 
 ---
 
