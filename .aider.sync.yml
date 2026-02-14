@@ -1,6 +1,0 @@
-model: openrouter/deepseek/deepseek-v3.2
-chat-language: swedish
-read: [BOOKCLUB_CHAT.md, README.md]
-file: [raw_books.xml]
-stream: true
-cache-prompts: true

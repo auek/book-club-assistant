@@ -1,6 +1,0 @@
-chat-language: swedish
-read: [BOOKCLUB_CHAT.md, reading_log.md, reading_in_progress.md]
-file: [reading_in_progress.md]
-stream: true
-cache-prompts: true
-chat-mode: ask
