@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
-from src.bot.core import error_handler
+from src.bot.core import error_handler, get_persistence
 from src.bot.commands.base import start, help_command, discuss_books
 from src.bot.commands.books import show_books
 from src.bot.commands.progress import show_progress
@@ -29,7 +29,8 @@ def main():
     )
 
     # Build application with specific defaults to avoid common initialization errors
-    application = ApplicationBuilder().token(token).build()
+    persistence = get_persistence()
+    application = ApplicationBuilder().token(token).persistence(persistence).build()
 
     # Register handlers
     application.add_handler(CommandHandler("start", start))

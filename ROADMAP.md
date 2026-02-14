@@ -19,8 +19,8 @@ This document outlines the progression from a monolithic script-based system to 
 #### Story 1: Auto-Backups [S]
 - [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
 
-#### Story 2: Persistent Bot Memory [M]
-- [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
+#### Story 2: Persistent Bot Memory [M] (COMPLETED)
+- [x] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
 #### Story 5: Garmin Connect Integration (Health & Workouts) [L]

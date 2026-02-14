@@ -16,3 +16,4 @@
 - ✅ **Decouple Development Tools**: Removed launcher flags and externalized tool configs. [2026-02-14]
 - ✅ **Persistent SSH Sessions**: Implemented `nohup` for Volumio and `tmux` for standard Linux. [2026-02-14]
 - ✅ **API Key Separation**: Isolated production bot credentials from development environment. [2026-02-14]
+- ✅ **Persistent Bot Memory**: Integrated `PicklePersistence` to preserve chat history across restarts. [2026-02-14]

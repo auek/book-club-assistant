@@ -1,8 +1,17 @@
 import logging
+import os
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, PicklePersistence
 
 logger = logging.getLogger(__name__)
+
+def get_persistence():
+    """Initialize and return the persistence instance."""
+    persistence_file = "bot_persistence.pickle"
+    # Ensure the file has restricted permissions if it exists
+    if os.path.exists(persistence_file):
+        os.chmod(persistence_file, 0o600)
+    return PicklePersistence(filepath=persistence_file)
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle errors in telegram bot updates."""
