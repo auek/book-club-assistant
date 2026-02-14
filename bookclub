@@ -16,8 +16,9 @@ detect_platform() {
 PLATFORM=$(detect_platform)
 
 usage() {
-    echo "Usage: $0 [-sync | -setup]"
+    echo "Usage: $0 [-sync | -bot | -setup]"
     echo "  -sync   Fetches data from Goodreads and updates reading list automatically"
+    echo "  -bot    Starts the Telegram bot"
     echo "  -setup  Installs necessary dependencies for $PLATFORM"
     echo ""
     echo "For Raspberry Pi, use bookclub.pi instead:"
@@ -54,6 +55,9 @@ fi
 case "$1" in
     -sync)
         python3 -m src.cli.sync_cli
+        ;;
+    -bot)
+        python3 -m src.cli.bot_cli
         ;;
     -setup)
         echo "🔧 Installing dependencies for $PLATFORM..."
