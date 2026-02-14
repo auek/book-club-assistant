@@ -38,8 +38,8 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     context.user_data['history'].append({"role": "user", "content": user_query})
     context.user_data['history'].append({"role": "assistant", "content": response})
     
-    # Keep only last 20 messages (10 exchanges)
-    if len(context.user_data['history']) > 20:
-        context.user_data['history'] = context.user_data['history'][-20:]
+    # Keep only last 40 messages (20 exchanges)
+    if len(context.user_data['history']) > 40:
+        context.user_data['history'] = context.user_data['history'][-40:]
 
     await update.message.reply_text(response)
