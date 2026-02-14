@@ -23,13 +23,20 @@ This document outlines the progression from a monolithic script-based system to 
 - [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
-#### Story 3: Decouple Development Tools [S]
+#### Story 3: Decouple Development Tools [S] (COMPLETED)
 - [x] **Clean Launchers**: Remove `-dev` and `-chat` (CLI) modes from `bookclub` and `bookclub.pi`.
 - [x] **Tool Agnosticism**: Remove `.aider.chat.yml` and `.aider.dev.yml` from the repository.
 - [x] **Persona Extraction**: Move general architect instructions from `ARCHITECT.md` to global user config and replace with a project-specific `AGENTS.md`.
 - [x] **Git Cleanup**: Update `.gitignore` to ignore any local IDE or LLM-tool specific configurations.
 
-#### Story 4: Garmin Connect Integration (Health & Workouts) [L]
+#### Story 4: API Key Separation [S]
+- [ ] **Credential Isolation**: Separate OpenRouter API keys for development (Aider) and production (Bot).
+    - *Goal*: Enable granular cost tracking and improve security by isolating the Raspberry Pi's credentials from the development environment.
+    - [ ] Generate a new OpenRouter key specifically for the Bot.
+    - [ ] Update `.env` on the Raspberry Pi with the new key.
+    - [ ] Verify that Aider continues to use the global key from `~/.aider.conf.yml`.
+
+#### Story 5: Garmin Connect Integration (Health & Workouts) [L]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
     - **Goal**: Allow the LLM to analyze fitness trends and suggest personalized running workouts.
     - **Safety & Privacy Precautions (MANDATORY)**:
