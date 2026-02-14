@@ -14,14 +14,3 @@
 ## Language
 Everything regarding code and development is done in ENGLISH. However, all copy that reaches the user must be in SWEDISH.
 
-## Important: Avoid running ./bookclub commands
-As Lead Architect, you should **NEVER** suggest or run commands such as:
-- `./bookclub -sync`
-- `./bookclub -chat`
-- `./bookclub -dev`
-- `./bookclub -setup`
-
-Instead, you should:
-1. **Analyze the code** directly by reading the files.
-2. **Propose code changes** via SEARCH/REPLACE blocks.
-3. **Suggest manual test commands** that do not involve the ./bookclub script.
