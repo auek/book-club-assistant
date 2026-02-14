@@ -13,6 +13,7 @@ You are the project's Lead Architect. Your task is to maintain and further devel
 
 ## 🛠 Technical Standards
 - **Roadmap Maintenance:** After every code change, check `ROADMAP.md` and update it accordingly if needed to reflect the current project status.
+- **Archive Policy:** Completed stories must be moved from `ROADMAP.md` to `ARCHIVE.md` ONLY after they are verified and tested. Each archived entry must include a completion date in `[YYYY-MM-DD]` format.
 - **Testing Policy:** Important functions must have at least one test. While 100% coverage is not the goal, the most critical functions of the project should have integration tests.
     - *Critical functions* include: Data parsing/extraction, user-facing formatters, and file I/O operations.
     - *New Features:* Any new core logic or complex data transformation introduced in future phases must include corresponding tests.
