@@ -1,4 +1,5 @@
 import os
+import httpx
 from openai import AsyncOpenAI
 from src.data.storage import read_file_content
 
@@ -15,9 +16,12 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
     reading_in_progress = read_file_content("reading_in_progress.md")
     instructions = read_file_content("BOKKLUBB.md")
     
+    # Use a custom httpx client to avoid proxy-related initialization errors
+    http_client = httpx.AsyncClient(proxies={})
     client = AsyncOpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=api_key,
+        http_client=http_client,
     )
 
     system_prompt = f"""
