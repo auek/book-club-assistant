@@ -65,8 +65,9 @@ python3 -m src.cli.health
 - `/start` – Välkomstmeddelande
 - `/help` – Visa tillgängliga kommandon
 - `/books` – Visa hela läsloggen
-- `/progress` – Visa pågående läsning
-- `/discuss` – Starta en diskussion om böckerna
+- `/progress` – Visa eller uppdatera lässtatus (t.ex. `/progress 45`)
+- `/info` – Visa systemstatistik och token-användning
+- *Allmänt meddelande* – Skicka text direkt till boten för att diskutera dina böcker med AI:n.
 
 ## Project Structure
 - `src/` – Modular Python source code (Bot, Sync, CLI, Data, Utils).
@@ -75,6 +76,29 @@ python3 -m src.cli.health
 - `reading_log.md` – Generated reading log (git-ignored).
 - `reading_in_progress.md` – Current reading status (git-ignored).
 - `tests/` – Integration tests for formatters and sync logic.
+
+## Persistence (Running in Background)
+Since the bot needs to stay active after you close your SSH session, use the following methods:
+
+### On Raspberry Pi (Volumio)
+Use `nohup` to keep the process running:
+```bash
+# Start the bot in background
+nohup ./bookclub.pi -bot > bot.log 2>&1 &
+
+# View live logs
+tail -f bot.log
+
+# Stop the bot
+pkill -f bot_cli
+```
+
+### On Standard Linux (with tmux)
+```bash
+./bookclub.pi -tmux
+```
+- **Detach:** Press `Ctrl+B` then `D`.
+- **Reattach:** Run `./bookclub.pi -tmux` again.
 
 ## Workflow
 1. `-sync` fetches RSS data → creates `raw_books.xml` → parses to `reading_log.md`.
