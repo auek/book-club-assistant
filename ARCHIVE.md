@@ -14,3 +14,4 @@
 - ✅ **AI-Chat Integration**: OpenRouter wrapper, context injection, and conversation memory. [2026-02-14]
 - ✅ **LLM Time Awareness**: `datetime.now()` injection for context. [2026-02-14]
 - ✅ **Decouple Development Tools**: Removed launcher flags and externalized tool configs. [2026-02-14]
+- ✅ **Persistent SSH Sessions**: Implemented `nohup` for Volumio and `tmux` for standard Linux. [2026-02-14]

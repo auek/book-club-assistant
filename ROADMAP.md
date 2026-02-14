@@ -23,12 +23,6 @@ This document outlines the progression from a monolithic script-based system to 
 - [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
-#### Story 3: Decouple Development Tools [S] (COMPLETED)
-- [x] **Clean Launchers**: Remove `-dev` and `-chat` (CLI) modes from `bookclub` and `bookclub.pi`.
-- [x] **Tool Agnosticism**: Remove `.aider.chat.yml` and `.aider.dev.yml` from the repository.
-- [x] **Persona Extraction**: Move general architect instructions from `ARCHITECT.md` to global user config and replace with a project-specific `AGENTS.md`.
-- [x] **Git Cleanup**: Update `.gitignore` to ignore any local IDE or LLM-tool specific configurations.
-
 #### Story 4: API Key Separation [S]
 - [ ] **Credential Isolation**: Separate OpenRouter API keys for development (Aider) and production (Bot).
     - *Goal*: Enable granular cost tracking and improve security by isolating the Raspberry Pi's credentials from the development environment.
@@ -65,13 +59,6 @@ This document outlines the progression from a monolithic script-based system to 
     - [ ] **Security**: Implement strict User ID whitelisting to ensure only the owner can interact with the bot.
     - [ ] **Economy**: Leverage the existing `src/utils/llm.py` with prompt caching to maintain low API costs compared to flat-rate subscriptions.
 
-#### Story 7: Persistent SSH Sessions (nohup/tmux) [S] (COMPLETED)
-- [x] **Remote Persistence**: Ensure the bot runs persistently on the Raspberry Pi (Volumio).
-    - **Goal**: Prevent the bot from stopping when the SSH connection is lost.
-    - [x] Use `nohup` as the primary method for Volumio (due to restricted apt repositories).
-    - [x] Document the workflow: `nohup ./bookclub.pi -bot > bot.log 2>&1 &`.
-    - [x] Keep `tmux` logic in `bookclub.pi` as an optional fallback for standard Pi OS.
-
 ---
 
 ### 🔮 Future Evolution (Major Shifts & XL Features)
@@ -86,10 +73,6 @@ This document outlines the progression from a monolithic script-based system to 
 - **Analysis**: Evaluate if Garmin and Notion features belong in the "Bookclub" or if the project should be forked/renamed to a "Personal Assistant" framework.
 - [ ] **Modular Core**: Design a core assistant that can load "plugins" (Bookclub, Garmin, Notion).
 - [ ] **Head Start**: Use the existing Telegram/LLM integration as the foundation for the new project.
-
-#### Feature 6: LLM Time Awareness
-- **Goal**: Ensure the LLM knows the current local time for context-aware responses.
-- ✅ Inject `datetime.now()` into the system prompt in `src/utils/llm.py`.
 
 ---
 *See [ARCHIVE.md](ARCHIVE.md) for completed tasks and historical milestones.*
