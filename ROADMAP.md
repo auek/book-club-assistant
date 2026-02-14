@@ -8,9 +8,9 @@ This document outlines the progression from a monolithic script-based system to 
 - ✅ `python telegram_bot.py` works (legacy monolithic bot)
 - ✅ `src/` structure established and core modules refactored.
 
-**Implementation Status (Updated: 2026-02-13):**
-- ✅ **Phases 0-3** (Refactoring & Modularization) are COMPLETED.
-- ❌ **Phase 4+** (Integration & New Features) are PENDING.
+**Implementation Status (Updated: 2026-02-14):**
+- ✅ **Phases 0-4** (Refactoring & Modularization) are COMPLETED.
+- ✅ **Features 1-4** (Robustness, Testing, UX, AI) are COMPLETED.
 
 ---
 
@@ -61,13 +61,14 @@ Once Phase 4 is complete, these can be implemented in any order.
 - ✅ Improve visual layout with better HTML formatting and separators.
 - ✅ Add visual progress bars for the `/progress` command.
 
-#### Feature 4: AI-Chat Integration - **IN PROGRESS**
+#### Feature 4: AI-Chat Integration - **COMPLETED**
 - **Goal**: Direct Telegram interaction with the book log using LLMs.
-- ✅ `src/utils/llm.py` (OpenRouter wrapper).
-- ✅ Context Injection (inject `reading_log.md` into prompt).
+- ✅ `src/utils/llm.py` (OpenRouter wrapper with `httpx` 0.28+ compatibility).
+- ✅ Context Injection (inject `reading_log.md`, `reading_in_progress.md`, and `BOKKLUBB.md`).
+- ✅ Security: Implemented prompt injection protection using delimiters and system instructions.
 - ✅ Implement `/discuss` command logic in bot.
 - ✅ Default text messages to AI discussion.
-- [ ] **Conversation Memory**: Implement short-term history (last 20 messages) using `context.user_data`.
+- ✅ **Conversation Memory**: Implemented short-term history using `context.user_data`.
 
 ---
 
@@ -80,7 +81,12 @@ Once Phase 4 is complete, these can be implemented in any order.
 - [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
-#### Story 3: MCP Integration (Notion)
+#### Story 3: Decouple Development Tools
+- [ ] **Clean Launchers**: Remove `-dev` and `-chat` (CLI) modes from `bookclub` and `bookclub.pi`.
+    - *Analysis*: Development tools like `aider` should be external to the project's runtime logic to avoid circular dependencies and bloated production environments.
+    - *Action*: Move development instructions to a separate `CONTRIBUTING.md` or a dedicated dev-script.
+
+#### Story 4: MCP Integration (Notion)
 - [ ] **Notion Connectivity**: Implement Model Context Protocol (MCP) or direct Tool Calling to allow the AI to interact with Notion.
     - [ ] Define tool schema for searching and adding notes to Notion.
     - [ ] Implement secure credential management for Notion API keys.

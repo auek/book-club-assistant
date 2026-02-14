@@ -3,49 +3,44 @@
 A lightweight Bash/Python tool to synchronize read books from Goodreads to a local Markdown log.
 
 ## Features
-- Fetches read books from Goodreads via RSS.
-- Generates a clean Markdown table with metadata (title, author, rating, date, link).
-- AI-powered book discussions via Telegram (Grok/DeepSeek).
-- Automatic cleanup of temporary files.
-- **Telegram Bot** to view reading logs and current progress via chat.
-- **Health Checks** to ensure environment readiness on Raspberry Pi/Volumio.
+- **Sync:** Fetches read books from Goodreads via RSS and generates a clean Markdown log.
+- **Bot:** A Telegram interface to view logs, track reading progress, and discuss books with AI.
+- **Multi-Platform:** Optimized for both standard PC (Linux/macOS) and Raspberry Pi (Debian/Volumio).
+- **Robust:** Built-in health checks and error handling for API and file operations.
 
 ## Requirements
 - Python 3.10+
-- Zsh or Bash
 - Goodreads User ID (Public profile)
-- Telegram Bot Token (for bot features)
-- XAI/DeepSeek API Key (for AI features)
+- Telegram Bot Token & Chat ID
+- OpenRouter API Key (for AI features)
 
 ## Quick Setup
 1. Clone the repository.
-2. Create a `.env` file with your credentials:
+2. Create a `.env` file:
    ```env
-   GOODREADS_USER_ID='your_user_id_here'
-   TELEGRAM_BOT_TOKEN='your_bot_token_here'
-   TELEGRAM_CHAT_ID='your_chat_id_here'
-   XAI_API_KEY='your_key_here'
+   GOODREADS_USER_ID='your_id'
+   TELEGRAM_BOT_TOKEN='your_token'
+   TELEGRAM_CHAT_ID='your_chat_id'
+   OPENROUTER_API_KEY='your_key'
+   CHAT_MODEL='google/gemini-2.0-flash-001'
    ```
-   Find your User ID at [goodreads.com/settings](https://www.goodreads.com/settings).
-3. Run the health check to verify setup:
-   ```bash
-   python3 -m src.cli.health
-   ```
-4. Run `./bookclub -sync` to fetch and generate the log.
+3. Run health check: `python3 -m src.cli.health`
 
 ## Usage
+
+### On PC (Linux/macOS)
+Use the `./bookclub` launcher:
 ```bash
-# Synchronize books from Goodreads
-./bookclub -sync
+./bookclub -sync   # Sync books from Goodreads
+./bookclub -bot    # Start the Telegram bot
+```
 
-# Start AI chat about your books (uses Grok)
-./bookclub -chat
-
-# Development mode with DeepSeek
-./bookclub -dev
-
-# Start the Telegram Bot (optimized for Raspberry Pi)
-./bookclub.pi -bot
+### On Raspberry Pi
+Use the `./bookclub.pi` launcher (optimized for Pi environments):
+```bash
+./bookclub.pi -setup  # Install system dependencies
+./bookclub.pi -sync   # Sync books
+./bookclub.pi -bot    # Start the bot
 ```
 
 ## Telegram Bot Setup
