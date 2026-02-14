@@ -68,6 +68,7 @@ Once Phase 4 is complete, these can be implemented in any order.
 - ✅ Context Injection (inject `reading_log.md`, `reading_in_progress.md`, and `BOKKLUBB.md`).
 - ✅ Security: Implemented prompt injection protection using delimiters and system instructions.
 - ✅ Implement `/discuss` command logic in bot.
+- ✅ Implement `/info` command for token usage and model tracking.
 - ✅ Default text messages to AI discussion.
 - ✅ **Conversation Memory**: Implemented short-term history using `context.user_data`.
 

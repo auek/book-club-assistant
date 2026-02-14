@@ -12,6 +12,7 @@ from src.bot.core import error_handler
 from src.bot.commands.base import start, help_command, discuss_books
 from src.bot.commands.books import show_books
 from src.bot.commands.progress import show_progress
+from src.bot.commands.info import show_info
 
 def main():
     load_dotenv()
@@ -36,6 +37,7 @@ def main():
     application.add_handler(CommandHandler("books", show_books))
     application.add_handler(CommandHandler("progress", show_progress))
     application.add_handler(CommandHandler("discuss", discuss_books))
+    application.add_handler(CommandHandler("info", show_info))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, discuss_books))
     
     application.add_error_handler(error_handler)

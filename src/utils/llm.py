@@ -4,6 +4,21 @@ from datetime import datetime
 from openai import AsyncOpenAI
 from src.data.storage import read_file_content
 
+# Global usage tracking (resets on restart)
+USAGE_STATS = {
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "request_count": 0
+}
+
+def get_usage_report() -> dict:
+    """Returns the current usage statistics and model name."""
+    return {
+        **USAGE_STATS,
+        "model": os.getenv('CHAT_MODEL', 'google/gemini-2.0-flash-001')
+    }
+
 async def get_ai_response(user_query: str, history: list = None) -> str:
     """Get a response from the LLM based on the reading log context."""
     api_key = os.getenv('OPENROUTER_API_KEY')
@@ -63,6 +78,15 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
             temperature=0.7,
             max_tokens=500  # Guardrail: Limit response length
         )
+
+        # Update usage statistics
+        usage = response.usage
+        if usage:
+            USAGE_STATS["prompt_tokens"] += usage.prompt_tokens
+            USAGE_STATS["completion_tokens"] += usage.completion_tokens
+            USAGE_STATS["total_tokens"] += usage.total_tokens
+            USAGE_STATS["request_count"] += 1
+
         return response.choices[0].message.content
     except Exception as e:
         return f"❌ Ett fel uppstod vid kontakt med AI: {str(e)}"
