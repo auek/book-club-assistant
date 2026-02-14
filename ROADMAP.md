@@ -76,19 +76,19 @@ Once Phase 4 is complete, these can be implemented in any order.
 
 ### 📖 Backlog
 
-#### Story 1: Auto-Backups
+#### Story 1: Auto-Backups [S]
 - [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
 
-#### Story 2: Persistent Bot Memory
+#### Story 2: Persistent Bot Memory [M]
 - [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
-#### Story 3: Decouple Development Tools
+#### Story 3: Decouple Development Tools [S]
 - [ ] **Clean Launchers**: Remove `-dev` and `-chat` (CLI) modes from `bookclub` and `bookclub.pi`.
     - *Analysis*: Development tools like `aider` should be external to the project's runtime logic to avoid circular dependencies and bloated production environments.
     - *Action*: Move development instructions to a separate `CONTRIBUTING.md` or a dedicated dev-script.
 
-#### Story 4: Garmin Connect Integration (Health & Workouts)
+#### Story 4: Garmin Connect Integration (Health & Workouts) [L]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
     - **Goal**: Allow the LLM to analyze fitness trends and suggest personalized running workouts.
     - **Safety & Privacy Precautions (MANDATORY)**:
@@ -98,7 +98,7 @@ Once Phase 4 is complete, these can be implemented in any order.
         - *Explicit Consent*: Implement a per-session confirmation before the bot accesses health endpoints.
         - *Anonymization*: Strip personal identifiers (name, GPS coordinates of home/work) before sending data to the LLM provider.
 
-#### Story 5: MCP Integration (Notion)
+#### Story 5: MCP Integration (Notion) [L]
 - [ ] **Notion Connectivity**: Implement Model Context Protocol (MCP) or direct Tool Calling to allow the AI to interact with Notion.
     - [ ] Define tool schema for searching and adding notes to Notion.
     - [ ] Implement secure credential management for Notion API keys.
@@ -109,7 +109,7 @@ Once Phase 4 is complete, these can be implemented in any order.
         - *Privacy*: Acknowledge that retrieved data is sent to the LLM provider.
         - *Robustness*: Implement rate-limiting and token-usage guards to prevent recursive loops.
 
-#### Story 6: Discord Frontend Integration
+#### Story 6: Discord Frontend Integration [M]
 - [ ] **Discord Bot Implementation**: Create a parallel frontend to the Telegram bot using `discord.py`.
     - **Goal**: Provide a desktop/mobile alternative that functions as a cost-effective personal assistant.
     - [ ] Implement `src/bot/discord_core.py` to handle Discord events.
@@ -117,7 +117,7 @@ Once Phase 4 is complete, these can be implemented in any order.
     - [ ] **Security**: Implement strict User ID whitelisting to ensure only the owner can interact with the bot.
     - [ ] **Economy**: Leverage the existing `src/utils/llm.py` with prompt caching to maintain low API costs compared to flat-rate subscriptions.
 
-#### Story 7: Persistent SSH Sessions (tmux)
+#### Story 7: Persistent SSH Sessions (tmux) [S]
 - [ ] **Remote Persistence**: Install and configure `tmux` on the Raspberry Pi (Volumio).
     - **Goal**: Prevent the bot from stopping when the SSH connection is lost.
     - [ ] Install `tmux` via `apt-get`.
