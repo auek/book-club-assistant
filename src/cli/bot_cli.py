@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import os
 import sys
+import logging
 
 # Add parent directory to path to import from src
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-import logging
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
@@ -28,6 +27,7 @@ def main():
         level=logging.INFO
     )
 
+    # Build application with specific defaults to avoid common initialization errors
     application = ApplicationBuilder().token(token).build()
 
     # Register handlers
