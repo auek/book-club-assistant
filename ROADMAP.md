@@ -25,9 +25,9 @@ This document outlines the progression from a monolithic script-based system to 
 
 #### Story 3: Decouple Development Tools [S]
 - [x] **Clean Launchers**: Remove `-dev` and `-chat` (CLI) modes from `bookclub` and `bookclub.pi`.
-- [ ] **Tool Agnosticism**: Remove `.aider.chat.yml` and `.aider.dev.yml` from the repository.
-- [ ] **Persona Extraction**: Move general architect instructions from `ARCHITECT.md` to global user config and replace with a project-specific `AGENTS.md`.
-- [ ] **Git Cleanup**: Update `.gitignore` to ignore any local IDE or LLM-tool specific configurations.
+- [x] **Tool Agnosticism**: Remove `.aider.chat.yml` and `.aider.dev.yml` from the repository.
+- [x] **Persona Extraction**: Move general architect instructions from `ARCHITECT.md` to global user config and replace with a project-specific `AGENTS.md`.
+- [x] **Git Cleanup**: Update `.gitignore` to ignore any local IDE or LLM-tool specific configurations.
 
 #### Story 4: Garmin Connect Integration (Health & Workouts) [L]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
