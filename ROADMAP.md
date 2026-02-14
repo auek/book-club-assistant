@@ -11,6 +11,7 @@ This document outlines the progression from a monolithic script-based system to 
 **Implementation Status (Updated: 2026-02-14):**
 - ✅ **Phases 0-4** (Refactoring & Modularization) are COMPLETED.
 - ✅ **Features 1-4** (Robustness, Testing, UX, AI) are COMPLETED.
+- ⏳ **Story 6** (Discord Frontend) added to backlog.
 
 ---
 
@@ -106,6 +107,14 @@ Once Phase 4 is complete, these can be implemented in any order.
         - *Safety*: Implement "Human-in-the-loop" confirmation for any write/delete actions.
         - *Privacy*: Acknowledge that retrieved data is sent to the LLM provider.
         - *Robustness*: Implement rate-limiting and token-usage guards to prevent recursive loops.
+
+#### Story 6: Discord Frontend Integration
+- [ ] **Discord Bot Implementation**: Create a parallel frontend to the Telegram bot using `discord.py`.
+    - **Goal**: Provide a desktop/mobile alternative that functions as a cost-effective personal assistant.
+    - [ ] Implement `src/bot/discord_core.py` to handle Discord events.
+    - [ ] Port existing commands (/books, /progress, /discuss) to Discord Slash Commands.
+    - [ ] **Security**: Implement strict User ID whitelisting to ensure only the owner can interact with the bot.
+    - [ ] **Economy**: Leverage the existing `src/utils/llm.py` with prompt caching to maintain low API costs compared to flat-rate subscriptions.
 
 ---
 
