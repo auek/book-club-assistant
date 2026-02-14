@@ -3,10 +3,12 @@ from src.utils.llm import get_ai_response
 from telegram.ext import ContextTypes
 from src.bot.middleware.auth import auth_only
 
+@auth_only
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a welcome message."""
     await update.message.reply_text("Welcome to your book club bot! ✨")
 
+@auth_only
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a help message."""
     help_text = """
