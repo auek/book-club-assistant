@@ -6,19 +6,19 @@ from src.bot.middleware.auth import auth_only
 @auth_only
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a welcome message."""
-    await update.message.reply_text("Welcome to your book club bot! ✨")
+    await update.message.reply_text("Välkommen till din bokklubbs-bot! ✨")
 
 @auth_only
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a help message."""
     help_text = """
-Available commands:
-/start - Welcome message
-/help - Show this help
-/books - Show reading log
-/progress - Show or update current reading progress
-    Usage: /progress [1-100] to update percentage
-/discuss - Start a discussion about your books
+Tillgängliga kommandon:
+/start - Välkomstmeddelande
+/help - Visa denna hjälp
+/books - Visa läsloggen
+/progress - Visa eller uppdatera aktuell lässtatus
+    Användning: /progress [1-100] för att uppdatera procent
+/discuss - Starta en diskussion om dina böcker
 """
     await update.message.reply_text(help_text)
 
