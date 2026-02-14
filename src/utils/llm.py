@@ -17,7 +17,8 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
     instructions = read_file_content("BOKKLUBB.md")
     
     # Use a custom httpx client to avoid proxy-related initialization errors
-    http_client = httpx.AsyncClient(proxies={})
+    # In httpx 0.28+, 'proxy' is used instead of 'proxies'
+    http_client = httpx.AsyncClient(proxy=None)
     client = AsyncOpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=api_key,
