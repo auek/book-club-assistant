@@ -11,7 +11,7 @@ This document outlines the progression from a monolithic script-based system to 
 **Implementation Status (Updated: 2026-02-14):**
 - ✅ **Phases 0-4** (Refactoring & Modularization) are COMPLETED.
 - ✅ **Features 1-4** (Robustness, Testing, UX, AI) are COMPLETED.
-- ⏳ **Story 6** (Discord Frontend) added to backlog.
+- ⏳ **Story 6** (Discord Frontend) is the current priority.
 
 ---
 
@@ -74,7 +74,7 @@ Once Phase 4 is complete, these can be implemented in any order.
 
 ---
 
-### 📖 Backlog
+### 📖 Backlog (Stories S-L)
 
 #### Story 1: Auto-Backups [S]
 - [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
@@ -126,15 +126,15 @@ Once Phase 4 is complete, these can be implemented in any order.
 
 ---
 
-### 🔮 Future Evolution (Major Shifts)
+### 🔮 Future Evolution (Major Shifts & XL Features)
 
-#### Feature 4: SQLite Integration
+#### Feature 1: SQLite Integration [XL]
 - **Goal**: Move from Markdown-parsing to a database as the "source of truth".
 - [ ] `src/data/database.py` for SQLite management.
 - [ ] Update Sync logic to save to DB first, then export to Markdown.
 - [ ] Security considerations for local DB access is of utmost importance.
 
-#### Feature 5: Transition to "Personal Assistant" Architecture
+#### Feature 2: Transition to "Personal Assistant" Architecture [XL]
 - **Analysis**: Evaluate if Garmin and Notion features belong in the "Bookclub" or if the project should be forked/renamed to a "Personal Assistant" framework.
 - [ ] **Modular Core**: Design a core assistant that can load "plugins" (Bookclub, Garmin, Notion).
 - [ ] **Head Start**: Use the existing Telegram/LLM integration as the foundation for the new project.
