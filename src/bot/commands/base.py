@@ -18,16 +18,13 @@ Tillgängliga kommandon:
 /books - Visa läsloggen
 /progress - Visa eller uppdatera aktuell lässtatus
     Användning: /progress [1-100] för att uppdatera procent
-/discuss - Starta en diskussion om dina böcker
 """
     await update.message.reply_text(help_text)
 
 @auth_only
 async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Start a discussion about books."""
+    """Handle general messages as a discussion about books."""
     user_query = update.message.text
-    if user_query.startswith('/discuss'):
-        user_query = user_query.replace('/discuss', '', 1).strip()
     
     if not user_query or len(user_query) < 2:
         return
