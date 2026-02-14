@@ -1,6 +1,6 @@
 # Pågående läsning
 
-## Vredens druvor
+## The Grapes of Wrath
 - Författare: John Steinbeck
 - Framsteg: 8%
 
