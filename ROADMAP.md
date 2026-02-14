@@ -1,4 +1,4 @@
-# 🗺️ Comprehensive Roadmap & Migration Plan for Bookclub-Bot
+# 🗺️ Comprehensive Roadmap for Bookclub-Bot
 
 ## 🎯 Overview
 This document outlines the progression from a monolithic script-based system to a modular architecture supporting PC and Raspberry Pi, with future AI and database integrations.
@@ -11,7 +11,6 @@ This document outlines the progression from a monolithic script-based system to 
 **Implementation Status (Updated: 2026-02-14):**
 - ✅ **Phases 0-4** (Refactoring & Modularization) are COMPLETED.
 - ✅ **Features 1-4** (Robustness, Testing, UX, AI) are COMPLETED.
-- ⏳ **Story 6** (Discord Frontend) is the current priority.
 
 ---
 
