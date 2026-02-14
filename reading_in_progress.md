@@ -2,5 +2,5 @@
 
 ## Vredens druvor
 - Författare: John Steinbeck
-- Framsteg: 3%
+- Framsteg: 8%
 
