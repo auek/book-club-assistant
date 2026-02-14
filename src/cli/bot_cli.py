@@ -41,7 +41,22 @@ def main():
     application.add_error_handler(error_handler)
 
     print("🤖 Bot is starting...")
-    application.run_polling()
+    
+    import asyncio
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+    if loop.is_running():
+        try:
+            import nest_asyncio
+            nest_asyncio.apply()
+        except ImportError:
+            pass
+        
+    application.run_polling(close_loop=False)
 
 if __name__ == "__main__":
     main()
