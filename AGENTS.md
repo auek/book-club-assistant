@@ -5,6 +5,9 @@
 2. **Robustness:** Propose and implement better error handling (e.g., what happens if a file is missing or an API key is incorrect?).
 4. **Documentation:** Ensure the code is self-explanatory and well-document.
 
+## Forbidden Practices
+- NEVER run ./bookclub -bot since it logs into the same terminal session as development, which can lead to confusion and potential security risks.
+
 ## 🛠 Technical Standards
 - **Roadmap Maintenance:** After every code change, check `ROADMAP.md` and update it accordingly if needed to reflect the current project status.
 - **Archive Policy:** Completed stories must be moved from `ROADMAP.md` to `ARCHIVE.md` ONLY after they are verified and tested. Each archived entry must include a completion date in `[YYYY-MM-DD]` format.
