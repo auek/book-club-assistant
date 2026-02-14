@@ -24,9 +24,7 @@ This document outlines the progression from a monolithic script-based system to 
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
 #### Story 3: Decouple Development Tools [S]
-- [ ] **Clean Launchers**: Remove `-dev` and `-chat` (CLI) modes from `bookclub` and `bookclub.pi`.
-    - *Analysis*: Development tools like `aider` should be external to the project's runtime logic to avoid circular dependencies and bloated production environments.
-    - *Action*: Move development instructions to a separate `CONTRIBUTING.md` or a dedicated dev-script.
+- [x] **Clean Launchers**: Remove `-dev` and `-chat` (CLI) modes from `bookclub` and `bookclub.pi`.
 
 #### Story 4: Garmin Connect Integration (Health & Workouts) [L]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
