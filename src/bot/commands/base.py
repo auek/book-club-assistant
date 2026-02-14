@@ -42,4 +42,4 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if len(context.user_data['history']) > 40:
         context.user_data['history'] = context.user_data['history'][-40:]
 
-    await update.message.reply_text(response)
+    await update.message.reply_text(response, parse_mode='Markdown')
