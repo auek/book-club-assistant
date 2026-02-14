@@ -6,7 +6,11 @@
 4. **Documentation:** Ensure the code is self-explanatory and well-document.
 
 ## Forbidden Practices
-- NEVER run ./bookclub -bot since it logs into the same terminal session as development, which can lead to confusion and potential security risks.
+- NEVER run the bot inside the agentic session in any form or way. This includes but is not limited to:
+    - `./bookclub -bot`
+    - `./bookclub.pi -bot`
+    - `python3 -m src.cli.bot_cli`
+  Running the bot in the same terminal session as development leads to confusion, log pollution, and potential security risks.
 
 ## 🛠 Technical Standards
 - **Roadmap Maintenance:** After every code change, check `ROADMAP.md` and update it accordingly if needed to reflect the current project status.
