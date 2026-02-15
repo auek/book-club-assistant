@@ -1,20 +1,6 @@
-# 🗺️ Comprehensive Roadmap for Bookclub-Bot
+# 🗺️ Roadmap Backlog
 
-## 🎯 Overview
-This document outlines the progression from a monolithic script-based system to a modular architecture supporting PC and Raspberry Pi, with future AI and database integrations.
-
-## 📋 Current Status (Baseline)
-- ✅ `./bookclub -sync` works (legacy `sync_books.py`)
-- ✅ `python telegram_bot.py` works (legacy monolithic bot)
-- ✅ `src/` structure established and core modules refactored.
-
-**Implementation Status (Updated: 2026-02-14):**
-- ✅ **Phases 0-4** (Refactoring & Modularization) are COMPLETED.
-- ✅ **Features 1-4** (Robustness, Testing, UX, AI) are COMPLETED.
-
----
-
-### 📖 Backlog (Stories S-L)
+### 📖 Active Stories (S-L)
 
 #### Story 1: Auto-Backups [S]
 - [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
