@@ -70,6 +70,7 @@
 - **Story: Interaction History Persistence [M]**: Move conversation history from Pickle/RAM to the database for long-term "memory."
 
 #### Feature: New Domains (Plugins)
+- **Story: AI Book Recommendations [S]**: Implement a `/recommend` command that uses the LLM to suggest a new book based on the current library, but with a "wildcard" factor to keep suggestions unpredictable and fun.
 - **Story: Garmin Connect Integration [M]**: (Ref: Story 5) Fetch fitness data. Includes mandatory privacy stripping and medical disclaimers.
 - **Story: Notion Workspace Integration [L]**: (Ref: Story 5) Allow the AI to search and append notes to a specific Notion database.
 - **Story: Internationalization (i18n) [M]**: (Ref: Story 10) Move hardcoded Swedish strings to localizable files to allow easy language switching.
