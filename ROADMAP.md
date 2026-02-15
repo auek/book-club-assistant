@@ -3,7 +3,7 @@
 ### 📖 Active Stories (S-L)
 
 #### Story 1: Auto-Backups [S]
-- [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
+- [x] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
 
 #### Story 5: Garmin Connect Integration (Health & Workouts) [M]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.

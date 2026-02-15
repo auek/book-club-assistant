@@ -1,9 +1,16 @@
 import os
+import shutil
+from datetime import datetime
 from typing import List
 from src.data.models import Book
 
 def save_reading_log(markdown_content: str, output_file: str = "reading_log.md") -> None:
-    """Writes the generated markdown to the reading log file."""
+    """Writes the generated markdown to the reading log file, with a timestamped backup."""
+    if os.path.exists(output_file):
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_file = f"{output_file}.{timestamp}.bak"
+        shutil.copy2(output_file, backup_file)
+
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(markdown_content)
 
