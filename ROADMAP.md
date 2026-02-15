@@ -51,7 +51,8 @@
 *Status: Planned - Improving deployment reliability and developer experience.*
 
 #### Feature: CI/CD Pipeline
-- **Story: Automated Testing [S]**: Create a GitHub Actions workflow to run `pytest` on every push to the `main` branch.
+- **Story: Automated Testing [S]**: Create a GitHub Actions workflow to run `pytest` on all branches and Pull Requests to ensure `main` remains stable.
+- **Story: Branch Protection & Workflow [S]**: Define a branching strategy where features are developed in `feature/*` branches and merged only after passing tests.
 - **Story: Self-Hosted Deployment [M]**: Set up a GitHub Actions runner on the Raspberry Pi for automated code updates and bot restarts.
 - **Story: Security Scrubbing [S]**: Use `git filter-repo` to permanently remove historical traces of leaked API keys before potentially moving to a Public repository.
 
