@@ -16,6 +16,11 @@ async def show_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         await update.message.reply_text("❌ Error: Book log not found. Run sync first.")
         return
 
+    # Bail out if the table structure suggests > 500 books (approx 5 pipes per row)
+    if content.count('|') > 2500:
+        await update.message.reply_text("⚠️ Biblioteket är för stort (>500 böcker). Systemet stöder inte detta format än.")
+        return
+
     formatted_books = format_books_for_telegram(content, limit=10)
     parts = split_text_into_chunks(formatted_books)
     

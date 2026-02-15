@@ -11,6 +11,9 @@ import os
 import sys
 from src.data.models import Book
 
+# Safety cap for books to prevent excessively large files/prompts
+MAX_BOOK_CAP = 500
+
 
 # Goodreads RSS may send various date formats. We try these in order.
 DATE_FORMATS = [
@@ -45,10 +48,15 @@ def parse_xml(file_path: str) -> List[Book]:
         print(f"❌ Fel vid parsning av XML: {e}", file=sys.stderr)
         sys.exit(1)
 
+    items = root.findall('.//item')
+    if len(items) > MAX_BOOK_CAP:
+        print(f"⚠️ Warning: Library too large ({len(items)} books). Capping at {MAX_BOOK_CAP} for stability.")
+        items = items[:MAX_BOOK_CAP]
+
     books = []
     
     # Goodreads RSS items are typically under //item
-    for item in root.findall('.//item'):
+    for item in items:
         # Extract data with fallback for missing tags
         title_node = item.find('title')
         title = title_node.text if title_node is not None else "Unknown title"

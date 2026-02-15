@@ -34,12 +34,24 @@ def main():
     
     conn_ok = check_connectivity()
     perm_ok = check_permissions()
+    sanity_ok = check_data_sanity()
     
-    if valid and conn_ok and perm_ok:
+    if valid and conn_ok and perm_ok and sanity_ok:
         print("\n🚀 System is healthy and ready!")
     else:
         print("\n⚠️ System has health issues. Please check the errors above.")
         sys.exit(1)
+
+# Add this new function
+def check_data_sanity():
+    """Checks if the data files are within supported limits."""
+    log_path = "reading_log.md"
+    if os.path.exists(log_path):
+        size = os.path.getsize(log_path)
+        if size > 60000:
+            print(f"⚠️ Warning: {log_path} is very large ({size} bytes). This may slow down the bot.")
+            return False
+    return True
 
 if __name__ == "__main__":
     main()
