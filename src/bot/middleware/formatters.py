@@ -70,8 +70,9 @@ def format_progress_for_telegram(markdown_text: str) -> str:
     
     for line in lines:
         line = line.strip()
-        # Skip the redundant title from the markdown file
-        if not line or line == "# Pågående läsning": continue
+        # Skip redundant titles and instructions
+        if not line or line == "# Pågående läsning" or "📌 Uppdatera filen" in line:
+            continue
         
         # Identify progress lines using the Swedish key 'Framsteg'
         if 'framsteg:' in line.lower():

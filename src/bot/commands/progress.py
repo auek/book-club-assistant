@@ -18,9 +18,11 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             val = int(args[0])
             if 0 <= val <= 100:
                 if await update_progress_file(val):
-                    await update.message.reply_text(f"✅ Progress updated to {val}%")
+                    content = read_file_content("reading_in_progress.md")
+                    formatted = format_progress_for_telegram(content)
+                    await update.message.reply_text(f"✅ Uppdaterat till {val}%\n\n{formatted}", parse_mode='HTML')
                 else:
-                    await update.message.reply_text("❌ Could not update progress file.")
+                    await update.message.reply_text("❌ Kunde inte uppdatera filen.")
             else:
                 await update.message.reply_text("❌ Please provide a number between 0 and 100.")
         except ValueError:
