@@ -14,9 +14,13 @@ def test_format_progress_content():
 
 def test_format_progress_bar():
     """Test the visual progress bar logic."""
-    content = "Progress: 45%"
+    # Use 'framsteg' as expected by the Swedish-localized formatter
+    content = "Framsteg: 45%"
     formatted = format_progress_for_telegram(content)
-    assert "<code>[████░░░░░░] 45%</code>" in formatted
+    # The formatter now uses a 20-character wide bar (Story 8)
+    # 45% of 20 = 9 blocks
+    expected_bar = "█" * 9 + "░" * 11
+    assert f"<code>[{expected_bar}] 45%</code>" in formatted
 
 def test_format_books_limit():
     """Test that book formatting respects the limit and handles tables."""
