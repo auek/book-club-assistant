@@ -23,7 +23,7 @@ This document outlines the progression from a monolithic script-based system to 
 - [x] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
     - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
 
-#### Story 5: Garmin Connect Integration (Health & Workouts) [L]
+#### Story 5: Garmin Connect Integration (Health & Workouts) [M]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
     - **Goal**: Allow the LLM to analyze fitness trends and suggest personalized running workouts.
     - **Safety & Privacy Precautions (MANDATORY)**:
@@ -44,7 +44,7 @@ This document outlines the progression from a monolithic script-based system to 
         - *Privacy*: Acknowledge that retrieved data is sent to the LLM provider.
         - *Robustness*: Implement rate-limiting and token-usage guards to prevent recursive loops.
 
-#### Story 6: Discord Frontend Integration [M]
+#### Story 6: Discord Frontend Integration [L]
 - [ ] **Discord Bot Implementation**: Create a parallel frontend to the Telegram bot using `discord.py`.
     - **Goal**: Provide a desktop/mobile alternative that functions as a cost-effective personal assistant.
     - [ ] Implement `src/bot/discord_core.py` to handle Discord events.
@@ -57,7 +57,7 @@ This document outlines the progression from a monolithic script-based system to 
 - [ ] **Async Storage**: Refactor `src/data/storage.py` to use `aiofiles` for non-blocking I/O.
 - [ ] **Duplicate Detection**: Implement logic in `src/sync/parse.py` to prevent duplicate entries if the RSS feed overlaps.
 
-#### Story 8: Enhanced Bot UX [M]
+#### Story 8: Enhanced Bot UX [S]
 - [ ] **Manual Sync Command**: Add a `/sync` command to the Telegram bot to trigger the Goodreads update manually.
 - [ ] **Visual Progress Improvements**: Enhance the precision and styling of the progress bar in `src/bot/middleware/formatters.py`.
 
