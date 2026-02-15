@@ -69,8 +69,9 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
     messages = [{"role": "system", "content": system_prompt}]
     if history:
         messages.extend(history)
-    # Wrap user query in delimiters to help prevent prompt injection
-    messages.append({"role": "user", "content": f"<user_input>\n{user_query}\n</user_input>"})
+    # Wrap user query in neutral delimiters to prevent prompt injection
+    # without encouraging XML mirroring.
+    messages.append({"role": "user", "content": f"--- USER INPUT START ---\n{user_query}\n--- USER INPUT END ---"})
 
     try:
         # Guardrail: Limit input length to save tokens

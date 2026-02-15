@@ -37,7 +37,11 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         context.user_data['history'] = []
 
     response = await get_ai_response(user_query, context.user_data['history'])
-    
+
+    # Remove accidental XML-style tags from the response
+    import re
+    response = re.sub(r'</?response>', '', response, flags=re.IGNORECASE).strip()
+
     # Update history
     context.user_data['history'].append({"role": "user", "content": user_query})
     context.user_data['history'].append({"role": "assistant", "content": response})
