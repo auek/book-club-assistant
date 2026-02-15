@@ -18,6 +18,10 @@ Tillgängliga kommandon:
 /books - Visa läsloggen
 /progress - Visa eller uppdatera aktuell lässtatus
     Användning: /progress [1-100] för att uppdatera procent
+/sync - Synka böcker från Goodreads och uppdatera loggen
+/info - Visa systeminformation och LLM-användning
+
+Skicka ett vanligt meddelande för att diskutera böcker med AI:n!
 """
     await update.message.reply_text(help_text)
 
