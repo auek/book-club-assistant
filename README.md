@@ -1,12 +1,13 @@
-# Book Club Sync
+# 📚 Your Personal Book Club Assistant
 
-A lightweight Bash/Python tool to synchronize read books from Goodreads to a local Markdown log.
+Transform your reading journey with an "always-on" AI companion designed to live on your Raspberry Pi. This isn't just a sync tool; it's a private, intelligent space to discuss every book you've ever read or are currently devouring.
 
-## Features
-- **Sync:** Fetches read books from Goodreads via RSS and generates a clean Markdown log.
-- **Bot:** A Telegram interface to view logs, track reading progress, and discuss books with AI.
-- **Multi-Platform:** Optimized for both standard PC (Linux/macOS) and Raspberry Pi (Debian/Volumio).
-- **Robust:** Built-in health checks and error handling for API and file operations.
+## ✨ Key Features
+- **Deep Book Discussions:** Chat with an LLM that has full context of your personal library—ask for summaries, thematic analysis, or what you should read next based on your history.
+- **Seamless Sync:** Automatically pulls your latest reads from Goodreads to keep your digital library up to date.
+- **Progress Tracking:** Interactive Telegram commands to update your reading percentage and visualize your momentum.
+- **Private & Secure:** Runs on your own hardware (Raspberry Pi) with strict Telegram authentication—your reading data and conversations stay yours.
+- **Robust Architecture:** Built with automated backups, health checks, and a rolling conversation memory.
 
 ## Requirements
 - Python 3.10+
