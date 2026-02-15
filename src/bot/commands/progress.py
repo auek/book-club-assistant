@@ -39,24 +39,33 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             await update.message.reply_text(plain, parse_mode=None)
 
 async def update_progress_file(percentage: int) -> bool:
-    """Update the reading_in_progress.md file with new progress percentage."""
+    """Update the reading_in_progress.md file with new progress percentage in Swedish."""
+    file_path = "reading_in_progress.md"
     try:
-        content = read_file_content("reading_in_progress.md")
+        content = read_file_content(file_path)
+        if not content:
+            return False
+            
         lines = content.split('\n')
         updated_lines, updated = [], False
+        
+        # Target the Swedish 'Framsteg:' key specifically
         for line in lines:
-            if any(kw in line.lower() for kw in ['progress:', 'framsteg:', '%']):
-                new_line = re.sub(r'(\d{1,3})%', f'{percentage}%', line)
+            if 'framsteg:' in line.lower():
+                # Replace the old percentage with the new value
+                new_line = re.sub(r'\d+%', f'{percentage}%', line)
                 updated_lines.append(new_line)
                 updated = True
             else:
                 updated_lines.append(line)
-        if not updated:
-            updated_lines.append(f"\n\n**Progress:** {percentage}%")
         
-        with open("reading_in_progress.md", "w", encoding="utf-8") as f:
-            f.write('\n'.join(updated_lines))
+        # If no 'Framsteg:' line exists, append it under the last book entry or end of file
+        if not updated:
+            updated_lines.append(f"- Framsteg: {percentage}%")
+        
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write('\n'.join(updated_lines).strip() + '\n')
         return True
     except Exception as e:
-        logger.exception(f"Error updating progress: {e}")
+        logger.error(f"Error updating progress file: {e}")
         return False

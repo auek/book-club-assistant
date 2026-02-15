@@ -72,18 +72,19 @@ def format_progress_for_telegram(markdown_text: str) -> str:
         line = line.strip()
         if not line: continue
         
-        # Handle progress percentage and visual bar
-        if '%' in line:
+        # Identify progress lines using the Swedish key 'Framsteg'
+        if 'framsteg:' in line.lower():
             try:
-                # Extract percentage number
-                pct_str = "".join(filter(str.isdigit, line))
-                if pct_str:
-                    pct = min(max(int(pct_str), 0), 100)
+                import re
+                # Extract the percentage number
+                pct_match = re.search(r'(\d+)%', line)
+                if pct_match:
+                    pct = min(max(int(pct_match.group(1)), 0), 100)
                     filled = pct // 10
                     bar = "█" * filled + "░" * (10 - filled)
                     formatted_lines.append(f"<code>[{bar}] {pct}%</code>")
                     continue
-            except (ValueError, Exception) as e:
+            except Exception as e:
                 logger.error(f"Error formatting progress bar: {e}")
 
         if line.startswith('# '): formatted_lines.append(f"\n<b>{line[2:]}</b>")
