@@ -42,6 +42,12 @@
 #### Story 9: Automated Quality Assurance [S]
 - [ ] **Pre-push Testing**: Implement a Git `pre-push` hook to automatically run the `pytest` suite before code is pushed to the remote repository.
 
+#### Story 10: Multi-language Support (i18n) [M]
+- [ ] **Internationalization**: Decouple Swedish strings from the source code to support English (EN) and other languages.
+    - [ ] **String Externalization**: Move hardcoded Swedish UI strings from `src/bot/`, `src/sync/render.py`, and `src/utils/llm.py` into language files (e.g., `locales/sv.json`, `locales/en.json`).
+    - [ ] **Language Selection**: Add a `LANGUAGE` key to `.env` to toggle between SV and EN.
+    - [ ] **Dynamic AI Context**: Update the system prompt in `src/utils/llm.py` to instruct the AI to respond in the configured language.
+
 ---
 
 ### 🔮 Future Evolution (Major Shifts & XL Features)
