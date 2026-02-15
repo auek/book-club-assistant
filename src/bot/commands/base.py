@@ -42,4 +42,8 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if len(context.user_data['history']) > 40:
         context.user_data['history'] = context.user_data['history'][-40:]
 
-    await update.message.reply_text(response, parse_mode='Markdown')
+    try:
+        await update.message.reply_text(response, parse_mode='Markdown')
+    except Exception:
+        # Fallback to plain text if Markdown parsing fails (e.g. malformed markdown from LLM)
+        await update.message.reply_text(response)
