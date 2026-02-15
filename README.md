@@ -42,14 +42,14 @@ To verify that the environment is correctly configured (especially on Raspberry 
 python3 -m src.cli.health
 ```
 
-### Bot-kommandon
-- `/start` – Starta boten och få ett välkomstmeddelande.
-- `/help` – Visa en lista över alla tillgängliga kommandon.
-- `/books` – Visa din kompletta läslogg från `reading_log.md`.
-- `/progress` – Se nuvarande framsteg eller uppdatera (t.ex. `/progress 45`).
-- `/sync` – Tvinga en synkronisering med Goodreads manuellt.
-- `/info` – Visa systemstatus, drifttid och AI-tokenstatistik.
-- *Textmeddelande* – Skriv direkt till boten för att diskutera dina böcker med AI:n.
+### 🤖 Bot Commands
+- `/start` – Initialize the bot and get a welcome message.
+- `/help` – List all available commands.
+- `/books` – View your entire reading log.
+- `/progress` – View current status or update (e.g., `/progress 45`).
+- `/sync` – Manually trigger a fresh sync with Goodreads.
+- `/info` – Check system health, uptime, and AI token usage.
+- *Any text* – Simply send a message to start a deep discussion about your books with the AI.
 
 ## Project Structure
 - `src/` – Modular Python source code (Bot, Sync, CLI, Data, Utils).
