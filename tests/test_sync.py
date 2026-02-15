@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
 import pytest
 from src.sync.parse import sort_books
