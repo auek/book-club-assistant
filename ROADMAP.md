@@ -45,8 +45,8 @@
 #### Story 10: Multi-language Support (i18n) [M]
 - [ ] **Internationalization**: Decouple Swedish strings from the source code to support English (EN) and other languages.
     - [ ] **String Externalization**: Move hardcoded Swedish UI strings from `src/bot/`, `src/sync/render.py`, and `src/utils/llm.py` into language files (e.g., `locales/sv.json`, `locales/en.json`).
-    - [ ] **Language Selection**: Add a `LANGUAGE` key to `.env` to toggle between SV and EN.
-    - [ ] **Dynamic AI Context**: Update the system prompt in `src/utils/llm.py` to instruct the AI to respond in the configured language.
+    - [ ] **User Toggle**: Implement a `/lang` command (e.g., `/lang en`) that saves the preference to `context.user_data` or a local config.
+    - [ ] **Dynamic AI Context**: Update the system prompt in `src/utils/llm.py` to instruct the AI to respond in the user's chosen language.
 
 ---
 
