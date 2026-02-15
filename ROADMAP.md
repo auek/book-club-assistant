@@ -19,9 +19,8 @@ This document outlines the progression from a monolithic script-based system to 
 #### Story 1: Auto-Backups [S]
 - [ ] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
 
-#### Story 2: Persistent Bot Memory [M] (COMPLETED)
-- [x] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
-    - *Security Note*: Ensure file permissions are restricted (chmod 600) and evaluate risks of using `pickle` with sensitive data.
+#### Story 2: Persistent Bot Memory [M]
+- [ ] **Persistent Memory**: Implement `PicklePersistence` for the Telegram bot to preserve conversation history across restarts.
 
 #### Story 5: Garmin Connect Integration (Health & Workouts) [M]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
@@ -58,8 +57,8 @@ This document outlines the progression from a monolithic script-based system to 
 - [ ] **Duplicate Detection**: Implement logic in `src/sync/parse.py` to prevent duplicate entries if the RSS feed overlaps.
 
 #### Story 8: Enhanced Bot UX [S]
-- [x] **Manual Sync Command**: Add a `/sync` command to the Telegram bot to trigger the Goodreads update manually.
-- [x] **Visual Progress Improvements**: Enhance the precision and styling of the progress bar in `src/bot/middleware/formatters.py`.
+- [ ] **Manual Sync Command**: Add a `/sync` command to the Telegram bot to trigger the Goodreads update manually.
+- [ ] **Visual Progress Improvements**: Enhance the precision and styling of the progress bar in `src/bot/middleware/formatters.py`.
 
 #### Story 9: Automated Quality Assurance [S]
 - [ ] **Pre-push Testing**: Implement a Git `pre-push` hook to automatically run the `pytest` suite before code is pushed to the remote repository.
