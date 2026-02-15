@@ -47,20 +47,23 @@
 
 ---
 
-### 🔮 Future Evolution (Major Shifts & XL Features)
+### 🔮 Future Evolution: Personal Assistant Architecture [XL]
+*Strategic goal: Transform the monolithic Bookclub bot into a multi-purpose Personal Assistant with a plugin-based architecture.*
 
-#### Feature 1: SQLite Integration [XL]
-- **Goal**: Move from Markdown-parsing to a database as the "source of truth".
-- [ ] `src/data/database.py` for SQLite management.
-- [ ] Update Sync logic to save to DB first, then export to Markdown.
-- [ ] Security considerations for local DB access is of utmost importance.
+#### Feature: Modular Orchestration
+- **Story: Modular Context Providers [M]**: Refactor `src/utils/llm.py` to accept a registry of context blocks instead of hardcoded file paths.
+- **Story: Plugin Registry System [M]**: Implement a way to dynamically register modules (Books, Garmin, Notion) so they can contribute commands and system prompts.
+- **Story: Multi-Client Adapter [L]**: (Ref: Story 6) Decouple the bot logic from Telegram to allow Discord or CLI interfaces to share the same LLM "brain".
 
-#### Feature 2: Transition to "Personal Assistant" Architecture [XL]
-- **Analysis**: Evaluate if Garmin and Notion features belong in the "Bookclub" or if the project should be forked/renamed to a "Personal Assistant" framework.
-- [ ] **Task 2.1: Modular Context Providers**: Refactor `src/utils/llm.py` to accept dynamic context blocks instead of hardcoded file reads.
-- [ ] **Task 2.2: Plugin Registry**: Create a system to dynamically register modules (Books, Garmin, Notion) and their respective bot commands.
-- [ ] **Task 2.3: Data Migration (SQLite)**: Implement a centralized database to serve as the primary source of truth for the assistant.
-- [x] **Head Start**: Use the existing Telegram/LLM integration as the foundation for the new project.
+#### Feature: Centralized Intelligence (SQLite)
+- **Story: Database Schema Design [S]**: Create `src/data/database.py` and define tables for books, health metrics, and user preferences.
+- **Story: Data Migration & Sync [L]**: Update sync logic to treat SQLite as the "Source of Truth," while keeping Markdown files as human-readable exports.
+- **Story: Interaction History Persistence [M]**: Move conversation history from Pickle/RAM to the database for long-term "memory."
+
+#### Feature: New Domains (Plugins)
+- **Story: Garmin Connect Integration [M]**: (Ref: Story 5) Fetch fitness data. Includes mandatory privacy stripping and medical disclaimers.
+- **Story: Notion Workspace Integration [L]**: (Ref: Story 5) Allow the AI to search and append notes to a specific Notion database.
+- **Story: Internationalization (i18n) [M]**: (Ref: Story 10) Move hardcoded Swedish strings to localizable files to allow easy language switching.
 
 ---
 *See [ARCHIVE.md](ARCHIVE.md) for completed tasks and historical milestones.*
