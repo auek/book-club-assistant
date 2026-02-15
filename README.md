@@ -14,9 +14,13 @@ A lightweight Bash/Python tool to synchronize read books from Goodreads to a loc
 - Telegram Bot Token & Chat ID
 - OpenRouter API Key (for AI features)
 
-## Quick Setup
-1. Clone the repository.
-2. Create a `.env` file:
+## Installation & Setup
+1. **Clone & Install:**
+   ```bash
+   git clone <repo-url>
+   pip install -r requirements.txt
+   ```
+2. **Configure:** Create a `.env` file based on the requirements below. Use `python3 get_chat_id.py` to find your Telegram Chat ID.
    ```env
    GOODREADS_USER_ID='your_id'
    TELEGRAM_BOT_TOKEN='your_token'
@@ -24,36 +28,12 @@ A lightweight Bash/Python tool to synchronize read books from Goodreads to a loc
    OPENROUTER_API_KEY='your_key'
    CHAT_MODEL='google/gemini-2.0-flash-001'
    ```
-3. Run health check: `python3 -m src.cli.health`
+3. **Verify:** Run `python3 -m src.cli.health` to check the environment.
 
 ## Usage
-
-### On PC (Linux/macOS)
-Use the `./bookclub` launcher:
-```bash
-./bookclub -sync   # Sync books from Goodreads
-./bookclub -bot    # Start the Telegram bot
-```
-
-### On Raspberry Pi
-Use the `./bookclub.pi` launcher (optimized for Pi environments):
-```bash
-./bookclub.pi -setup  # Install system dependencies
-./bookclub.pi -sync   # Sync books
-./bookclub.pi -bot    # Start the bot
-```
-
-## Telegram Bot Setup
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Create a bot via [@BotFather](https://t.me/botfather) on Telegram and copy the token.
-3. Run `python3 get_chat_id.py` to find your chat ID (send a message to your bot first).
-4. Start the bot:
-   ```bash
-   ./bookclub.pi -bot
-   ```
+- **Sync Books:** `./bookclub -sync` (fetches from Goodreads)
+- **Start Bot:** `./bookclub -bot` (Telegram interface)
+- **Raspberry Pi:** Use `./bookclub.pi` for optimized setup and execution.
 
 ## System Health
 To verify that the environment is correctly configured (especially on Raspberry Pi):
@@ -61,13 +41,14 @@ To verify that the environment is correctly configured (especially on Raspberry 
 python3 -m src.cli.health
 ```
 
-### Bot Commands
-- `/start` – Välkomstmeddelande
-- `/help` – Visa tillgängliga kommandon
-- `/books` – Visa hela läsloggen
-- `/progress` – Visa eller uppdatera lässtatus (t.ex. `/progress 45`)
-- `/info` – Visa systemstatistik och token-användning
-- *Allmänt meddelande* – Skicka text direkt till boten för att diskutera dina böcker med AI:n.
+### Bot-kommandon
+- `/start` – Starta boten och få ett välkomstmeddelande.
+- `/help` – Visa en lista över alla tillgängliga kommandon.
+- `/books` – Visa din kompletta läslogg från `reading_log.md`.
+- `/progress` – Se nuvarande framsteg eller uppdatera (t.ex. `/progress 45`).
+- `/sync` – Tvinga en synkronisering med Goodreads manuellt.
+- `/info` – Visa systemstatus, drifttid och AI-tokenstatistik.
+- *Textmeddelande* – Skriv direkt till boten för att diskutera dina böcker med AI:n.
 
 ## Project Structure
 - `src/` – Modular Python source code (Bot, Sync, CLI, Data, Utils).
@@ -78,33 +59,23 @@ python3 -m src.cli.health
 - `tests/` – Integration tests for formatters and sync logic.
 
 ## Persistence (Running in Background)
-Since the bot needs to stay active after you close your SSH session, use the following methods:
+To keep the bot running after closing your SSH session:
 
-### On Raspberry Pi (Volumio)
-Use `nohup` to keep the process running:
+### Standard Linux (using tmux)
 ```bash
-# Start the bot in background
-nohup ./bookclub.pi -bot > bot.log 2>&1 &
+./bookclub -tmux
+```
+- **Detach:** `Ctrl+B` then `D`.
+- **Reattach:** `./bookclub -tmux`.
 
-# View live logs
-tail -f bot.log
+### Raspberry Pi / Volumio (using nohup)
+```bash
+# Start in background
+nohup ./bookclub.pi -bot > bot.log 2>&1 &
 
 # Stop the bot
 pkill -f bot_cli
 ```
-
-### On Standard Linux (with tmux)
-```bash
-./bookclub.pi -tmux
-```
-- **Detach:** Press `Ctrl+B` then `D`.
-- **Reattach:** Run `./bookclub.pi -tmux` again.
-
-## Workflow
-1. `-sync` fetches RSS data → creates `raw_books.xml` → parses to `reading_log.md`.
-2. `-chat` or `/discuss` reads `reading_log.md` and initializes the LLM context.
-3. Temporary files are automatically deleted after synchronization.
-4. The system is designed to run efficiently on low-resource hardware like Raspberry Pi.
 
 ## Licens
 MIT
