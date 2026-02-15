@@ -49,10 +49,10 @@ async def update_progress_file(percentage: int) -> bool:
         lines = content.split('\n')
         updated_lines, updated = [], False
         
-        # Target the Swedish 'Framsteg:' key specifically
+        # Match 'Framsteg:' case-insensitively
         for line in lines:
-            if 'framsteg:' in line.lower():
-                # Replace the old percentage with the new value
+            if re.search(r'Framsteg:', line, re.IGNORECASE):
+                # Replace the digits before the %
                 new_line = re.sub(r'\d+%', f'{percentage}%', line)
                 updated_lines.append(new_line)
                 updated = True

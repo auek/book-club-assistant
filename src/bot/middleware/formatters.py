@@ -66,11 +66,12 @@ def format_progress_for_telegram(markdown_text: str) -> str:
         return "📖 <b>Pågående läsning</b>\n\nInga böcker i pågående läsning för tillfället."
     
     lines = markdown_text.strip().split('\n')
-    formatted_lines = ["📖 <b>Pågående läsning</b>\n"]
+    formatted_lines = []
     
     for line in lines:
         line = line.strip()
-        if not line: continue
+        # Skip the redundant title from the markdown file
+        if not line or line == "# Pågående läsning": continue
         
         # Identify progress lines using the Swedish key 'Framsteg'
         if 'framsteg:' in line.lower():
@@ -102,7 +103,6 @@ def format_progress_for_telegram(markdown_text: str) -> str:
             except: formatted_lines.append(line)
         else: formatted_lines.append(line)
     
-    formatted_lines.append("\n\n📌 <i>Uppdatera filen reading_in_progress.md för att ändra</i>")
     return '\n'.join(formatted_lines)
 
 def split_text_into_chunks(text: str, max_length: int = 4096) -> list:
