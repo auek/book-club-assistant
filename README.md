@@ -1,6 +1,6 @@
 # 📚 Your Personal Book Club Assistant
 
-Transform your reading journey with an "always-on" AI companion designed to live on your Raspberry Pi. This isn't just a sync tool; it's a private, intelligent space to discuss every book you've ever read or are currently devouring.
+Transform your reading journey with an "always-on" AI companion designed to live on your Raspberry Pi. This isn't just a sync tool; it's a personal, intelligent space to discuss every book you've ever read or are currently devouring.
 
 ## ✨ Key Features
 - **Deep Book Discussions:** Chat with an LLM that has full context of your personal library—ask for summaries, thematic analysis, or what you should read next based on your history.
@@ -27,7 +27,7 @@ Transform your reading journey with an "always-on" AI companion designed to live
    TELEGRAM_BOT_TOKEN='your_token'
    TELEGRAM_CHAT_ID='your_chat_id'
    OPENROUTER_API_KEY='your_key'
-   CHAT_MODEL='google/gemini-2.0-flash-001'
+   CHAT_MODEL='google/gemini-2.0-flash-001' # Specify your preferred LLM for the telegram bot discussions
    ```
 3. **Verify:** Run `python3 -m src.cli.health` to check the environment.
 
@@ -78,5 +78,5 @@ nohup ./bookclub.pi -bot > bot.log 2>&1 &
 pkill -f bot_cli
 ```
 
-## Licens
+## License
 MIT

@@ -11,6 +11,5 @@ __pycache__
 .aider*
 
 reading_log.md
-#reading_in_progress.md
 raw_books.xml
 bot_persistence.pickle
