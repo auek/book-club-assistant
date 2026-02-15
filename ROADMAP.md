@@ -5,6 +5,13 @@
 #### Story 1: Auto-Backups [S]
 - [x] **Auto-Backups**: Extend `storage.py` to create timestamped backups of `reading_log.md` before overwriting.
 
+#### Story 2: Natural Language Progress Updates [M]
+- [ ] **Intent Interception**: Refactor `discuss_books` in `src/bot/commands/base.py` to intercept progress updates.
+    - **Logic**: Use regex `(\d+)\s*%` combined with keywords (`framsteg`, `läst`, `update`) to identify if a chat message is an update request.
+    - **Integration**: Call `update_progress_file(val)` directly to ensure the `.md` file is updated without relying on LLM hallucination.
+    - **UX**: Provide immediate visual feedback by returning the formatted progress bar after a successful interception.
+    - **LLM Guidance**: Update system prompt in `src/utils/llm.py` to instruct the AI to guide users toward the `[number]%` format if they express a desire to update progress.
+
 #### Story 5: Garmin Connect Integration (Health & Workouts) [M]
 - [ ] **Garmin Connectivity**: Implement MCP to fetch health and activity data (steps, heart rate, sleep, runs) from Garmin Connect.
     - **Goal**: Allow the LLM to analyze fitness trends and suggest personalized running workouts.
