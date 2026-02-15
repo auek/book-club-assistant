@@ -56,10 +56,6 @@ This document outlines the progression from a monolithic script-based system to 
 - [ ] **Async Storage**: Refactor `src/data/storage.py` to use `aiofiles` for non-blocking I/O.
 - [ ] **Duplicate Detection**: Implement logic in `src/sync/parse.py` to prevent duplicate entries if the RSS feed overlaps.
 
-#### Story 8: Enhanced Bot UX [S]
-- [ ] **Manual Sync Command**: Add a `/sync` command to the Telegram bot to trigger the Goodreads update manually.
-- [ ] **Visual Progress Improvements**: Enhance the precision and styling of the progress bar in `src/bot/middleware/formatters.py`.
-
 #### Story 9: Automated Quality Assurance [S]
 - [ ] **Pre-push Testing**: Implement a Git `pre-push` hook to automatically run the `pytest` suite before code is pushed to the remote repository.
 
