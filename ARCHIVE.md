@@ -18,3 +18,4 @@
 - ✅ **API Key Separation**: Isolated production bot credentials from development environment. [2026-02-14]
 - ✅ **Persistent Bot Memory**: Integrated `PicklePersistence` to preserve chat history across restarts. [2026-02-14]
 - ✅ **Story 8: Enhanced Bot UX**: Implemented manual `/sync` command and improved progress bar visuals. [2026-02-15]
+- ✅ **Story 9: Automated Quality Assurance**: Implemented a Git `pre-push` hook to run `pytest` before remote pushes. [2026-02-15]

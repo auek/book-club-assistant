@@ -39,9 +39,6 @@
 - [ ] **Async Storage**: Refactor `src/data/storage.py` to use `aiofiles` for non-blocking I/O.
 - [ ] **Duplicate Detection**: Implement logic in `src/sync/parse.py` to prevent duplicate entries if the RSS feed overlaps.
 
-#### Story 9: Automated Quality Assurance [S]
-- [ ] **Pre-push Testing**: Implement a Git `pre-push` hook to automatically run the `pytest` suite before code is pushed to the remote repository.
-
 #### Story 10: Multi-language Support (i18n) [M]
 - [ ] **Internationalization**: Decouple Swedish strings from the source code to support English (EN) and other languages.
     - [ ] **String Externalization**: Move hardcoded Swedish UI strings from `src/bot/`, `src/sync/render.py`, and `src/utils/llm.py` into language files (e.g., `locales/sv.json`, `locales/en.json`).
