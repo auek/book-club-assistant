@@ -61,6 +61,9 @@ This document outlines the progression from a monolithic script-based system to 
 - [x] **Manual Sync Command**: Add a `/sync` command to the Telegram bot to trigger the Goodreads update manually.
 - [x] **Visual Progress Improvements**: Enhance the precision and styling of the progress bar in `src/bot/middleware/formatters.py`.
 
+#### Story 9: Automated Quality Assurance [S]
+- [ ] **Pre-push Testing**: Implement a Git `pre-push` hook to automatically run the `pytest` suite before code is pushed to the remote repository.
+
 ---
 
 ### 🔮 Future Evolution (Major Shifts & XL Features)
