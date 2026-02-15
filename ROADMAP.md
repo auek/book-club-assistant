@@ -57,8 +57,10 @@
 
 #### Feature 2: Transition to "Personal Assistant" Architecture [XL]
 - **Analysis**: Evaluate if Garmin and Notion features belong in the "Bookclub" or if the project should be forked/renamed to a "Personal Assistant" framework.
-- [ ] **Modular Core**: Design a core assistant that can load "plugins" (Bookclub, Garmin, Notion).
-- [ ] **Head Start**: Use the existing Telegram/LLM integration as the foundation for the new project.
+- [ ] **Task 2.1: Modular Context Providers**: Refactor `src/utils/llm.py` to accept dynamic context blocks instead of hardcoded file reads.
+- [ ] **Task 2.2: Plugin Registry**: Create a system to dynamically register modules (Books, Garmin, Notion) and their respective bot commands.
+- [ ] **Task 2.3: Data Migration (SQLite)**: Implement a centralized database to serve as the primary source of truth for the assistant.
+- [x] **Head Start**: Use the existing Telegram/LLM integration as the foundation for the new project.
 
 ---
 *See [ARCHIVE.md](ARCHIVE.md) for completed tasks and historical milestones.*
