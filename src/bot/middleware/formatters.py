@@ -80,8 +80,9 @@ def format_progress_for_telegram(markdown_text: str) -> str:
                 pct_match = re.search(r'(\d+)%', line)
                 if pct_match:
                     pct = min(max(int(pct_match.group(1)), 0), 100)
-                    filled = pct // 10
-                    bar = "█" * filled + "░" * (10 - filled)
+                    # 20-step precision for a smoother bar
+                    filled = (pct * 20) // 100
+                    bar = "█" * filled + "░" * (20 - filled)
                     formatted_lines.append(f"<code>[{bar}] {pct}%</code>")
                     continue
             except Exception as e:
