@@ -5,7 +5,8 @@ from telegram.error import BadRequest
 from telegram.ext import ContextTypes
 from src.bot.middleware.auth import auth_only
 from src.bot.middleware.formatters import format_progress_for_telegram
-from src.data.storage import read_file_content
+from src.data.storage import read_file_content, save_pending_confirmation, get_pending_confirmation, clear_pending_confirmation
+from src.utils.llm import validate_book_title
 
 logger = logging.getLogger(__name__)
 
@@ -85,17 +86,36 @@ async def start_reading(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         await update.message.reply_text("❌ Ange bok: /read Titel - Författare")
         return
     
-    input_text = " ".join(context.args)
-    if " - " in input_text:
-        parts = input_text.split(" - ", 1)
-        new_content = f"# Pågående läsning\n\n## {parts[0].strip()}\n- Författare: {parts[1].strip()}\n- Framsteg: 0%"
-    else:
-        new_content = f"# Pågående läsning\n\n## {input_text}\n- Framsteg: 0%"
+    # Check for existing pending confirmation - abort it
+    chat_id = update.effective_chat.id
+    if get_pending_confirmation(chat_id):
+        clear_pending_confirmation(chat_id)
     
-    try:
-        with open("reading_in_progress.md", "w", encoding="utf-8") as f:
-            f.write(new_content)
-        await update.message.reply_text(f"📖 Nu läser vi: <b>{input_text}</b>", parse_mode='HTML')
-    except Exception as e:
-        logger.error(f"Error starting new book: {e}")
-        await update.message.reply_text("❌ Kunde inte uppdatera filen.")
+    input_text = " ".join(context.args)
+    
+    # Validate with LLM
+    await update.message.reply_text("🔍 Validerar boken...")
+    validation = await validate_book_title(input_text)
+    
+    if not validation.get("valid", False):
+        reason = validation.get("reason", "Okänt fel")
+        await update.message.reply_text(f"❌ Kunde inte identifiera boken: {reason}\n\nFörsök igen med /read Titel - Författare")
+        return
+    
+    corrected = validation
+    title = corrected.get("title", "")
+    author = corrected.get("author", "")
+    
+    # Show confirmation prompt
+    if author:
+        prompt = f"Menade du: <b>{title}</b> av <b>{author}</b>?\n\nSvara /yes för att bekräfta eller /no för att avbryta."
+    else:
+        prompt = f"Menade du: <b>{title}</b>?\n\nSvara /yes för att bekräfta eller /no för att avbryta."
+    
+    # Save pending confirmation
+    save_pending_confirmation(chat_id, {
+        "raw_input": input_text,
+        "corrected": {"title": title, "author": author}
+    })
+    
+    await update.message.reply_text(prompt, parse_mode='HTML')

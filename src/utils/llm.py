@@ -1,5 +1,4 @@
 import json
-import json
 import os
 import httpx
 from datetime import datetime, timedelta, timezone
@@ -103,3 +102,64 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         return response.choices[0].message.content
     except Exception as e:
         return f"❌ Ett fel uppstod vid kontakt med AI: {str(e)}"
+
+async def validate_book_title(raw_input: str) -> dict:
+    """Validate and correct a book title/author input.
+    
+    Returns:
+        {"valid": True, "title": "...", "author": "...", "confidence": 0.9}
+        or
+        {"valid": False, "reason": "..."}
+    """
+    api_key = os.getenv('OPENROUTER_API_KEY')
+    model = os.getenv('CHAT_MODEL', 'google/gemini-2.0-flash-001')
+    
+    if not api_key:
+        return {"valid": False, "reason": "AI-tjänsten är inte konfigurerad."}
+
+    prompt = f"""
+    User wants to add a book to their reading list.
+    
+    Input: "{raw_input}"
+    
+    Determine if this is a real book. If it is, respond with the corrected title and author.
+    If it's not a recognizable book, respond with NO.
+    
+    Respond in this exact format (JSON only, no other text):
+    {{"valid": true, "title": "corrected title", "author": "corrected author", "confidence": 0.9}}
+    or
+    {{"valid": false, "reason": "why it's not valid"}}
+    
+    Be strict: made-up books, random strings, or unclear entries should be marked invalid.
+    """
+
+    http_client = httpx.AsyncClient()
+    client = AsyncOpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=api_key,
+        http_client=http_client,
+    )
+
+    try:
+        response = await client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=200
+        )
+        
+        content = response.choices[0].message.content.strip()
+        
+        # Extract JSON from response
+        # Handle potential markdown code blocks
+        if content.startswith("```"):
+            content = content.split("```")[1]
+            if content.startswith("json"):
+                content = content[4:]
+        content = content.strip().strip("```")
+        
+        result = json.loads(content)
+        return result
+        
+    except Exception as e:
+        return {"valid": False, "reason": f"Fel vid validering: {str(e)}"}
