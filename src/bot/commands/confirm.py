@@ -13,7 +13,7 @@ async def confirm_yes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     pending = get_pending_confirmation(chat_id)
     
     if not pending:
-        await update.message.reply_text("❌ Inget pending bekräftelse. Använd /read först.")
+        await update.message.reply_text("❌ Ingen väntande bekräftelse. Använd /read först.")
         return
     
     corrected = pending.get("corrected", {})
@@ -48,7 +48,7 @@ async def confirm_no(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     pending = get_pending_confirmation(chat_id)
     
     if not pending:
-        await update.message.reply_text("❌ Inget pending bekräftelse. Använd /read först.")
+        await update.message.reply_text("❌ Ingen väntande bekräftelse. Använd /read först.")
         return
     
     clear_pending_confirmation(chat_id)
