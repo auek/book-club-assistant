@@ -17,6 +17,12 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         try:
             val = int(args[0])
             if 0 <= val <= 100:
+                if val == 100:
+                    with open("reading_in_progress.md", "w", encoding="utf-8") as f:
+                        f.write("# Pågående läsning\n\nIngen bok läses just nu.")
+                    await update.message.reply_text("✅ Grattis! Boken är avslutad. Glöm inte att logga den på Goodreads!")
+                    return
+
                 if await update_progress_file(val):
                     content = read_file_content("reading_in_progress.md")
                     formatted = format_progress_for_telegram(content)
@@ -71,3 +77,25 @@ async def update_progress_file(percentage: int) -> bool:
     except Exception as e:
         logger.error(f"Error updating progress file: {e}")
         return False
+
+@auth_only
+async def start_reading(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Overwrite reading_in_progress.md with a new book. Usage: /read Title - Author"""
+    if not context.args:
+        await update.message.reply_text("❌ Ange bok: /read Titel - Författare")
+        return
+    
+    input_text = " ".join(context.args)
+    if " - " in input_text:
+        parts = input_text.split(" - ", 1)
+        new_content = f"# Pågående läsning\n\n## {parts[0].strip()}\n- Författare: {parts[1].strip()}\n- Framsteg: 0%"
+    else:
+        new_content = f"# Pågående läsning\n\n## {input_text}\n- Framsteg: 0%"
+    
+    try:
+        with open("reading_in_progress.md", "w", encoding="utf-8") as f:
+            f.write(new_content)
+        await update.message.reply_text(f"📖 Nu läser vi: <b>{input_text}</b>", parse_mode='HTML')
+    except Exception as e:
+        logger.error(f"Error starting new book: {e}")
+        await update.message.reply_text("❌ Kunde inte uppdatera filen.")

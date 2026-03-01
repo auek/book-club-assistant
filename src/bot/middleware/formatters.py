@@ -62,8 +62,8 @@ def format_books_for_telegram(markdown_text: str, limit: int = 10) -> str:
 
 def format_progress_for_telegram(markdown_text: str) -> str:
     """Format the reading progress markdown for nice Telegram display."""
-    if not markdown_text.strip():
-        return "📖 <b>Pågående läsning</b>\n\nInga böcker i pågående läsning för tillfället."
+    if not markdown_text.strip() or "Ingen bok läses just nu" in markdown_text:
+        return "📖 <b>Pågående läsning</b>\n\nIngen bok läses just nu. Använd /read för att börja!"
     
     lines = markdown_text.strip().split('\n')
     formatted_lines = []

@@ -11,7 +11,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 from src.bot.core import error_handler, get_persistence
 from src.bot.commands.base import start, help_command, discuss_books
 from src.bot.commands.books import show_books
-from src.bot.commands.progress import show_progress
+from src.bot.commands.progress import show_progress, start_reading
 from src.bot.commands.info import show_info
 from src.bot.commands.sync import sync_books
 
@@ -38,6 +38,7 @@ def main():
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("books", show_books))
     application.add_handler(CommandHandler("progress", show_progress))
+    application.add_handler(CommandHandler("read", start_reading))
     application.add_handler(CommandHandler("discuss", discuss_books))
     application.add_handler(CommandHandler("info", show_info))
     application.add_handler(CommandHandler("sync", sync_books))
