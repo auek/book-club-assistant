@@ -16,8 +16,10 @@ Tillgängliga kommandon:
 /start - Välkomstmeddelande
 /help - Visa denna hjälp
 /books - Visa läsloggen
+/read - Starta en ny bok. Användning: /read Titel - Författare
 /progress - Visa eller uppdatera aktuell lässtatus
     Användning: /progress [1-100] för att uppdatera procent
+    Använd /progress 100 för att avsluta boken och rensa aktuell läsning
 /sync - Synka böcker från Goodreads och uppdatera loggen
 /info - Visa systeminformation och LLM-användning
 

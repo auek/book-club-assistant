@@ -46,7 +46,8 @@ python3 -m src.cli.health
 - `/start` – Initialize the bot and get a welcome message.
 - `/help` – List all available commands.
 - `/books` – View your entire reading log.
-- `/progress` – View current status or update (e.g., `/progress 45`).
+- `/read` – Start a new book. Usage: `/read Title - Author`
+- `/progress` – View current status or update (e.g., `/progress 45`). Use `/progress 100` to finish and clear the current book.
 - `/sync` – Manually trigger a fresh sync with Goodreads.
 - `/info` – Check system health, uptime, and AI token usage.
 - *Any text* – Simply send a message to start a deep discussion about your books with the AI.
