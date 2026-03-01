@@ -1,8 +1,11 @@
 import logging
 import os
 from telegram import Update
-from telegram.ext import ContextTypes, PicklePersistence, CommandHandler
+from telegram.ext import ContextTypes, PicklePersistence, CommandHandler, Application
 from src.bot.commands.confirm import confirm_yes, confirm_no
+from src.bot.commands.books import show_books
+from src.bot.commands.progress import show_progress, start_reading
+# Import other command handlers as needed
 
 logger = logging.getLogger(__name__)
 
@@ -22,3 +25,18 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
             await update.message.reply_text("❌ Sorry, an error occurred. Check the bot logs.")
         except Exception:
             pass
+
+def register_handlers(application: Application) -> None:
+    """Register all command handlers to the application."""
+    # Import here to avoid circular imports
+    from src.bot.commands.start import start
+    from src.bot.commands.help import help_command
+    
+    # Command handlers
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("books", show_books))
+    application.add_handler(CommandHandler("progress", show_progress))
+    application.add_handler(CommandHandler("read", start_reading))
+    application.add_handler(CommandHandler("yes", confirm_yes))
+    application.add_handler(CommandHandler("no", confirm_no))
