@@ -1,7 +1,8 @@
-from telegram import Update
+from telegram import Update, ParseMode
 from src.utils.llm import get_ai_response
 from telegram.ext import ContextTypes
 from src.bot.middleware.auth import auth_only
+from src.bot.middleware.formatters import split_text_into_chunks
 
 @auth_only
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -52,8 +53,10 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if len(context.user_data['history']) > 40:
         context.user_data['history'] = context.user_data['history'][-40:]
 
-    try:
-        await update.message.reply_text(response, parse_mode='Markdown')
-    except Exception:
-        # Fallback to plain text if Markdown parsing fails (e.g. malformed markdown from LLM)
-        await update.message.reply_text(response)
+    chunks = split_text_into_chunks(response, max_length=4096)
+    for chunk in chunks:
+        try:
+            await update.message.reply_text(chunk, parse_mode=ParseMode.MARKDOWN)
+        except Exception:
+            # Fallback to plain text if Markdown parsing fails (e.g. malformed markdown from LLM)
+            await update.message.reply_text(chunk, parse_mode=None)
