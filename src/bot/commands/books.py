@@ -1,5 +1,6 @@
 import logging
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import ContextTypes
 from src.bot.middleware.auth import auth_only
@@ -26,7 +27,7 @@ async def show_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     
     for part in parts:
         try:
-            await update.message.reply_text(part, parse_mode='HTML', disable_web_page_preview=True)
+            await update.message.reply_text(part, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
         except BadRequest:
             plain_part = part.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
             await update.message.reply_text(plain_part, parse_mode=None)
