@@ -40,7 +40,8 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if 'history' not in context.user_data:
         context.user_data['history'] = []
 
-    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    # Use string literal for compatibility with older PTB versions on Volumio
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
     response = await get_ai_response(user_query, context.user_data['history'])
 
     # Remove accidental XML-style tags from the response
