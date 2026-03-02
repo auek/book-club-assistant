@@ -1,4 +1,5 @@
-from telegram import Update, ParseMode
+from telegram import Update
+from telegram.constants import ParseMode
 from src.utils.llm import get_ai_response
 from telegram.ext import ContextTypes
 from src.bot.middleware.auth import auth_only
