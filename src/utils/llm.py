@@ -88,7 +88,7 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
             model=model,
             messages=messages,
             temperature=0.7,
-            max_tokens=500  # Guardrail: Limit response length
+            max_tokens=2500  # Allow up to ~12k characters
         )
 
         # Update usage statistics

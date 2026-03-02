@@ -55,7 +55,10 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         context.user_data['history'] = context.user_data['history'][-40:]
 
     chunks = split_text_into_chunks(response, max_length=4096)
-    for chunk in chunks:
+    for i, chunk in enumerate(chunks):
+        if i >= 3:
+            await update.message.reply_text("... (skriv 'fortsätt' för att se resten)")
+            break
         try:
             await update.message.reply_text(chunk, parse_mode=ParseMode.MARKDOWN)
         except Exception:

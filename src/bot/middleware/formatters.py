@@ -116,5 +116,6 @@ def split_text_into_chunks(text: str, max_length: int = 4096) -> list:
         else:
             if current_chunk: chunks.append(current_chunk.strip())
             current_chunk = line + "\n"
-    if current_chunk: chunks.append(current_chunk.strip())
-    return chunks
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+    return [c for c in chunks if c]
