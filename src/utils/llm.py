@@ -133,33 +133,33 @@ async def validate_book_title(raw_input: str) -> dict:
     Be strict: made-up books, random strings, or unclear entries should be marked invalid.
     """
 
-    http_client = httpx.AsyncClient()
-    client = AsyncOpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=api_key,
-        http_client=http_client,
-    )
-
-    try:
-        response = await client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,
-            max_tokens=200
+    async with httpx.AsyncClient() as http_client:
+        client = AsyncOpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+            http_client=http_client,
         )
-        
-        content = response.choices[0].message.content.strip()
-        
-        # Extract JSON from response
-        # Handle potential markdown code blocks
-        if content.startswith("```"):
-            content = content.split("```")[1]
-            if content.startswith("json"):
-                content = content[4:]
-        content = content.strip().strip("```")
-        
-        result = json.loads(content)
-        return result
-        
-    except Exception as e:
-        return {"valid": False, "reason": f"Fel vid validering: {str(e)}"}
+
+        try:
+            response = await client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=200
+            )
+            
+            content = response.choices[0].message.content.strip()
+            
+            # Extract JSON from response
+            # Handle potential markdown code blocks
+            if content.startswith("```"):
+                content = content.split("```")[1]
+                if content.startswith("json"):
+                    content = content[4:]
+            content = content.strip().strip("```")
+            
+            result = json.loads(content)
+            return result
+            
+        except Exception as e:
+            return {"valid": False, "reason": f"Fel vid validering: {str(e)}"}
