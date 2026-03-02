@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.constants import ParseMode
+from telegram.constants import ParseMode, ChatAction
 from src.utils.llm import get_ai_response
 from telegram.ext import ContextTypes
 from src.bot.middleware.auth import auth_only
@@ -40,6 +40,7 @@ async def discuss_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if 'history' not in context.user_data:
         context.user_data['history'] = []
 
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     response = await get_ai_response(user_query, context.user_data['history'])
 
     # Remove accidental XML-style tags from the response
