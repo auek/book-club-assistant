@@ -31,6 +31,8 @@ def register_handlers(application: Application) -> None:
     # Import here to avoid circular imports
     from src.bot.commands.start import start
     from src.bot.commands.help import help_command
+    from src.bot.commands.info import show_info
+    from src.bot.commands.sync import sync_books
     
     # Command handlers
     application.add_handler(CommandHandler("start", start))
@@ -40,3 +42,5 @@ def register_handlers(application: Application) -> None:
     application.add_handler(CommandHandler("read", start_reading))
     application.add_handler(CommandHandler("yes", confirm_yes))
     application.add_handler(CommandHandler("no", confirm_no))
+    application.add_handler(CommandHandler("info", show_info))
+    application.add_handler(CommandHandler("sync", sync_books))

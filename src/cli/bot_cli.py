@@ -33,15 +33,11 @@ def main():
     persistence = get_persistence()
     application = ApplicationBuilder().token(token).persistence(persistence).build()
 
-    # Register handlers
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(CommandHandler("books", show_books))
-    application.add_handler(CommandHandler("progress", show_progress))
-    application.add_handler(CommandHandler("read", start_reading))
-    application.add_handler(CommandHandler("discuss", discuss_books))
-    application.add_handler(CommandHandler("info", show_info))
-    application.add_handler(CommandHandler("sync", sync_books))
+    # Use the central registration logic from core.py
+    from src.bot.core import register_handlers
+    register_handlers(application)
+    
+    # Add the global message handler for AI discussions LAST
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, discuss_books))
     
     application.add_error_handler(error_handler)
