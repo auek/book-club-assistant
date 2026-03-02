@@ -29,8 +29,7 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
 def register_handlers(application: Application) -> None:
     """Register all command handlers to the application."""
     # Import here to avoid circular imports
-    from src.bot.commands.start import start
-    from src.bot.commands.help import help_command
+    from src.bot.commands.base import start, help_command
     from src.bot.commands.info import show_info
     from src.bot.commands.sync import sync_books
     

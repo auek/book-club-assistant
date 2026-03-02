@@ -9,11 +9,7 @@ from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
 from src.bot.core import error_handler, get_persistence
-from src.bot.commands.base import start, help_command, discuss_books
-from src.bot.commands.books import show_books
-from src.bot.commands.progress import show_progress, start_reading
-from src.bot.commands.info import show_info
-from src.bot.commands.sync import sync_books
+from src.bot.commands.base import discuss_books
 
 def main():
     load_dotenv()
