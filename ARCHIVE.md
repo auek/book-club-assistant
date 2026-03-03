@@ -19,3 +19,9 @@
 - ✅ **Persistent Bot Memory**: Integrated `PicklePersistence` to preserve chat history across restarts. [2026-02-14]
 - ✅ **Story 8: Enhanced Bot UX**: Implemented manual `/sync` command and improved progress bar visuals. [2026-02-15]
 - ✅ **Story 9: Automated Quality Assurance**: Implemented a Git `pre-push` hook to run `pytest` before remote pushes. [2026-02-15]
+
+## Recent Features & Improvements
+- ✅ **AI-Powered Validation Flow**: Implemented LLM-based validation for `/read` command with pending confirmation state. [2026-03-01]
+- ✅ **Async Resource Management**: Migrated to `httpx` for stable async network operations. [2026-03-02]
+- ✅ **Usage Analytics**: Integrated token usage tracking for LLM requests. [2026-03-02]
+- ✅ **Telegram UX**: Implemented 3-message chunking for long AI responses. [2026-03-02]
