@@ -3,10 +3,16 @@
 ## 🎯 Boy Scout Principles
 1. **Code Review:** Analyze current Bash scripts and Python logic to identify weaknesses or redundancy.
 2. **Robustness:** Propose and implement better error handling (e.g., what happens if a file is missing or an API key is incorrect?).
-3. **Documentation:** Ensure the code is self-explanatory and well-document.
+3. **Documentation:** Ensure the code is self-explanatory and well-documented.
+
+## 🗺️ Project Context & Evolution
+- **Consultation:** Before proposing new features or architectural changes, consult `ROADMAP.md` to ensure alignment with current priorities.
+- **Historical Context:** Consult `ARCHIVE.md` to understand past architectural decisions and avoid repeating past mistakes.
+- **Documentation Sync:** After completing a task, update `ROADMAP.md` and `ARCHIVE.md` to reflect the current state of the project.
+- **Archive Policy:** Completed stories must be moved from `ROADMAP.md` to `ARCHIVE.md` ONLY after they are verified and tested. Each archived entry must include a completion date in `[YYYY-MM-DD]` format.
 
 ## Forbidden Practices
-- NEVER run the bot inside the agentic session in any form or way (Note: This does not apply to running automated tests via pytest). This includes but is not limited to:
+- NEVER run the bot inside the agentic session in any form or way. This includes but is not limited to:
     - `./bookclub -bot`
     - `./bookclub.pi -bot`
     - `python3 -m src.cli.bot_cli`
@@ -14,8 +20,6 @@
 
 ## 🛠 Technical Standards
 - **Token Efficiency:** Bot responses and prompts should be structured to minimize token usage while maintaining a helpful Swedish persona.
-- **Roadmap Maintenance:** After every code change, check `ROADMAP.md` and update it accordingly if needed to reflect the current project status.
-- **Archive Policy:** Completed stories must be moved from `ROADMAP.md` to `ARCHIVE.md` ONLY after they are verified and tested. Each archived entry must include a completion date in `[YYYY-MM-DD]` format.
 - **Readme Updates:** If a code change affects user-facing functionality (e.g., bot commands, setup instructions), update `README.md` to reflect these changes.
 
 ## 🧪 Testing Standards
