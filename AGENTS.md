@@ -1,35 +1,42 @@
-# Project Specifics: Bookclub-Bot
+# Project Guide: Bookclub-Bot
 
-## 🎯 Boy Scout Principles
-1. **Code Review:** Analyze current Bash scripts and Python logic to identify weaknesses or redundancy.
-2. **Robustness:** Propose and implement better error handling (e.g., what happens if a file is missing or an API key is incorrect?).
-3. **Documentation:** Ensure the code is self-explanatory and well-documented.
+You are assisting in the development of a private literary companion. This project is a specialized bridge between a user's reading history (Goodreads) and an LLM, allowing for context-aware discussions about books.
 
-## 🗺️ Project Context & Evolution
-- **Consultation:** Before proposing new features or architectural changes, consult `ROADMAP.md` to ensure alignment with current priorities.
-- **Historical Context:** Consult `ARCHIVE.md` to understand past architectural decisions and avoid repeating past mistakes.
-- **Documentation Sync:** After completing a task, update `ROADMAP.md` and `ARCHIVE.md` to reflect the current state of the project.
-- **Archive Policy:** Completed stories must be moved from `ROADMAP.md` to `ARCHIVE.md` ONLY after they are verified and tested. Each archived entry must include a completion date in `[YYYY-MM-DD]` format.
+## 🏗 Project Architecture & Data Flow
 
-## Forbidden Practices
-- NEVER run the bot inside the agentic session in any form or way. This includes but is not limited to:
-    - `./bookclub -bot`
-    - `./bookclub.pi -bot`
-    - `python3 -m src.cli.bot_cli`
-  Running the bot in the same terminal session as development leads to confusion, log pollution, and potential security risks.
+### 1. Data Ingestion (Sync)
+- **Source:** Goodreads RSS feed (public profile).
+- **Process:** `src/sync/fetch.py` retrieves XML -> `src/sync/parse.py` converts to `Book` dataclasses -> `src/sync/render.py` generates `reading_log.md`.
+- **Trigger:** Manual via `/sync` bot command or `./bookclub -sync` CLI.
 
-## 🛠 Technical Standards
-- **Token Efficiency:** Bot responses and prompts should be structured to minimize token usage while maintaining a helpful Swedish persona.
-- **Readme Updates:** If a code change affects user-facing functionality (e.g., bot commands, setup instructions), update `README.md` to reflect these changes.
+### 2. Reading State
+- **Active Book:** Stored in `reading_in_progress.md`. 
+- **Validation:** When a user runs `/read`, `src/utils/llm.py` uses an LLM to correct titles/authors. A confirmation flow (`/yes` or `/no`) is required before updating the file.
+- **Progress:** Updated via `/progress <percentage>`, which modifies the `Framsteg: XX%` line in the markdown file.
+
+### 3. AI Discussion
+- **Engine:** Uses OpenRouter (default: Gemini Flash 2.0).
+- **Context:** The system prompt in `BOOKCLUB_CHAT.md` instructs the AI to read both `reading_log.md` and `reading_in_progress.md`.
+- **Language:** Internal logic and documentation are in English; the bot persona and user responses are in Swedish.
+
+## 📂 Directory Structure
+- `src/bot/`: Telegram bot handlers, commands, and formatting middleware.
+- `src/cli/`: Entry points for bot service, sync utility, and health checks.
+- `src/data/`: Data models and filesystem storage abstractions.
+- `src/sync/`: Logic for Goodreads RSS fetching, parsing, and rendering.
+- `src/utils/`: Configuration management, logging, and LLM wrappers.
+- `tests/`: Pytest suite covering data parsing, bot formatters, and state transitions.
+
+## 🎯 Development Principles
+1. **File-Based Persistence:** We prioritize Markdown for human-readability. The system treats Markdown as the primary database.
+2. **Auth-First:** All command handlers must be wrapped with the `@auth_only` decorator.
+3. **Graceful Degradation:** If the LLM is unavailable, the bot must still support basic book listing and progress updates.
 
 ## 🧪 Testing Standards
-- **Unit Testing**: New logic in `src/` should be accompanied by unit tests in the `tests/` directory.
-- **Regression**: Ensure that changes to formatters or data parsing do not break existing Markdown output formats.
-- **Environment**: Tests should not require active API keys; use mocking for network calls (Goodreads/OpenRouter).
-- **Execution**: Run tests using `pytest` before committing major changes.
+- **Mocking:** Tests must never hit external APIs (Goodreads/OpenRouter). Use `unittest.mock`.
+- **Coverage:** Changes to `src/bot/middleware/formatters.py` or `src/sync/parse.py` must be accompanied by updated tests.
+- **Execution:** Run `pytest` before finalizing changes.
 
-## Language
-All code, comments, and documentation should be in English to maintain consistency and accessibility for potential future collaborators. However, user-facing strings in the Telegram bot can remain in Swedish as per the current design, but should be externalized for future internationalization efforts.
-The endpoints for the bot /sync, /books, /progress, /info and /help should also remain in English for consistency with the codebase, but the bot's responses (including plain text discussions) will always be in swedish.
-
-
+## 🚫 Forbidden Practices
+- **No Agentic Bot Execution:** NEVER start the bot (`./bookclub -bot`) within a development session to avoid log pollution and state conflicts.
+- **No Hardcoded IDs:** Always use `TELEGRAM_CHAT_ID` from the environment for authorization.
