@@ -31,7 +31,7 @@ async def sync_books(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
             await status_msg.edit_text("❌ Failed to fetch RSS feed.")
             return
 
-        books = parse_xml("raw_books.xml")
+        books = parse_xml(str(BASE_DIR / "raw_books.xml"))
         sorted_books = sort_books(books)
         markdown = generate_markdown(sorted_books)
         save_reading_log(markdown, output_file=str(BASE_DIR / "docs" / "reading_log.md"))

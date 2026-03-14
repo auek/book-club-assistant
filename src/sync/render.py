@@ -7,6 +7,7 @@ Handles Markdown generation and file cleanup.
 from typing import List
 import os
 from src.data.models import Book
+from src.utils.config import BASE_DIR
 
 
 def generate_markdown(books: List[Book]) -> str:
@@ -75,7 +76,7 @@ def generate_markdown(books: List[Book]) -> str:
     return "\n".join(lines)
 
 
-def cleanup_files(input_file: str = "raw_books.xml") -> None:
+def cleanup_files(input_file: str = str(BASE_DIR / "raw_books.xml")) -> None:
     """
     Delete the raw data file after processing.
     

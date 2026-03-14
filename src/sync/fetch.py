@@ -7,9 +7,10 @@ Handles API calls and raw data retrieval.
 import subprocess
 import sys
 import os
+from src.utils.config import BASE_DIR
 
 
-def fetch_goodreads_rss(user_id: str, api_key: str, output_file: str = "raw_books.xml") -> bool:
+def fetch_goodreads_rss(user_id: str, api_key: str, output_file: str = str(BASE_DIR / "raw_books.xml")) -> bool:
     """
     Fetch RSS feed from Goodreads API using curl.
     
