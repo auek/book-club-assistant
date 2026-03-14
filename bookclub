@@ -67,11 +67,10 @@ case "$1" in
                 # Fedora (PC)
                 echo "📦 Installing packages with dnf..."
                 sudo dnf install -y python3 python3-pip curl git
-                pip3 install --user aider-chat
                 ;;
             *)
                 echo "⚠️ Unknown platform. Please install manually:"
-                echo "   Python3, pip, curl, git, and 'pip install aider-chat'"
+                echo "   Python3, pip, curl, and git"
                 ;;
         esac
         
