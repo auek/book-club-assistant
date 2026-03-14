@@ -27,6 +27,11 @@ You are assisting in the development of a private literary companion. This proje
 - `src/utils/`: Configuration management, logging, and LLM wrappers.
 - `tests/`: Pytest suite covering data parsing, bot formatters, and state transitions.
 
+## 📋 Project Management & Evolution
+- **Roadmap:** Consult `ROADMAP.md` for planned features, active stories, and the long-term vision. Use this for inspiration when suggesting improvements.
+- **Archive:** Consult `ARCHIVE.md` to understand the historical evolution of the project and to verify if a feature has already been implemented.
+- **Workflow:** When a story or milestone from the Roadmap is completed, it must be moved to `ARCHIVE.md` with the completion date.
+
 ## 🎯 Development Principles
 1. **File-Based Persistence:** We prioritize Markdown for human-readability. The system treats Markdown as the primary database.
 2. **Auth-First:** All command handlers must be wrapped with the `@auth_only` decorator.
