@@ -10,7 +10,7 @@ __pycache__
 
 .aider*
 
-reading_log.md
+docs/reading_log.md
 raw_books.xml
 bot_persistence.pickle
 reading_in_progress.md
