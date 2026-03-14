@@ -2,7 +2,7 @@
 import os
 import sys
 import requests
-from src.utils.config import validate_config
+from src.utils.config import validate_config, BASE_DIR
 
 def check_connectivity():
     """Checks if external APIs are reachable."""
@@ -45,7 +45,7 @@ def main():
 # Add this new function
 def check_data_sanity():
     """Checks if the data files are within supported limits."""
-    log_path = "reading_log.md"
+    log_path = BASE_DIR / "docs" / "reading_log.md"
     if os.path.exists(log_path):
         size = os.path.getsize(log_path)
         if size > 60000:

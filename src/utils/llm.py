@@ -4,6 +4,7 @@ import httpx
 from datetime import datetime, timedelta, timezone
 from openai import AsyncOpenAI
 from src.data.storage import read_file_content
+from src.utils.config import BASE_DIR
 
 # Global usage tracking (resets on restart)
 USAGE_STATS = {
@@ -29,7 +30,7 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         return "❌ AI-tjänsten är inte konfigurerad (saknar OPENROUTER_API_KEY)."
 
     # Load context
-    reading_log = read_file_content("reading_log.md")
+    reading_log = read_file_content(str(BASE_DIR / "docs" / "reading_log.md"))
 
     # Safety limit: Roughly 50-60k characters for 500 books
     if len(reading_log) > 60000:
