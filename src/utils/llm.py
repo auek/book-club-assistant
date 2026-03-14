@@ -11,21 +11,23 @@ USAGE_STATS = {
     "prompt_tokens": 0,
     "completion_tokens": 0,
     "total_tokens": 0,
-    "request_count": 0
+    "request_count": 0,
 }
+
 
 def get_usage_report() -> dict:
     """Returns the current usage statistics and model name."""
     return {
         **USAGE_STATS,
-        "model": os.getenv('CHAT_MODEL', 'google/gemini-2.0-flash-001')
+        "model": os.getenv("CHAT_MODEL", "google/gemini-2.0-flash-001"),
     }
+
 
 async def get_ai_response(user_query: str, history: list = None) -> str:
     """Get a response from the LLM based on the reading log context."""
-    api_key = os.getenv('OPENROUTER_API_KEY')
-    model = os.getenv('CHAT_MODEL', 'google/gemini-2.0-flash-001')
-    
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    model = os.getenv("CHAT_MODEL", "google/gemini-2.0-flash-001")
+
     if not api_key:
         return "❌ AI-tjänsten är inte konfigurerad (saknar OPENROUTER_API_KEY)."
 
@@ -37,8 +39,8 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         return "❌ Din läslogg är för stor för AI-analys (>500 böcker). Invänta framtida uppdatering för stora bibliotek."
 
     reading_in_progress = read_file_content("reading_in_progress.md")
-    instructions = read_file_content("docs/BOOKCLUB_CHAT.md")
-    
+    instructions = read_file_content(str(BASE_DIR / "docs" / "BOOKCLUB_CHAT.md"))
+
     # Use a custom httpx client as a context manager to ensure it closes
     async with httpx.AsyncClient() as http_client:
         client = AsyncOpenAI(
@@ -49,8 +51,10 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
 
         # Manual offset for Sweden (CET is UTC+1, CEST is UTC+2)
         # This avoids zoneinfo/backports dependencies on older Python versions
-        offset = timedelta(hours=1) 
-        current_time = (datetime.now(timezone.utc) + offset).strftime("%Y-%m-%d %H:%M:%S")
+        offset = timedelta(hours=1)
+        current_time = (datetime.now(timezone.utc) + offset).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
         system_prompt = f"""
         {instructions}
         
@@ -75,7 +79,7 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         messages = [{"role": "system", "content": system_prompt}]
         if history:
             messages.extend(history)
-        
+
         # Send raw query to prevent the model from mirroring input delimiters in its response
         messages.append({"role": "user", "content": user_query})
 
@@ -88,7 +92,7 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
                 model=model,
                 messages=messages,
                 temperature=0.7,
-                max_tokens=2500  # Allow up to ~12k characters
+                max_tokens=2500,  # Allow up to ~12k characters
             )
 
             # Update usage statistics
@@ -103,17 +107,18 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         except Exception as e:
             return f"❌ Ett fel uppstod vid kontakt med AI: {str(e)}"
 
+
 async def validate_book_title(raw_input: str) -> dict:
     """Validate and correct a book title/author input.
-    
+
     Returns:
         {"valid": True, "title": "...", "author": "...", "confidence": 0.9}
         or
         {"valid": False, "reason": "..."}
     """
-    api_key = os.getenv('OPENROUTER_API_KEY')
-    model = os.getenv('CHAT_MODEL', 'google/gemini-2.0-flash-001')
-    
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    model = os.getenv("CHAT_MODEL", "google/gemini-2.0-flash-001")
+
     if not api_key:
         return {"valid": False, "reason": "AI-tjänsten är inte konfigurerad."}
 
@@ -145,11 +150,11 @@ async def validate_book_title(raw_input: str) -> dict:
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.3,
-                max_tokens=200
+                max_tokens=200,
             )
-            
+
             content = response.choices[0].message.content.strip()
-            
+
             # Extract JSON from response
             # Handle potential markdown code blocks
             if content.startswith("```"):
@@ -157,9 +162,9 @@ async def validate_book_title(raw_input: str) -> dict:
                 if content.startswith("json"):
                     content = content[4:]
             content = content.strip().strip("```")
-            
+
             result = json.loads(content)
             return result
-            
+
         except Exception as e:
             return {"valid": False, "reason": f"Fel vid validering: {str(e)}"}
