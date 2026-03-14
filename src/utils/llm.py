@@ -1,6 +1,7 @@
 import json
 import os
 import httpx
+from typing import Optional
 from datetime import datetime, timedelta, timezone
 from openai import AsyncOpenAI
 from src.data.storage import read_file_content
@@ -23,7 +24,7 @@ def get_usage_report() -> dict:
     }
 
 
-async def get_ai_response(user_query: str, history: list | None = None) -> str:
+async def get_ai_response(user_query: str, history: Optional[list] = None) -> str:
     """Get a response from the LLM based on the reading log context."""
     api_key = os.getenv("OPENROUTER_API_KEY")
     model = os.getenv("CHAT_MODEL", "google/gemini-2.0-flash-001")
