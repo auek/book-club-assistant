@@ -12,8 +12,14 @@ A personal AI companion designed to run on low-power hardware like the Raspberry
 ## Requirements
 - Python 3.10+
 - Goodreads User ID (Public profile)
-- Telegram Bot Token & Chat ID
+- [Telegram Bot Token & Chat ID](#telegram-setup)
 - OpenRouter API Key
+
+## Telegram Setup
+1. **Create a Bot:** Message [@BotFather](https://t.me/botfather) on Telegram and follow the steps to create a new bot and receive your **API Token**.
+2. **Privacy Settings:** To allow the bot to read your messages for AI discussion, send `/setprivacy` to @BotFather, select your bot, and set it to **Disabled**.
+3. **Get Chat ID:** Start the bot in Telegram, then run `python3 get_chat_id.py` locally to identify your unique Chat ID. This ensures only you can access the bot.
+4. **Documentation:** For more details, see the [official Telegram Bot tutorial](https://core.telegram.org/bots/features#botfather).
 
 ## Installation & Setup
 1. **Clone & Install:**
