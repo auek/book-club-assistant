@@ -7,8 +7,11 @@ from src.bot.middleware.auth import auth_only
 from src.bot.middleware.formatters import format_progress_for_telegram
 from src.data.storage import read_file_content, save_pending_confirmation, get_pending_confirmation, clear_pending_confirmation
 from src.utils.llm import validate_book_title
+from src.utils.config import BASE_DIR
 
 logger = logging.getLogger(__name__)
+
+PROGRESS_FILE = BASE_DIR / "reading_in_progress.md"
 
 @auth_only
 async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -19,13 +22,13 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             val = int(args[0])
             if 0 <= val <= 100:
                 if val == 100:
-                    with open("reading_in_progress.md", "w", encoding="utf-8") as f:
+                    with open(PROGRESS_FILE, "w", encoding="utf-8") as f:
                         f.write("# Pågående läsning\n\nIngen bok läses just nu.")
                     await update.message.reply_text("✅ Grattis! Boken är avslutad. Glöm inte att logga den på Goodreads!")
                     return
 
                 if await update_progress_file(val):
-                    content = read_file_content("reading_in_progress.md")
+                    content = read_file_content(PROGRESS_FILE)
                     formatted = format_progress_for_telegram(content)
                     await update.message.reply_text(f"✅ Uppdaterat till {val}%\n\n{formatted}", parse_mode='HTML')
                 else:
@@ -35,7 +38,7 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         except ValueError:
             await update.message.reply_text("❌ Please provide a valid number.")
     else:
-        content = read_file_content("reading_in_progress.md")
+        content = read_file_content(PROGRESS_FILE)
         if not content:
             await update.message.reply_text("📖 No reading in progress file found.")
             return
@@ -49,9 +52,8 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 async def update_progress_file(percentage: int) -> bool:
     """Update the reading_in_progress.md file with new progress percentage in Swedish."""
-    file_path = "reading_in_progress.md"
     try:
-        content = read_file_content(file_path)
+        content = read_file_content(PROGRESS_FILE)
         if not content:
             return False
             
@@ -72,7 +74,7 @@ async def update_progress_file(percentage: int) -> bool:
         if not updated:
             updated_lines.append(f"- Framsteg: {percentage}%")
         
-        with open(file_path, "w", encoding="utf-8") as f:
+        with open(PROGRESS_FILE, "w", encoding="utf-8") as f:
             f.write('\n'.join(updated_lines).strip() + '\n')
         return True
     except Exception as e:

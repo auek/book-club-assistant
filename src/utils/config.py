@@ -1,5 +1,9 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Project root directory
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 def validate_config():
     """Validates that all required environment variables are set."""
