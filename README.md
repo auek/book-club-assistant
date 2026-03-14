@@ -59,7 +59,7 @@ python3 -m src.cli.health
 - `bookclub` – Main entry point script (Bash).
 - `bookclub.pi` – Raspberry Pi optimized entry point.
 - `reading_log.md` – Generated reading log (git-ignored).
-- `reading_in_progress.md` – Current reading status (git-ignored).
+- `reading_in_progress.md` – Current reading status (git-ignored, managed by bot).
 - `tests/` – Integration tests for formatters and sync logic.
 
 ## Persistence (Running in Background)
@@ -78,7 +78,7 @@ To keep the bot running after closing your SSH session:
 nohup ./bookclub.pi -bot > bot.log 2>&1 &
 
 # Stop the bot
-pkill -f bot_cli
+pkill -f src.cli.bot_cli
 ```
 
 ## License

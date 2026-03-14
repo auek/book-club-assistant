@@ -90,7 +90,7 @@ case "$1" in
         echo "   TELEGRAM_BOT_TOKEN='your_bot_token_here' (optional)"
         echo "   TELEGRAM_CHAT_ID='your_chat_id_here' (optional)"
         echo "2. Run: ./bookclub.pi -sync"
-        echo "3. For Telegram bot: python3 telegram_bot.py"
+        echo "3. For Telegram bot: ./bookclub.pi -bot"
         ;;
     -bot)
         python3 -m src.cli.bot_cli
