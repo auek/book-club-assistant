@@ -36,7 +36,7 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         return "❌ Din läslogg är för stor för AI-analys (>500 böcker). Invänta framtida uppdatering för stora bibliotek."
 
     reading_in_progress = read_file_content("reading_in_progress.md")
-    instructions = read_file_content("BOKKLUBB.md")
+    instructions = read_file_content("docs/BOOKCLUB_CHAT.md")
     
     # Use a custom httpx client as a context manager to ensure it closes
     async with httpx.AsyncClient() as http_client:

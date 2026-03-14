@@ -16,7 +16,7 @@ You are assisting in the development of a private literary companion. This proje
 
 ### 3. AI Discussion
 - **Engine:** Uses OpenRouter (default: Gemini Flash 2.0).
-- **Context:** The system prompt in `BOOKCLUB_CHAT.md` instructs the AI to read both `reading_log.md` and `reading_in_progress.md`.
+- **Context:** The system prompt in `docs/BOOKCLUB_CHAT.md` instructs the AI to read both `reading_log.md` and `reading_in_progress.md`.
 - **Language:** Internal logic and documentation are in English; the bot persona and user responses are in Swedish.
 
 ## 📂 Directory Structure
@@ -25,12 +25,13 @@ You are assisting in the development of a private literary companion. This proje
 - `src/data/`: Data models and filesystem storage abstractions.
 - `src/sync/`: Logic for Goodreads RSS fetching, parsing, and rendering.
 - `src/utils/`: Configuration management, logging, and LLM wrappers.
+- `docs/`: Project documentation, roadmap, and AI system prompts.
 - `tests/`: Pytest suite covering data parsing, bot formatters, and state transitions.
 
 ## 📋 Project Management & Evolution
-- **Roadmap:** Consult `ROADMAP.md` for planned features, active stories, and the long-term vision. Use this for inspiration when suggesting improvements.
-- **Archive:** Consult `ARCHIVE.md` to understand the historical evolution of the project and to verify if a feature has already been implemented.
-- **Workflow:** When a story or milestone from the Roadmap is completed, it must be moved to `ARCHIVE.md` with the completion date.
+- **Roadmap:** Consult `docs/ROADMAP.md` for planned features, active stories, and the long-term vision. Use this for inspiration when suggesting improvements.
+- **Archive:** Consult `docs/ARCHIVE.md` to understand the historical evolution of the project and to verify if a feature has already been implemented.
+- **Workflow:** When a story or milestone from the Roadmap is completed, it must be moved to `docs/ARCHIVE.md` with the completion date.
 
 ## 🎯 Development Principles
 1. **File-Based Persistence:** We prioritize Markdown for human-readability. The system treats Markdown as the primary database.

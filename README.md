@@ -56,6 +56,7 @@ python3 -m src.cli.health
 
 ## Project Structure
 - `src/` – Python source code (Bot, Sync, CLI, Data, Utils).
+- `docs/` – Project documentation, roadmap, and AI system prompts.
 - `bookclub` – Main entry point script.
 - `bookclub.pi` – Raspberry Pi optimized entry point.
 - `reading_log.md` – Generated reading log (git-ignored).
