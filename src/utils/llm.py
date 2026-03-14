@@ -23,7 +23,7 @@ def get_usage_report() -> dict:
     }
 
 
-async def get_ai_response(user_query: str, history: list = None) -> str:
+async def get_ai_response(user_query: str, history: list | None = None) -> str:
     """Get a response from the LLM based on the reading log context."""
     api_key = os.getenv("OPENROUTER_API_KEY")
     model = os.getenv("CHAT_MODEL", "google/gemini-2.0-flash-001")
@@ -78,7 +78,7 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
         if len(user_query) > 1000:
             return "❌ Frågan är för lång (max 1000 tecken)."
 
-        messages = [{"role": "system", "content": system_prompt}]
+        messages: list = [{"role": "system", "content": system_prompt}]
         if history:
             messages.extend(history)
 
@@ -105,7 +105,7 @@ async def get_ai_response(user_query: str, history: list = None) -> str:
                 USAGE_STATS["total_tokens"] += usage.total_tokens
                 USAGE_STATS["request_count"] += 1
 
-            return response.choices[0].message.content
+            return response.choices[0].message.content or ""
         except Exception as e:
             return f"❌ Ett fel uppstod vid kontakt med AI: {str(e)}"
 
@@ -155,7 +155,10 @@ async def validate_book_title(raw_input: str) -> dict:
                 max_tokens=200,
             )
 
-            content = response.choices[0].message.content.strip()
+            content = response.choices[0].message.content
+            if not content:
+                return {"valid": False, "reason": "Tomt svar från AI."}
+            content = content.strip()
 
             # Extract JSON from response
             # Handle potential markdown code blocks
